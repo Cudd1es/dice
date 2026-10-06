@@ -60,6 +60,7 @@ targets:
       - DiceMessagesTests
       - DiceMessages/Screen.swift
       - DiceMessages/MessageFactory.swift
+      - DiceMessages/RevealState.swift
       - DiceMessages/PanelModel.swift
       - DiceMessages/SpecStore.swift
     settings:
