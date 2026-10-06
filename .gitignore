@@ -1,0 +1,6 @@
+spike/
+*.xcodeproj
+DerivedData/
+.build/
+.superpowers/
+.DS_Store
