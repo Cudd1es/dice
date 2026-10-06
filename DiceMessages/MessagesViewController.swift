@@ -13,7 +13,8 @@ struct RootView: View {
     var body: some View {
         switch screen {
         case nil:
-            Color.clear
+            // Fixed height: Color.clear alone is greedy and made the bubble very tall.
+            Color.clear.frame(height: 1)
         case .panel?:
             RollPanelView(model: model, onRoll: onRoll)
         case .detail(let spec, let result)?:
@@ -47,7 +48,14 @@ final class MessagesViewController: MSMessagesAppViewController {
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
         reveal.activate()
-        refresh()
+        // activeConversation is still nil inside this callback when Messages recreates a bubble that was
+        // scrolled off screen (seen on device), so use the conversation it hands us.
+        refresh(conversation)
+    }
+
+    override func didBecomeActive(with conversation: MSConversation) {
+        super.didBecomeActive(with: conversation)
+        refresh(conversation)
     }
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
@@ -80,11 +88,12 @@ final class MessagesViewController: MSMessagesAppViewController {
         return host.sizeThatFits(in: CGSize(width: size.width, height: .greatestFiniteMagnitude))
     }
 
-    private func refresh() {
+    private func refresh(_ conversation: MSConversation? = nil) {
+        let conversation = conversation ?? activeConversation
         // A transcript bubble learns its message in willBecomeActive; until then there is nothing to draw,
         // and resolving now would flash the corrupt-data text.
-        if presentationStyle == .transcript && activeConversation == nil { return }
-        let message = activeConversation?.selectedMessage
+        if presentationStyle == .transcript && conversation == nil { return }
+        let message = conversation?.selectedMessage
         let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url,
                                     isPending: message?.isPending ?? false, revealing: reveal.revealing)
         host.rootView = makeRoot(screen)
