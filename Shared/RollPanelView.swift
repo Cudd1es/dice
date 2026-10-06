@@ -5,21 +5,44 @@ import DiceKit
 struct RollPanelView: View {
     @ObservedObject var model: PanelModel
     let onRoll: () -> Void
+    /// Called when a text field takes focus. The extension expands here: Messages shows no keyboard in the compact drawer.
+    var onKeyboardFocus: (() -> Void)? = nil
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
+    private enum Field { case purpose, dc }
+    @FocusState private var focus: Field?
+    @State private var contentHeight: CGFloat?
+
     private static let defaultDC = 10
+    /// The purpose counter appears only near the limit, so the field stays clean otherwise.
+    private static let purposeCounterFrom = 30
 
     var body: some View {
         // Full height when it fits; scrolls when space is short (landscape-sized sheets, large text),
         // so the roll button is always reachable.
-        ViewThatFits(in: .vertical) {
+        // One ScrollView capped at the content's height rather than ViewThatFits: switching between two copies
+        // when the keyboard shrinks the space recreated the text field and dropped its focus.
+        ScrollView {
             content
-            ScrollView { content }
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(maxHeight: contentHeight)
+        .onChange(of: focus) { old, new in
+            if new != nil { onKeyboardFocus?() }
+            if old == .dc, new != .dc { model.commitDCDraft() }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focus = nil }
+            }
         }
     }
 
     private var content: some View {
         VStack(spacing: 12) {
+                purposeField
                 sidesRow
                 // Count and modifier stack vertically at accessibility text sizes, where one row is too wide.
                 if dynamicTypeSize.isAccessibilitySize {
@@ -44,7 +67,10 @@ struct RollPanelView: View {
                         .font(.footnote)
                         .foregroundStyle(.red)
                 }
-                Button(action: onRoll) {
+                Button {
+                    focus = nil
+                    onRoll()
+                } label: {
                     Text("Roll")
                         .font(.title3.weight(.bold))
                         .frame(maxWidth: .infinity)
@@ -106,16 +132,85 @@ struct RollPanelView: View {
         .disabled(!model.isModeEnabled)
     }
 
+    /// Filled like the panel's buttons rather than the system's bordered style. Shows a clear button once there is
+    /// text and a counter near the limit.
+    private var purposeField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "pencil")
+                .foregroundStyle(.secondary)
+            TextField("Purpose (optional), e.g. Perception check", text: $model.purpose)
+                .submitLabel(.done)
+                .focused($focus, equals: .purpose)
+                // Cut here, not in the model: when a didSet put back the previous value, SwiftUI saw no change
+                // and the field kept showing the extra characters.
+                .onChange(of: model.purpose) { _, text in
+                    if text.count > RollPurpose.maxLength { model.purpose = String(text.prefix(RollPurpose.maxLength)) }
+                }
+            if model.purpose.count > Self.purposeCounterFrom {
+                Text(verbatim: "\(model.purpose.count)/\(RollPurpose.maxLength)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            if !model.purpose.isEmpty {
+                Button {
+                    model.purpose = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear purpose")
+            }
+        }
+        .padding(.horizontal, 12)
+        .frame(minHeight: 40)
+        .background(Color(.tertiarySystemFill), in: Capsule())
+        .overlay {
+            Capsule().strokeBorder(Color.accentColor.opacity(focus == .purpose ? 0.6 : 0), lineWidth: 1.5)
+        }
+        .contentShape(Capsule())
+        .onTapGesture { focus = .purpose }
+        .animation(.easeOut(duration: 0.15), value: focus)
+    }
+
+    /// Tap the number to type a DC; the stepper is slow for large ones.
+    @ViewBuilder
+    private func dcValue(_ dc: Int) -> some View {
+        // The field must exist before it can take focus, so editing is the model's dcDraft, not the focus state.
+        if let draft = model.dcDraft {
+            // Starts empty with the current DC as the placeholder, so typing replaces it; leaving it empty keeps it.
+            TextField(String(dc), text: Binding(get: { draft }, set: { model.dcDraft = $0 }))
+                .keyboardType(.numberPad)
+                .focused($focus, equals: .dc)
+                .font(.body.monospacedDigit())
+                .multilineTextAlignment(.center)
+                .frame(width: 56, height: 32)
+                .background(Color(.tertiarySystemFill), in: Capsule())
+                .overlay { Capsule().strokeBorder(Color.accentColor.opacity(0.6), lineWidth: 1.5) }
+                .onAppear { focus = .dc }
+        } else {
+            Button {
+                model.beginEditingDC()
+            } label: {
+                Text("\(dc)").font(.body.monospacedDigit())
+            }
+        }
+    }
+
     private var dcRow: some View {
         HStack {
             Toggle("DC", isOn: Binding(
                 get: { model.spec.dc != nil },
-                set: { model.setDC($0 ? Self.defaultDC : nil) }
+                set: { on in
+                    // Turning DC off drops any typed draft (setDC(nil)); also close the number pad.
+                    if !on, focus == .dc { focus = nil }
+                    model.setDC(on ? Self.defaultDC : nil)
+                }
             ))
             .fixedSize()
             if let dc = model.spec.dc {
                 Stepper(value: Binding(get: { dc }, set: { model.setDC($0) }), in: RollSpec.dcRange) {
-                    Text("\(dc)").font(.body.monospacedDigit())
+                    dcValue(dc)
                 }
             }
             Spacer()

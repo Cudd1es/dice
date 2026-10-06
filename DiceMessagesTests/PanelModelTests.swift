@@ -38,8 +38,8 @@ final class PanelModelTests: XCTestCase {
 
     func test_panel_clampsDC() {
         let model = PanelModel(store: store)
-        model.setDC(99)
-        XCTAssertEqual(model.spec.dc, 40)
+        model.setDC(1500)
+        XCTAssertEqual(model.spec.dc, 999)
         model.setDC(0)
         XCTAssertEqual(model.spec.dc, 1)
         model.setDC(nil)
@@ -88,5 +88,81 @@ final class PanelModelTests: XCTestCase {
         XCTAssertEqual(a.spec, b.spec)
         XCTAssertEqual(a.result, b.result)
         XCTAssertEqual(a.spec, model.spec)
+    }
+
+    func test_panel_rollReturnsPurposeAndClears() {
+        let model = PanelModel(store: store)
+        model.purpose = "  攻击哥布林 "
+        XCTAssertEqual(model.roll().purpose, "攻击哥布林")
+        XCTAssertEqual(model.purpose, "")
+    }
+
+    func test_panel_blankPurposeIsNil() {
+        let model = PanelModel(store: store)
+        model.purpose = "  "
+        XCTAssertNil(model.roll().purpose)
+    }
+
+    // The field cuts at 40 as you type (RollPanelView); a longer value still never leaves the panel.
+    func test_panel_longPurposeRollsAs40() {
+        let model = PanelModel(store: store)
+        model.purpose = String(repeating: "a", count: 50)
+        XCTAssertEqual(model.roll().purpose, String(repeating: "a", count: 40))
+    }
+
+    func test_panel_purposeNotSaved() {
+        let model = PanelModel(store: store)
+        model.purpose = "察觉检定"
+        _ = model.roll()
+        XCTAssertEqual(PanelModel(store: store).purpose, "")
+    }
+
+    func test_panel_setDCText() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.setDC(text: "120")
+        XCTAssertEqual(model.spec.dc, 120)
+        model.setDC(text: "5000")
+        XCTAssertEqual(model.spec.dc, 999)
+        model.setDC(text: "007")
+        XCTAssertEqual(model.spec.dc, 7)
+        model.setDC(text: "-5")
+        XCTAssertEqual(model.spec.dc, 1)
+        model.setDC(text: "")
+        XCTAssertEqual(model.spec.dc, 1)
+        model.setDC(text: "abc")
+        XCTAssertEqual(model.spec.dc, 1)
+    }
+
+    // Tapping Roll with the number pad still up must roll the DC that was typed, not the old one.
+    func test_panel_rollCommitsTypedDC() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.dcDraft = "18"
+        XCTAssertEqual(model.roll().spec.dc, 18)
+        XCTAssertNil(model.dcDraft)
+        XCTAssertEqual(store.load().dc, 18)
+    }
+
+    // Switching DC off mid-edit drops the draft, so the later focus-loss commit cannot turn it back on.
+    func test_panel_turningDCOffDropsDraft() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.dcDraft = "2"
+        model.setDC(nil)
+        model.commitDCDraft()
+        XCTAssertNil(model.spec.dc)
+        XCTAssertNil(model.dcDraft)
+    }
+
+    func test_panel_emptyDCDraftKeepsDC() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.commitDCDraft()
+        XCTAssertEqual(model.spec.dc, 15)
+        XCTAssertNil(model.dcDraft)
     }
 }

@@ -5,6 +5,7 @@ import DiceKit
 struct ResultCard: View {
     let spec: RollSpec
     let result: RollResult
+    var purpose: String?
     var onRollAgain: (() -> Void)?
     /// Smaller in the app's result area on short screens such as iPhone SE.
     var totalFontSize: CGFloat = 72
@@ -13,6 +14,12 @@ struct ResultCard: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 6) {
+                    if let purpose {
+                        Text(purpose)
+                            .font(.headline)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                    }
                     Label(RollFormatter.formula(spec), systemImage: "dice")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)

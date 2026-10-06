@@ -6,6 +6,7 @@ public struct RollHistory: Equatable, Sendable {
         public let id: UUID
         public let spec: RollSpec
         public let result: RollResult
+        public let purpose: String?
         public let date: Date
     }
 
@@ -15,8 +16,8 @@ public struct RollHistory: Equatable, Sendable {
 
     public init() {}
 
-    public mutating func add(spec: RollSpec, result: RollResult, date: Date = Date()) {
-        entries.insert(Entry(id: UUID(), spec: spec, result: result, date: date), at: 0)
+    public mutating func add(spec: RollSpec, result: RollResult, purpose: String? = nil, date: Date = Date()) {
+        entries.insert(Entry(id: UUID(), spec: spec, result: result, purpose: purpose, date: date), at: 0)
         if entries.count > Self.capacity {
             entries.removeLast()
         }

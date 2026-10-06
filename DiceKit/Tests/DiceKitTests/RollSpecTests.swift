@@ -28,7 +28,9 @@ final class RollSpecTests: XCTestCase {
 
     func test_validate_rejectsDCBounds() {
         assertThrows(RollSpec(dc: 0), .invalidDC(0))
-        assertThrows(RollSpec(dc: 41), .invalidDC(41))
+        assertThrows(RollSpec(dc: 1000), .invalidDC(1000))
+        // Percentile and many-dice rolls need DCs well above the d20 range.
+        XCTAssertNoThrow(try RollSpec(sides: 100, dc: 999).validate())
         XCTAssertNoThrow(try RollSpec(dc: nil).validate())
     }
 

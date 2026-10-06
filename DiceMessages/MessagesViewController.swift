@@ -9,6 +9,7 @@ struct RootView: View {
     let model: PanelModel
     let onRoll: () -> Void
     let onRollAgain: () -> Void
+    let onKeyboardFocus: () -> Void
 
     var body: some View {
         switch screen {
@@ -16,9 +17,9 @@ struct RootView: View {
             // Fixed height: Color.clear alone is greedy and made the bubble very tall.
             Color.clear.frame(height: 1)
         case .panel?:
-            RollPanelView(model: model, onRoll: onRoll)
-        case .detail(let spec, let result)?:
-            ResultCard(spec: spec, result: result, onRollAgain: onRollAgain)
+            RollPanelView(model: model, onRoll: onRoll, onKeyboardFocus: onKeyboardFocus)
+        case .detail(let spec, let result, let purpose)?:
+            ResultCard(spec: spec, result: result, purpose: purpose, onRollAgain: onRollAgain)
         case let screen?:
             // No ScrollView: the transcript bubble is sized from this view's fitting height.
             BubbleView(screen: screen)
@@ -60,6 +61,9 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
         super.didTransition(to: presentationStyle)
+        // Messages hides the keyboard in compact but the field could stay focused; end editing so the next tap
+        // on a field is a new focus and expands again.
+        if presentationStyle == .compact { view.endEditing(true) }
         if presentationStyle == .expanded, let message = activeConversation?.selectedMessage {
             reveal.didExpand(selected: message.url, isPending: message.isPending)
         }
@@ -102,7 +106,14 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func makeRoot(_ screen: Screen?) -> RootView {
         RootView(screen: screen, model: model,
                  onRoll: { [weak self] in self?.roll() },
-                 onRollAgain: { [weak self] in self?.showPanel() })
+                 onRollAgain: { [weak self] in self?.showPanel() },
+                 onKeyboardFocus: { [weak self] in self?.expandForKeyboard() })
+    }
+
+    private func expandForKeyboard() {
+        guard presentationStyle == .compact else { return }
+        reveal.expandForInput()
+        requestPresentationStyle(.expanded)
     }
 
     private func showPanel() {
@@ -114,8 +125,8 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func roll() {
         guard let conversation = activeConversation else { return }
         model.errorMessage = nil
-        let (spec, result) = model.roll()
-        let message = MessageFactory.makeMessage(spec: spec, result: result, session: nil)
+        let (spec, result, purpose) = model.roll()
+        let message = MessageFactory.makeMessage(spec: spec, result: result, purpose: purpose, session: nil)
         conversation.insert(message) { [weak self] error in
             DispatchQueue.main.async {
                 if error != nil {

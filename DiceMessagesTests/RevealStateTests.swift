@@ -66,4 +66,17 @@ final class RevealStateTests: XCTestCase {
         state.didExpand(selected: url, isPending: false)
         XCTAssertTrue(state.revealing, "a fresh tap on the same message reveals again")
     }
+
+    // Tapping the purpose or DC field in the compact drawer expands the extension for the keyboard. A sent
+    // message left selected from earlier must not take over the panel on that expansion.
+    func test_expandForInput_doesNotReveal() {
+        var state = RevealState()
+        state.activate()
+        state.expandForInput()
+        state.didExpand(selected: url, isPending: false)
+        XCTAssertFalse(state.revealing)
+        // Only that one expansion is ignored.
+        state.didExpand(selected: url, isPending: false)
+        XCTAssertTrue(state.revealing)
+    }
 }

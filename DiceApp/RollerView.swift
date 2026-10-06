@@ -48,7 +48,7 @@ struct RollerView: View {
     @ViewBuilder
     private func resultArea(compact: Bool) -> some View {
         if let latest {
-            ResultCard(spec: latest.spec, result: latest.result,
+            ResultCard(spec: latest.spec, result: latest.result, purpose: latest.purpose,
                        totalFontSize: compact ? Self.compactTotalFontSize : 72)
                 // Keyed by the roll, not the total, so rolling the same number again still visibly reacts.
                 .keyframeAnimator(initialValue: 1.0, trigger: latest.id) { card, scale in
@@ -78,7 +78,7 @@ struct RollerView: View {
     private func roll() {
         let rolled = model.roll()
         withAnimation {
-            history.add(spec: rolled.spec, result: rolled.result)
+            history.add(spec: rolled.spec, result: rolled.result, purpose: rolled.purpose)
         }
     }
 
@@ -96,6 +96,18 @@ private struct HistoryRow: View {
     let entry: RollHistory.Entry
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            row
+            if let purpose = entry.purpose {
+                Text(purpose)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
+    }
+
+    private var row: some View {
         HStack(spacing: 8) {
             Text(RollFormatter.clockTime(entry.date))
                 .font(.caption.monospacedDigit())

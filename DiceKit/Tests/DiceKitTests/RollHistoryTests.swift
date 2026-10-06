@@ -30,6 +30,15 @@ final class RollHistoryTests: XCTestCase {
         XCTAssertEqual(history.entries.last?.spec.modifier, 1)
     }
 
+    func test_add_keepsPurpose() {
+        var history = RollHistory()
+        let spec = RollSpec()
+        history.add(spec: spec, result: result(spec, [12]), purpose: "攻击")
+        history.add(spec: spec, result: result(spec, [3]))
+        XCTAssertNil(history.entries[0].purpose)
+        XCTAssertEqual(history.entries[1].purpose, "攻击")
+    }
+
     func test_add_keepsSpecResultAndDate() {
         var history = RollHistory()
         let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15)
