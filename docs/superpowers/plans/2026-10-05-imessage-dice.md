@@ -10,6 +10,11 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-05-imessage-dice-design.md`
 
+**状态（2026-10-06）：** 9 个任务全部完成，已合并到 `main`（PR #1–#3）。偏离计划之处：
+- Task 1 模拟器结论为 B，先按 B 实现；之后真机 spike 证明 A 可行，已切换到 A（见 spike 文档的真机复测）。
+- 消息 URL 改为 `https://dice.invalid/roll`（「信息」会丢弃自定义 scheme）。
+- 接收方与群聊验收待加入 Apple Developer Program、用 TestFlight 分发后进行。
+
 ## Global Constraints
 
 - 最低系统：iOS 17；`DiceKit` 同时声明 macOS 14，并且只能用 Swift 标准库 + Foundation（保证 Linux 上也能 `swift test`）
@@ -74,14 +79,14 @@ dice/
 
 **Interfaces:** 无。产出是一个结论：**A 成立** 或 **切换到变体 B**。
 
-- [ ] **Step 1:** 在 `spike/` 建最小扩展。`MessagesViewController`：compact 时一个按钮，点击后 `activeConversation?.insert(msg)`，其中 `msg.url = "dice://roll?t=<当前时间戳>"`，`msg.layout = MSMessageLiveLayout(alternateLayout: MSMessageTemplateLayout(caption: "ALT"))`；transcript 时显示一个 `UILabel`，文字为 `activeConversation?.selectedMessage?.isPending == true ? "PENDING" : "SENT"`，并 `os_log` 打印每次 `willBecomeActive`/`didTransition`/`viewWillAppear` 时的 `isPending` 和 VC 实例地址；覆盖 `contentSizeThatFits(_:)` 返回 `CGSize(width: size.width, height: 80)`
-- [ ] **Step 2:** 用 Xcode 运行扩展 scheme，宿主选 Messages，在模拟器「信息」里逐项观察并记录：
+- [x] **Step 1:** 在 `spike/` 建最小扩展。`MessagesViewController`：compact 时一个按钮，点击后 `activeConversation?.insert(msg)`，其中 `msg.url = "dice://roll?t=<当前时间戳>"`，`msg.layout = MSMessageLiveLayout(alternateLayout: MSMessageTemplateLayout(caption: "ALT"))`；transcript 时显示一个 `UILabel`，文字为 `activeConversation?.selectedMessage?.isPending == true ? "PENDING" : "SENT"`，并 `os_log` 打印每次 `willBecomeActive`/`didTransition`/`viewWillAppear` 时的 `isPending` 和 VC 实例地址；覆盖 `contentSizeThatFits(_:)` 返回 `CGSize(width: size.width, height: 80)`
+- [x] **Step 2:** 用 Xcode 运行扩展 scheme，宿主选 Messages，在模拟器「信息」里逐项观察并记录：
   1. 插入后草稿气泡是否由扩展渲染、显示 `PENDING`（而不是 `ALT`）
   2. 点发送后，发送方气泡是否**无需任何操作**变为 `SENT`（日志里是否出现新的 VC 实例或新的生命周期回调）
   3. 切换到模拟器中另一方的会话，接收方气泡是否显示 `SENT`
   4. 点开已发送气泡时，expanded 模式下 `selectedMessage` 是否就是该消息
-- [ ] **Step 3:** 把观察结果、Xcode 版本、模拟器 iOS 版本写入 `docs/superpowers/spikes/2026-10-05-live-layout.md`，结论一行：`Decision: A` 或 `Decision: B`（1–3 任一不成立即为 B）
-- [ ] **Step 4:** 提交
+- [x] **Step 3:** 把观察结果、Xcode 版本、模拟器 iOS 版本写入 `docs/superpowers/spikes/2026-10-05-live-layout.md`，结论一行：`Decision: A` 或 `Decision: B`（1–3 任一不成立即为 B）
+- [x] **Step 4:** 提交
 
 ```bash
 git add .gitignore docs/superpowers/spikes/2026-10-05-live-layout.md
@@ -114,8 +119,8 @@ public struct RollSpec: Codable, Equatable, Sendable {
 }
 ```
 
-- [ ] **Step 1:** `Package.swift`：`swift-tools-version:5.9`，库 `DiceKit`，platforms `.iOS(.v17), .macOS(.v14)`，测试目标 `DiceKitTests`
-- [ ] **Step 2: 写失败测试** `RollSpecTests`：
+- [x] **Step 1:** `Package.swift`：`swift-tools-version:5.9`，库 `DiceKit`，platforms `.iOS(.v17), .macOS(.v14)`，测试目标 `DiceKitTests`
+- [x] **Step 2: 写失败测试** `RollSpecTests`：
   - `test_validate_acceptsDefault`：`RollSpec()` 不抛错
   - `test_validate_rejectsBadSides`：`sides: 7` → `.invalidSides(7)`
   - `test_validate_rejectsCountBounds`：`count: 0` → `.invalidCount(0)`，`count: 21` → `.invalidCount(21)`
@@ -124,10 +129,10 @@ public struct RollSpec: Codable, Equatable, Sendable {
   - `test_validate_rejectsAdvantageOnNonD20`：`RollSpec(count: 2, sides: 20, mode: .advantage)` → `.modeRequiresSingleD20`
   - `test_normalized_resetsModeWhenNotSingleD20`：`RollSpec(sides: 6, mode: .advantage).normalized().mode == .normal`；1d20 优势保持不变
   - `test_diceToRoll`：普通 `3d6` → 3；1d20 劣势 → 2
-- [ ] **Step 3:** 运行 `cd DiceKit && swift test --filter RollSpecTests`，预期编译失败
-- [ ] **Step 4:** 实现 `RollSpec.swift`
-- [ ] **Step 5:** 再次运行，预期 PASS
-- [ ] **Step 6:** 提交 `feat(dicekit): add RollSpec with validation`
+- [x] **Step 3:** 运行 `cd DiceKit && swift test --filter RollSpecTests`，预期编译失败
+- [x] **Step 4:** 实现 `RollSpec.swift`
+- [x] **Step 5:** 再次运行，预期 PASS
+- [x] **Step 6:** 提交 `feat(dicekit): add RollSpec with validation`
 
 ---
 
@@ -159,7 +164,7 @@ public enum DiceEngine {
 
 `evaluate` 规则：普通 → 全部保留；优势 → 保留最大值的下标，劣势 → 最小值的下标，**相等时保留下标 0**。`total` = 保留骰子之和 + `modifier`。`critical` 仅在 `isSingleD20` 时看保留的那颗（20 → `.success`，1 → `.failure`）。`dcOutcome`：`dc == nil` → `nil`；`critical == .success` → `.success`；`.failure` → `.failure`；否则 `total >= dc`。
 
-- [ ] **Step 1: 写失败测试** `DiceEngineTests`：
+- [x] **Step 1: 写失败测试** `DiceEngineTests`：
   - `test_roll_isDeterministicWithSeed`：同一 `SplitMix64(seed: 42)` 掷 `4d6` 两次结果相等
   - `test_roll_rangeAndUniformity`：对每个允许面数，用 `SplitMix64(seed: 1)` 掷 100,000 次 `1dN`，所有值在 `1...N`，每个点数出现次数在期望值 ±10% 内
   - `test_evaluate_normalSum`：`2d6+3`，dice `[2, 5]` → kept `[0, 1]`、total 10、critical `.none`
@@ -168,10 +173,10 @@ public enum DiceEngine {
   - `test_evaluate_tieKeepsFirst`：优势 `[9, 9]` → kept `[0]`
   - `test_evaluate_criticalOnlyForSingleD20`：1d20 `[20]` → `.success`；`[1]` → `.failure`；优势 `[1, 20]` → `.success`；劣势 `[1, 20]` → `.failure`；`3d20` `[20, 20, 20]` → `.none`
   - `test_evaluate_dcBoundaryAndNaturals`：1d20+0 DC 10 `[10]` → `.success`；`[9]` → `.failure`；1d20+0 DC 25 `[20]` → `.success`；1d20+10 DC 5 `[1]` → `.failure`；`2d6` DC 7 `[3, 4]` → `.success`；无 DC → `nil`
-- [ ] **Step 2:** `swift test --filter DiceEngineTests`，预期失败
-- [ ] **Step 3:** 实现 `SplitMix64`（标准算法：`state &+= 0x9E3779B97F4A7C15`，再做两轮 xor-shift 乘法 `0xBF58476D1CE4E5B9`、`0x94D049BB133111EB`）、`RollResult`、`DiceEngine`
-- [ ] **Step 4:** 再次运行，预期 PASS
-- [ ] **Step 5:** 提交 `feat(dicekit): add dice engine`
+- [x] **Step 2:** `swift test --filter DiceEngineTests`，预期失败
+- [x] **Step 3:** 实现 `SplitMix64`（标准算法：`state &+= 0x9E3779B97F4A7C15`，再做两轮 xor-shift 乘法 `0xBF58476D1CE4E5B9`、`0x94D049BB133111EB`）、`RollResult`、`DiceEngine`
+- [x] **Step 4:** 再次运行，预期 PASS
+- [x] **Step 5:** 提交 `feat(dicekit): add dice engine`
 
 ---
 
@@ -201,7 +206,7 @@ URL 形如 `dice://roll?v=1&n=1&s=20&m=a&k=5&dc=15&d=8,17`。键：`v` 版本、
 
 解码顺序：`v` 缺失 → `missingField("v")`；`v != 1` → `unsupportedVersion(v)`；其余字段缺失/无法解析 → `missingField`/`malformed`；`spec.validate()` 失败 → `invalidSpec`；骰子数量 `!= spec.diceToRoll` 或任一值不在 `1...sides` → `invalidDice`。
 
-- [ ] **Step 1: 写失败测试** `MessageCodecTests`：
+- [x] **Step 1: 写失败测试** `MessageCodecTests`：
   - `test_roundTrip`：至少 3 组（`1d20+5 优势 DC15`、`2d6-2`、`20d100`）编码后解码，spec 与 result 都相等
   - `test_url_containsVersion`：`URLComponents` 里 `v == "1"`
   - `test_decode_missingVersion` / `test_decode_futureVersion`（`v=2` → `.unsupportedVersion(2)`）
@@ -209,10 +214,10 @@ URL 形如 `dice://roll?v=1&n=1&s=20&m=a&k=5&dc=15&d=8,17`。键：`v` 版本、
   - `test_decode_outOfRangeSpec`：`s=7` → `.invalidSpec(.invalidSides(7))`
   - `test_decode_wrongDiceCount`：1d20 优势但 `d=12` → `.invalidDice`
   - `test_decode_dieOutOfRange`：`s=6&d=7` → `.invalidDice`
-- [ ] **Step 2:** `swift test --filter MessageCodecTests`，预期失败
-- [ ] **Step 3:** 用 `URLComponents`/`URLQueryItem` 实现
-- [ ] **Step 4:** 再次运行，预期 PASS
-- [ ] **Step 5:** 提交 `feat(dicekit): add message codec`
+- [x] **Step 2:** `swift test --filter MessageCodecTests`，预期失败
+- [x] **Step 3:** 用 `URLComponents`/`URLQueryItem` 实现
+- [x] **Step 4:** 再次运行，预期 PASS
+- [x] **Step 5:** 提交 `feat(dicekit): add message codec`
 
 ---
 
@@ -239,16 +244,16 @@ public enum RollFormatter {
 - `detailMarkdown`：`"[" + 骰子用 ", " 连接，未保留的写成 ~~v~~ + "]"` + 加值（`" + 5"` / `" - 2"`，0 时省略）+ `" = {total}"`。供 SwiftUI `AttributedString(markdown:)` 渲染删除线
 - `outcome`：`critical == .success` → `"大成功"`；`.failure` → `"大失败"`；否则 `dcOutcome` → `"成功"` / `"失败"`；都没有 → `nil`
 
-- [ ] **Step 1: 写失败测试** `RollFormatterTests`：
+- [x] **Step 1: 写失败测试** `RollFormatterTests`：
   - `test_formula`：`1d20+5 · 优势 · DC 15`、`2d6`、`1d8-2`、`1d20 · 劣势`
   - `test_summary`：`"🎲 1d20+5 · 优势 · DC 15"`
   - `test_detail`：优势 `[17, 8]` 保留下标 0、+5 → `"[17, ~~8~~] + 5 = 22"`；`2d6-2` `[3, 4]` → `"[3, 4] - 2 = 5"`；`1d6` `[6]` → `"[6] = 6"`
   - `test_detail_twentyDice`：20d100 输出包含 20 个数字、以 `" = {total}"` 结尾
   - `test_outcome`：大成功 / 大失败 / 成功 / 失败 / `nil`；大成功且有 DC 时返回 `"大成功"`
-- [ ] **Step 2:** `swift test --filter RollFormatterTests`，预期失败
-- [ ] **Step 3:** 实现
-- [ ] **Step 4:** `swift test`（全部），预期 PASS
-- [ ] **Step 5:** 提交 `feat(dicekit): add Chinese formatter`
+- [x] **Step 2:** `swift test --filter RollFormatterTests`，预期失败
+- [x] **Step 3:** 实现
+- [x] **Step 4:** `swift test`（全部），预期 PASS
+- [x] **Step 5:** 提交 `feat(dicekit): add Chinese formatter`
 
 ---
 
@@ -283,12 +288,12 @@ enum MessageFactory {
 
 `MessageFactory`：`url = MessageCodec.url(...)`；`summaryText = RollFormatter.summary(spec)`；template = caption `formula(spec)`、subcaption `tapToRevealCaption`；**变体 A** `layout = MSMessageLiveLayout(alternateLayout: template)`，**变体 B** `layout = template`。
 
-- [ ] **Step 1:** 写 `project.yml` 和空壳文件，运行 `xcodegen generate && xcodebuild build -project Dice.xcodeproj -scheme DiceApp $SIM`，预期 `BUILD SUCCEEDED`
-- [ ] **Step 2: 写失败测试** `ScreenTests`：`test_resolve_transcriptPending`、`test_resolve_transcriptSent`、`test_resolve_transcriptFutureVersionNeedsUpdate`、`test_resolve_transcriptGarbageIsCorrupt`、`test_resolve_compactNoMessageShowsPanel`、`test_resolve_expandedPendingShowsPanel`、`test_resolve_expandedSentShowsDetail`；`MessageFactoryTests`：`test_message_urlDecodesBack`、`test_message_summaryHasNoResult`（等于 `summary(spec)`）、`test_message_alternateLayoutHasNoResult`（caption 等于 `formula(spec)`，subcaption 等于 `tapToRevealCaption`）、`test_message_layoutMatchesSpikeDecision`（变体 A：`layout is MSMessageLiveLayout`；变体 B：`layout is MSMessageTemplateLayout`）
-- [ ] **Step 3:** `xcodebuild test -project Dice.xcodeproj -scheme DiceApp $SIM -only-testing:DiceMessagesTests`，预期失败
-- [ ] **Step 4:** 实现 `Screen.swift`、`MessageFactory.swift`（按 Task 1 的 Decision 选 A/B）
-- [ ] **Step 5:** 再次运行，预期 PASS
-- [ ] **Step 6:** 提交 `feat(messages): add project, screen routing, message factory`
+- [x] **Step 1:** 写 `project.yml` 和空壳文件，运行 `xcodegen generate && xcodebuild build -project Dice.xcodeproj -scheme DiceApp $SIM`，预期 `BUILD SUCCEEDED`
+- [x] **Step 2: 写失败测试** `ScreenTests`：`test_resolve_transcriptPending`、`test_resolve_transcriptSent`、`test_resolve_transcriptFutureVersionNeedsUpdate`、`test_resolve_transcriptGarbageIsCorrupt`、`test_resolve_compactNoMessageShowsPanel`、`test_resolve_expandedPendingShowsPanel`、`test_resolve_expandedSentShowsDetail`；`MessageFactoryTests`：`test_message_urlDecodesBack`、`test_message_summaryHasNoResult`（等于 `summary(spec)`）、`test_message_alternateLayoutHasNoResult`（caption 等于 `formula(spec)`，subcaption 等于 `tapToRevealCaption`）、`test_message_layoutMatchesSpikeDecision`（变体 A：`layout is MSMessageLiveLayout`；变体 B：`layout is MSMessageTemplateLayout`）
+- [x] **Step 3:** `xcodebuild test -project Dice.xcodeproj -scheme DiceApp $SIM -only-testing:DiceMessagesTests`，预期失败
+- [x] **Step 4:** 实现 `Screen.swift`、`MessageFactory.swift`（按 Task 1 的 Decision 选 A/B）
+- [x] **Step 5:** 再次运行，预期 PASS
+- [x] **Step 6:** 提交 `feat(messages): add project, screen routing, message factory`
 
 ---
 
@@ -311,10 +316,10 @@ final class MessagesViewController: MSMessagesAppViewController  // hosts RootVi
 - 覆盖 `contentSizeThatFits(_ size: CGSize) -> CGSize`：用 hosting controller 的 `sizeThatFits(in: CGSize(width: size.width, height: .greatestFiniteMagnitude))`
 - 若 Task 1 观察到发送后需要特定回调才刷新，在对应回调里调用 `refresh()`（以 spike 文档为准）
 
-- [ ] **Step 1:** 实现 `BubbleView`，附 `#Preview`：`pending`、`normal`（2d6+3）、`critSuccess`、`critFailure`、`dcSuccess`、`dcFailure`、`twentyD100`、`needsUpdate`、`corrupt`，各一份浅色与深色
-- [ ] **Step 2:** 在 Xcode Canvas 逐个检查预览：20d100 换行不截断、深色模式文字可读
-- [ ] **Step 3:** 实现 `MessagesViewController` 托管与 `refresh()`，`xcodebuild build ... -scheme DiceApp $SIM` 预期成功
-- [ ] **Step 4:** 提交 `feat(messages): add bubble view and controller hosting`
+- [x] **Step 1:** 实现 `BubbleView`，附 `#Preview`：`pending`、`normal`（2d6+3）、`critSuccess`、`critFailure`、`dcSuccess`、`dcFailure`、`twentyD100`、`needsUpdate`、`corrupt`，各一份浅色与深色
+- [x] **Step 2:** 在 Xcode Canvas 逐个检查预览：20d100 换行不截断、深色模式文字可读（实际改为临时 `ImageRenderer` 渲染 PNG 检查，并在模拟器上复核）
+- [x] **Step 3:** 实现 `MessagesViewController` 托管与 `refresh()`，`xcodebuild build ... -scheme DiceApp $SIM` 预期成功
+- [x] **Step 4:** 提交 `feat(messages): add bubble view and controller hosting`
 
 ---
 
@@ -348,14 +353,14 @@ struct SpecStore {
 ```
 每个修改方法结束时 `spec = spec.normalized()`。`RollPanelView` 只读 `model.spec` 与 `formula`，**不持有、不显示任何 `RollResult`**。插入：`activeConversation?.insert(model.makeRoll()) { error in ... }`，成功 → `dismiss()`；失败 → `errorMessage = "插入失败，请重试"`。
 
-- [ ] **Step 1: 写失败测试** `SpecStoreTests`：`test_specStore_roundTrip`、`test_specStore_fallsBackToDefault`（写入垃圾数据）、`test_specStore_persistsSpecOnly`（读出原始 JSON，键集合 ⊆ `{count, sides, mode, modifier, dc}`）；测试用 `UserDefaults(suiteName: UUID().uuidString)`
-- [ ] **Step 2: 写失败测试** `PanelModelTests`：`test_panel_loadsLastSpec`、`test_panel_clampsCount`（从 20 再 +1 仍是 20；从 1 再 -1 仍是 1）、`test_panel_clampsModifier`、`test_panel_changingSidesResetsMode`（1d20 优势 → 选 d6 → `.normal`）、`test_panel_modeIgnoredWhenDisabled`、`test_panel_makeRollSavesSpec`、`test_panel_makeRollMessageDecodes`（`MessageCodec.decode(msg.url!)` 的 spec 等于 `model.spec`）
-- [ ] **Step 3:** `xcodebuild test ... -only-testing:DiceMessagesTests`，预期失败
-- [ ] **Step 4:** 实现 `SpecStore`、`PanelModel`
-- [ ] **Step 5:** 再次运行，预期 PASS
-- [ ] **Step 6:** 实现 `RollPanelView`：行 1 面数按钮横向滚动；行 2 数量与加值 `− 值 +`；行 3 `劣势 | 普通 | 优势` 分段（`!isModeEnabled` 时 `.disabled`）与 DC `Toggle` + `Stepper`；公式预览；「投掷」按钮；`errorMessage` 非空时显示。接入 `MessagesViewController`
-- [ ] **Step 7:** 构建并在模拟器「信息」里点一次投掷，草稿出现且面板收起
-- [ ] **Step 8:** 提交 `feat(messages): add roll panel and draft insertion`
+- [x] **Step 1: 写失败测试** `SpecStoreTests`：`test_specStore_roundTrip`、`test_specStore_fallsBackToDefault`（写入垃圾数据）、`test_specStore_persistsSpecOnly`（读出原始 JSON，键集合 ⊆ `{count, sides, mode, modifier, dc}`）；测试用 `UserDefaults(suiteName: UUID().uuidString)`
+- [x] **Step 2: 写失败测试** `PanelModelTests`：`test_panel_loadsLastSpec`、`test_panel_clampsCount`（从 20 再 +1 仍是 20；从 1 再 -1 仍是 1）、`test_panel_clampsModifier`、`test_panel_changingSidesResetsMode`（1d20 优势 → 选 d6 → `.normal`）、`test_panel_modeIgnoredWhenDisabled`、`test_panel_makeRollSavesSpec`、`test_panel_makeRollMessageDecodes`（`MessageCodec.decode(msg.url!)` 的 spec 等于 `model.spec`）
+- [x] **Step 3:** `xcodebuild test ... -only-testing:DiceMessagesTests`，预期失败
+- [x] **Step 4:** 实现 `SpecStore`、`PanelModel`
+- [x] **Step 5:** 再次运行，预期 PASS
+- [x] **Step 6:** 实现 `RollPanelView`：行 1 面数按钮横向滚动；行 2 数量与加值 `− 值 +`；行 3 `劣势 | 普通 | 优势` 分段（`!isModeEnabled` 时 `.disabled`）与 DC `Toggle` + `Stepper`；公式预览；「投掷」按钮；`errorMessage` 非空时显示。接入 `MessagesViewController`
+- [x] **Step 7:** 构建并在模拟器「信息」里点一次投掷，草稿出现且面板收起
+- [x] **Step 8:** 提交 `feat(messages): add roll panel and draft insertion`
 
 ---
 
@@ -367,9 +372,9 @@ struct SpecStore {
 
 **Interfaces:** 无新增。
 
-- [ ] **Step 1:** 完成说明页，构建通过
-- [ ] **Step 2:** 运行 `cd DiceKit && swift test` 与 `xcodebuild test ... -only-testing:DiceMessagesTests`，全部 PASS
-- [ ] **Step 3:** 在模拟器「信息」逐项验收并在验收文档中打勾（记录 iOS 版本）：
+- [x] **Step 1:** 完成说明页，构建通过
+- [x] **Step 2:** 运行 `cd DiceKit && swift test` 与 `xcodebuild test ... -only-testing:DiceMessagesTests`，全部 PASS
+- [x] **Step 3:** 在模拟器「信息」逐项验收并在验收文档中打勾（记录 iOS 版本；接收方与群聊两项待 TestFlight，见验收文档）：
   1. 1d20+5 优势 DC 15 → 面板与草稿中都看不到任何点数或成败
   2. 发送 → 发送方气泡自动显示总值、明细、成败
   3. 切换到另一方会话 → 接收方气泡显示同一结果
@@ -380,4 +385,4 @@ struct SpecStore {
   8. 20d100 → 气泡完整换行
   9. 深色模式下气泡可读
   10. 群聊：标记"待真机"
-- [ ] **Step 4:** 提交 `docs: add simulator acceptance results`
+- [x] **Step 4:** 提交 `docs: add simulator acceptance results`
