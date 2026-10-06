@@ -16,7 +16,7 @@ struct BubbleView: View {
         switch screen {
         case .pendingBubble(let spec):
             VStack(alignment: .leading, spacing: 4) {
-                Text("🎲 " + RollFormatter.formula(spec))
+                FormulaLabel(spec: spec)
                     .font(.headline)
                 Text(RollFormatter.pendingCaption)
                     .font(.subheadline)
@@ -26,7 +26,7 @@ struct BubbleView: View {
             ResultView(spec: spec, result: result, large: false)
         case .detail(let spec, let result):
             VStack(alignment: .leading, spacing: 12) {
-                Text("🎲 " + RollFormatter.formula(spec))
+                FormulaLabel(spec: spec)
                     .font(.title2.weight(.semibold))
                 ResultView(spec: spec, result: result, large: true)
             }
@@ -37,6 +37,15 @@ struct BubbleView: View {
         case .panel:
             EmptyView()
         }
+    }
+}
+
+/// Uses an SF Symbol rather than 🎲: the emoji renders as a missing-glyph box inside the extension.
+private struct FormulaLabel: View {
+    let spec: RollSpec
+
+    var body: some View {
+        Label(RollFormatter.formula(spec), systemImage: "dice")
     }
 }
 
