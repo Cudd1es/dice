@@ -9,6 +9,7 @@ struct RootView: View {
     let model: PanelModel
     let onRoll: () -> Void
     let onRollAgain: () -> Void
+    let onKeyboardFocus: () -> Void
 
     var body: some View {
         switch screen {
@@ -16,7 +17,7 @@ struct RootView: View {
             // Fixed height: Color.clear alone is greedy and made the bubble very tall.
             Color.clear.frame(height: 1)
         case .panel?:
-            RollPanelView(model: model, onRoll: onRoll)
+            RollPanelView(model: model, onRoll: onRoll, onKeyboardFocus: onKeyboardFocus)
         case .detail(let spec, let result, let purpose)?:
             ResultCard(spec: spec, result: result, purpose: purpose, onRollAgain: onRollAgain)
         case let screen?:
@@ -102,7 +103,14 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func makeRoot(_ screen: Screen?) -> RootView {
         RootView(screen: screen, model: model,
                  onRoll: { [weak self] in self?.roll() },
-                 onRollAgain: { [weak self] in self?.showPanel() })
+                 onRollAgain: { [weak self] in self?.showPanel() },
+                 onKeyboardFocus: { [weak self] in self?.expandForKeyboard() })
+    }
+
+    private func expandForKeyboard() {
+        guard presentationStyle == .compact else { return }
+        reveal.expandForInput()
+        requestPresentationStyle(.expanded)
     }
 
     private func showPanel() {

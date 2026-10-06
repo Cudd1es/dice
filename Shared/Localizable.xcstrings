@@ -137,6 +137,16 @@
         }
       }
     },
+    "Purpose (optional), e.g. Perception check": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目的（可选），如：察觉检定"
+          }
+        }
+      }
+    },
     "Recent": {
       "localizations": {
         "zh-Hans": {
@@ -217,12 +227,12 @@
         }
       }
     },
-    "To say what the roll is for (like “attack the goblin”), type it in the text field before sending": {
+    "To say what the roll is for (like “attack the goblin”), type it at the top of the panel; it shows in the bubble": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "想说明这次投的是什么（比如「攻击哥布林」），在输入框里写上再发送"
+            "value": "可在面板最上方写这次投骰的目的（如「攻击哥布林」），会显示在气泡里"
           }
         }
       }

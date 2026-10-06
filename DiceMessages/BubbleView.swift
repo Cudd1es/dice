@@ -14,16 +14,20 @@ struct BubbleView: View {
     @ViewBuilder
     private var content: some View {
         switch screen {
-        case .pendingBubble(let spec, _):
+        case .pendingBubble(let spec, let purpose):
             VStack(alignment: .leading, spacing: 4) {
+                PurposeLine(purpose: purpose)
                 FormulaLabel(spec: spec)
                     .font(.headline)
                 Text(RollFormatter.pendingCaption())
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-        case .revealedBubble(let spec, let result, _):
-            ResultView(spec: spec, result: result)
+        case .revealedBubble(let spec, let result, let purpose):
+            VStack(alignment: .leading, spacing: 4) {
+                PurposeLine(purpose: purpose)
+                ResultView(spec: spec, result: result)
+            }
         case .detail(let spec, let result, let purpose):
             ResultCard(spec: spec, result: result, purpose: purpose)
         case .invalid(let reason):
@@ -32,6 +36,19 @@ struct BubbleView: View {
                 .foregroundStyle(.secondary)
         case .panel:
             EmptyView()
+        }
+    }
+}
+
+/// One line so a long purpose cannot grow the bubble.
+private struct PurposeLine: View {
+    let purpose: String?
+
+    var body: some View {
+        if let purpose {
+            Text(purpose)
+                .font(.headline)
+                .lineLimit(1)
         }
     }
 }
@@ -85,6 +102,11 @@ private func revealed(_ spec: RollSpec, _ dice: [Int]) -> Screen {
 #Preview("dcSuccess") { BubbleView(screen: revealed(RollSpec(modifier: 3, dc: 15), [13])) }
 #Preview("dcFailure") { BubbleView(screen: revealed(RollSpec(modifier: 3, dc: 15), [9])) }
 #Preview("twentyD100") { BubbleView(screen: revealed(RollSpec(count: 20, sides: 100, modifier: -4), Array(81...100))) }
+#Preview("purpose") {
+    BubbleView(screen: .revealedBubble(RollSpec(mode: .advantage, modifier: 5, dc: 15),
+                                       DiceEngine.evaluate(RollSpec(mode: .advantage, modifier: 5, dc: 15), dice: [17, 8]),
+                                       purpose: "察觉检定：门后有没有人，还是只是风声在作怪呢？"))
+}
 #Preview("needsUpdate") { BubbleView(screen: .invalid(.needsUpdate)) }
 #Preview("corrupt") { BubbleView(screen: .invalid(.corrupt)) }
 #Preview("twentyD100 dark") {

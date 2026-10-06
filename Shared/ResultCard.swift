@@ -14,6 +14,12 @@ struct ResultCard: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 6) {
+                    if let purpose {
+                        Text(purpose)
+                            .font(.headline)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                    }
                     Label(RollFormatter.formula(spec), systemImage: "dice")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)

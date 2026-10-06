@@ -7,12 +7,8 @@ import DiceKit
 final class PanelModel: ObservableObject {
     @Published private(set) var spec: RollSpec
     @Published var errorMessage: String?
-    /// Raw text of the purpose field. Cut to the limit as it is typed or pasted; never saved.
-    @Published var purpose = "" {
-        didSet {
-            if purpose.count > RollPurpose.maxLength { purpose = String(purpose.prefix(RollPurpose.maxLength)) }
-        }
-    }
+    /// Raw text of the purpose field; never saved. Rolling normalizes it, which also cuts it to the limit.
+    @Published var purpose = ""
 
     private let store: SpecStore
 

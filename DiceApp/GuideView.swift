@@ -16,7 +16,7 @@ struct GuideView: View {
                     Label("Open Messages and go to a conversation", systemImage: "message")
                     Label("Tap + next to the text field and choose DND Dice", systemImage: "plus.circle")
                     Label("Set your dice and tap Roll; the roll goes into the text field", systemImage: "dice")
-                    Label("To say what the roll is for (like “attack the goblin”), type it in the text field before sending", systemImage: "text.bubble")
+                    Label("To say what the roll is for (like “attack the goblin”), type it at the top of the panel; it shows in the bubble", systemImage: "text.bubble")
                     Label("Once sent, the bubble shows the result, the same for everyone", systemImage: "paperplane")
                 }
                 Section {

@@ -103,11 +103,11 @@ final class PanelModelTests: XCTestCase {
         XCTAssertNil(model.roll().purpose)
     }
 
-    // Pasting a long text must not get past the limit, even before rolling.
-    func test_panel_purposeTruncatesWhileTyping() {
+    // The field cuts at 40 as you type (RollPanelView); a longer value still never leaves the panel.
+    func test_panel_longPurposeRollsAs40() {
         let model = PanelModel(store: store)
         model.purpose = String(repeating: "a", count: 50)
-        XCTAssertEqual(model.purpose.count, 40)
+        XCTAssertEqual(model.roll().purpose, String(repeating: "a", count: 40))
     }
 
     func test_panel_purposeNotSaved() {
