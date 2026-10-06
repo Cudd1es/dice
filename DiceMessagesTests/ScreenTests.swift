@@ -16,7 +16,7 @@ final class ScreenTests: XCTestCase {
     }
 
     func test_resolve_transcriptFutureVersionNeedsUpdate() {
-        let future = URL(string: "https://dice.invalid/roll?v=2&n=1&s=20&m=n&k=0&d=7")!
+        let future = URL(string: "https://dice.invalid/roll?v=3&n=1&s=20&m=n&k=0&d=7")!
         XCTAssertEqual(Screen.resolve(style: .transcript, messageURL: future, isPending: false), .invalid(.needsUpdate))
     }
 
