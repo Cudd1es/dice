@@ -11,7 +11,25 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC，以及天然 20 / 天然 1 的大成功和大失败。
 
-## 测试内容（What to Test）— 0.3.2（构建号 7）
+## 测试内容（What to Test）— 0.4.0
+
+新功能：加成骰（骰子组合）。在面板上点「＋ 加成」选骰子，选完自动回到面板；也可以点「减」做灾祸术那样的 -1d4。请大家都更新：旧版收到带加成骰的消息只会提示"请更新 App"。
+
+1. 试三种组合：`1d20+1d4+5`（开优势和 DC 15）、`1d20-1d4`、`1d8+2d6+3`（主骰选 d8、加值 +3、加成 2 次 d6）。总值和明细算得对吗？
+2. 点加成骰的小标签：「多一个 / 少一个 / 删除」是否正常？加满 4 组后，新的骰子种类是否变灰？
+3. 在「信息」里发一条带加成骰的投骰：自己和朋友看到的气泡、点开的结果是否一致？
+4. 还没更新的朋友收到带加成骰的消息，是否显示"请更新 App"？
+
+### English
+
+New: bonus dice. Tap "+ Bonus" on the panel to pick one; you return to the panel right away. Switch to Subtract for things like Bane (-1d4). Please update: older versions only show "Please update the app" for rolls with bonus dice.
+
+1. Try `1d20+1d4+5` (with advantage and DC 15), `1d20-1d4`, and `1d8+2d6+3` (main die d8, modifier +3, d6 added twice). Are the total and breakdown right?
+2. Tap a bonus tag: do One More / One Fewer / Remove work? With 4 groups, are new kinds greyed out?
+3. Send a roll with bonus dice in Messages: do you and your friends see the same bubble and result?
+4. Friends who haven't updated: does a roll with bonus dice ask them to update?
+
+### 上一版：测试内容（What to Test）— 0.3.2（构建号 7）
 
 目的输入框换了新样式：浅灰圆角底，和面板按钮统一；有文字时右边出现清空按钮，超过 30 字显示字数。
 

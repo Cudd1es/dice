@@ -1,12 +1,52 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Add": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加"
+          }
+        }
+      }
+    },
     "Advantage": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "优势"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "返回"
+          }
+        }
+      }
+    },
+    "Bonus": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加成"
+          }
+        }
+      }
+    },
+    "Bonus Dice": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加成骰"
           }
         }
       }
@@ -127,6 +167,26 @@
         }
       }
     },
+    "One Fewer": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "少一个"
+          }
+        }
+      }
+    },
+    "One More": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "多一个"
+          }
+        }
+      }
+    },
     "Open Messages and go to a conversation": {
       "localizations": {
         "zh-Hans": {
@@ -163,6 +223,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "最近"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
           }
         }
       }
@@ -213,6 +283,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "在本页设好骰子，点「投掷」，结果显示在上方；最近 10 次记录关掉 App 后清空"
+          }
+        }
+      }
+    },
+    "Subtract": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "减"
           }
         }
       }

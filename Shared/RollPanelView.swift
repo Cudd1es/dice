@@ -40,7 +40,18 @@ struct RollPanelView: View {
         }
     }
 
+    @ViewBuilder
     private var content: some View {
+        if model.isPickingBonus {
+            BonusPickerView(model: model)
+                .transition(.move(edge: .trailing).combined(with: .opacity))
+        } else {
+            panel
+                .transition(.move(edge: .leading).combined(with: .opacity))
+        }
+    }
+
+    private var panel: some View {
         VStack(spacing: 12) {
                 purposeField
                 sidesRow
@@ -57,6 +68,7 @@ struct RollPanelView: View {
                         modifierStepper
                     }
                 }
+                bonusRow
                 modeRow
                 dcRow
                 Text(RollFormatter.formula(model.spec))
@@ -79,6 +91,33 @@ struct RollPanelView: View {
                 .controlSize(.large)
         }
         .padding()
+    }
+
+    /// Bonus dice tags, each with a menu to change or remove it, then the button that opens the picker.
+    private var bonusRow: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(Array(model.spec.extras.enumerated()), id: \.offset) { index, group in
+                    Menu {
+                        Button("One More", systemImage: "plus") { model.incrementBonus(at: index) }
+                            .disabled(group.count >= BonusDice.countRange.upperBound)
+                        Button("One Fewer", systemImage: "minus") { model.decrementBonus(at: index) }
+                        Button("Remove", systemImage: "trash", role: .destructive) { model.removeBonus(at: index) }
+                    } label: {
+                        Text(verbatim: (group.sign == .plus ? "+" : "−") + "\(group.count)d\(group.sides)")
+                            .fontWeight(.semibold)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.accentColor)
+                }
+                Button("Bonus", systemImage: "plus") {
+                    focus = nil
+                    withAnimation(BonusPickerView.animation) { model.isPickingBonus = true }
+                }
+                .buttonStyle(.bordered)
+                .tint(.secondary)
+            }
+        }
     }
 
     private var countStepper: some View {
