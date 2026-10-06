@@ -11,9 +11,6 @@ struct RollPanelView: View {
 
     private enum Field { case purpose, dc }
     @FocusState private var focus: Field?
-    @State private var dcText = ""
-    /// The DC field must exist before it can take focus, so editing is its own state.
-    @State private var editingDC = false
     @State private var contentHeight: CGFloat?
 
     private static let defaultDC = 10
@@ -31,10 +28,7 @@ struct RollPanelView: View {
         .frame(maxHeight: contentHeight)
         .onChange(of: focus) { old, new in
             if new != nil { onKeyboardFocus?() }
-            if old == .dc, new != .dc {
-                model.setDC(text: dcText)
-                editingDC = false
-            }
+            if old == .dc, new != .dc { model.commitDCDraft() }
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -147,9 +141,10 @@ struct RollPanelView: View {
     /// Tap the number to type a DC; the stepper is slow for large ones.
     @ViewBuilder
     private func dcValue(_ dc: Int) -> some View {
-        if editingDC {
+        // The field must exist before it can take focus, so editing is the model's dcDraft, not the focus state.
+        if let draft = model.dcDraft {
             // Starts empty with the current DC as the placeholder, so typing replaces it; leaving it empty keeps it.
-            TextField(String(dc), text: $dcText)
+            TextField(String(dc), text: Binding(get: { draft }, set: { model.dcDraft = $0 }))
                 .keyboardType(.numberPad)
                 .focused($focus, equals: .dc)
                 .font(.body.monospacedDigit())
@@ -157,8 +152,7 @@ struct RollPanelView: View {
                 .onAppear { focus = .dc }
         } else {
             Button {
-                dcText = ""
-                editingDC = true
+                model.beginEditingDC()
             } label: {
                 Text("\(dc)").font(.body.monospacedDigit())
             }
@@ -169,7 +163,11 @@ struct RollPanelView: View {
         HStack {
             Toggle("DC", isOn: Binding(
                 get: { model.spec.dc != nil },
-                set: { model.setDC($0 ? Self.defaultDC : nil) }
+                set: { on in
+                    // Turning DC off drops any typed draft (setDC(nil)); also close the number pad.
+                    if !on, focus == .dc { focus = nil }
+                    model.setDC(on ? Self.defaultDC : nil)
+                }
             ))
             .fixedSize()
             if let dc = model.spec.dc {

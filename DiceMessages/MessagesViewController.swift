@@ -61,6 +61,9 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
         super.didTransition(to: presentationStyle)
+        // Messages hides the keyboard in compact but the field could stay focused; end editing so the next tap
+        // on a field is a new focus and expands again.
+        if presentationStyle == .compact { view.endEditing(true) }
         if presentationStyle == .expanded, let message = activeConversation?.selectedMessage {
             reveal.didExpand(selected: message.url, isPending: message.isPending)
         }

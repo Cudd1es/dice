@@ -17,7 +17,7 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 1. 投骰面板最上方填目的（比如「察觉检定：门后有没有人」）再投：草稿气泡、发出后的气泡、点开的结果里都能看到目的吗？投完输入框是否清空？
 2. 在「信息」里，面板在下方小窗口时点目的输入框：面板是否展开到全屏并弹出键盘？（如果之前点开过某条骰子结果，也试一次，确认不会跳到那条结果）
-3. 点 DC 的数字，直接输入 120 之类的大数，点「完成」后是否生效？
+3. 点 DC 的数字，直接输入 120 之类的大数，点「完成」后是否生效？不点「完成」直接点「投掷」，用的是不是刚输入的 DC？
 4. 还没更新的朋友收到带目的的消息：结果是否照常显示（只是看不到目的）？
 5. App 内投骰：结果区和「最近」记录里是否显示目的？
 
@@ -27,7 +27,7 @@ New: write an optional purpose before rolling, and DCs now go up to 999 and can 
 
 1. Fill in the purpose at the top of the panel (e.g. "Perception: anyone behind the door?") and roll: does it show on the draft bubble, the sent bubble and the opened result? Is the field cleared afterwards?
 2. In Messages, with the panel in the small drawer, tap the purpose field: does the panel expand and show the keyboard? (Also try after opening an earlier roll's result; it should not jump to that result.)
-3. Tap the DC number and type a large one like 120, then Done: does it apply?
+3. Tap the DC number and type a large one like 120, then Done: does it apply? And if you tap Roll straight away instead of Done, does the roll use the DC you just typed?
 4. Friends who haven't updated yet: do messages with a purpose still show the result (just without the purpose)?
 5. In the app: does the purpose show in the result area and the Recent list?
 

@@ -133,4 +133,36 @@ final class PanelModelTests: XCTestCase {
         model.setDC(text: "abc")
         XCTAssertEqual(model.spec.dc, 1)
     }
+
+    // Tapping Roll with the number pad still up must roll the DC that was typed, not the old one.
+    func test_panel_rollCommitsTypedDC() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.dcDraft = "18"
+        XCTAssertEqual(model.roll().spec.dc, 18)
+        XCTAssertNil(model.dcDraft)
+        XCTAssertEqual(store.load().dc, 18)
+    }
+
+    // Switching DC off mid-edit drops the draft, so the later focus-loss commit cannot turn it back on.
+    func test_panel_turningDCOffDropsDraft() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.dcDraft = "2"
+        model.setDC(nil)
+        model.commitDCDraft()
+        XCTAssertNil(model.spec.dc)
+        XCTAssertNil(model.dcDraft)
+    }
+
+    func test_panel_emptyDCDraftKeepsDC() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.beginEditingDC()
+        model.commitDCDraft()
+        XCTAssertEqual(model.spec.dc, 15)
+        XCTAssertNil(model.dcDraft)
+    }
 }
