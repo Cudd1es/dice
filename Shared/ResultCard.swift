@@ -34,7 +34,7 @@ struct ResultCard: View {
                             .background(result.outcomeColor.opacity(0.15), in: Capsule())
                     }
                     if let onRollAgain {
-                        Button("再投一次", systemImage: "arrow.counterclockwise", action: onRollAgain)
+                        Button("Roll Again", systemImage: "arrow.counterclockwise", action: onRollAgain)
                             .buttonStyle(.bordered)
                             .padding(.top, 8)
                     }

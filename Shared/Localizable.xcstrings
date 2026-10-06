@@ -1,0 +1,242 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Advantage": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "优势"
+          }
+        }
+      }
+    },
+    "Couldn't insert the roll. Try again.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "插入失败，请重试"
+          }
+        }
+      }
+    },
+    "DC": {
+      "shouldTranslate": false
+    },
+    "DND Dice": {
+      "shouldTranslate": false
+    },
+    "Dice": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数量"
+          }
+        }
+      }
+    },
+    "Disadvantage": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "劣势"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
+        }
+      }
+    },
+    "Everyone in the chat needs DND Dice to see the result; others only see the formula and an install prompt.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "群里每个人都要安装 DND Dice 才能看到结果；没装的人只会看到公式和安装提示。"
+          }
+        }
+      }
+    },
+    "How to Use": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用说明"
+          }
+        }
+      }
+    },
+    "Mode": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "模式"
+          }
+        }
+      }
+    },
+    "Modifier": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加值"
+          }
+        }
+      }
+    },
+    "Normal": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "普通"
+          }
+        }
+      }
+    },
+    "Once sent, the bubble shows the result, the same for everyone": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点发送后，气泡上直接显示结果，大家看到的都一样"
+          }
+        }
+      }
+    },
+    "Open Messages and go to a conversation": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开「信息」，进入一个对话"
+          }
+        }
+      }
+    },
+    "Pick your dice, then tap Roll": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选好骰子，点「投掷」"
+          }
+        }
+      }
+    },
+    "Recent": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近"
+          }
+        }
+      }
+    },
+    "Roll": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "投掷"
+          }
+        }
+      }
+    },
+    "Roll Again": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再投一次"
+          }
+        }
+      }
+    },
+    "Roll in the App": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 App 里投骰"
+          }
+        }
+      }
+    },
+    "Set your dice and tap Roll; the roll goes into the text field": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设置骰子后点「投掷」，消息会放进输入框"
+          }
+        }
+      }
+    },
+    "Set your dice on this screen and tap Roll. The result shows at the top; the last 10 rolls are kept until you close the app.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在本页设好骰子，点「投掷」，结果显示在上方；最近 10 次记录关掉 App 后清空"
+          }
+        }
+      }
+    },
+    "Tap + next to the text field and choose DND Dice": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点输入框左侧的 +，在 App 列表里选「DND Dice」"
+          }
+        }
+      }
+    },
+    "The result is fixed when you tap Roll and nobody sees it before it's sent, so deleting and rolling again doesn't help.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "结果在点「投掷」时就已确定，发送前谁都看不到，删掉重投也不会更好。"
+          }
+        }
+      }
+    },
+    "To say what the roll is for (like “attack the goblin”), type it in the text field before sending": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "想说明这次投的是什么（比如「攻击哥布林」），在输入框里写上再发送"
+          }
+        }
+      }
+    },
+    "Use in Messages": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在「信息」里使用"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

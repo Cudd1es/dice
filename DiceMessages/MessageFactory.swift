@@ -14,7 +14,7 @@ enum MessageFactory {
 
         let fallback = MSMessageTemplateLayout()
         fallback.caption = RollFormatter.formula(spec)
-        fallback.subcaption = RollFormatter.installToRevealCaption
+        fallback.subcaption = RollFormatter.installToRevealCaption()
         message.layout = MSMessageLiveLayout(alternateLayout: fallback)
         return message
     }

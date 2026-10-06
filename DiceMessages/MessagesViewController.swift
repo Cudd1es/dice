@@ -119,7 +119,7 @@ final class MessagesViewController: MSMessagesAppViewController {
         conversation.insert(message) { [weak self] error in
             DispatchQueue.main.async {
                 if error != nil {
-                    self?.model.errorMessage = "插入失败，请重试"
+                    self?.model.errorMessage = String(localized: "Couldn't insert the roll. Try again.")
                 } else {
                     self?.dismiss()
                 }

@@ -1,6 +1,8 @@
 name: Dice
 options:
   bundleIdPrefix: dev.ansel.dice
+  # Base language; Simplified Chinese comes from Shared/Localizable.xcstrings.
+  developmentLanguage: en
   deploymentTarget:
     iOS: "17.0"
 settings:
@@ -21,7 +23,7 @@ targets:
     info:
       path: DiceApp/Info.plist
       properties:
-        CFBundleDisplayName: 骰子
+        CFBundleDisplayName: DND Dice
         UILaunchScreen: {}
         # Only uses encryption built into iOS, so App Store Connect does not ask on every upload.
         ITSAppUsesNonExemptEncryption: false
@@ -50,7 +52,7 @@ targets:
     info:
       path: DiceMessages/Info.plist
       properties:
-        CFBundleDisplayName: 骰子
+        CFBundleDisplayName: DND Dice
         NSExtension:
           NSExtensionPointIdentifier: com.apple.message-payload-provider
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).MessagesViewController
