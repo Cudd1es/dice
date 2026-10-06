@@ -14,6 +14,8 @@ struct RollPanelView: View {
     @State private var contentHeight: CGFloat?
 
     private static let defaultDC = 10
+    /// The purpose counter appears only near the limit, so the field stays clean otherwise.
+    private static let purposeCounterFrom = 30
 
     var body: some View {
         // Full height when it fits; scrolls when space is short (landscape-sized sheets, large text),
@@ -40,15 +42,7 @@ struct RollPanelView: View {
 
     private var content: some View {
         VStack(spacing: 12) {
-                TextField("Purpose (optional), e.g. Perception check", text: $model.purpose)
-                    .textFieldStyle(.roundedBorder)
-                    .submitLabel(.done)
-                    .focused($focus, equals: .purpose)
-                    // Cut here, not in the model: when a didSet put back the previous value, SwiftUI saw no change
-                    // and the field kept showing the extra characters.
-                    .onChange(of: model.purpose) { _, text in
-                        if text.count > RollPurpose.maxLength { model.purpose = String(text.prefix(RollPurpose.maxLength)) }
-                    }
+                purposeField
                 sidesRow
                 // Count and modifier stack vertically at accessibility text sizes, where one row is too wide.
                 if dynamicTypeSize.isAccessibilitySize {
@@ -138,6 +132,47 @@ struct RollPanelView: View {
         .disabled(!model.isModeEnabled)
     }
 
+    /// Filled like the panel's buttons rather than the system's bordered style. Shows a clear button once there is
+    /// text and a counter near the limit.
+    private var purposeField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "pencil")
+                .foregroundStyle(.secondary)
+            TextField("Purpose (optional), e.g. Perception check", text: $model.purpose)
+                .submitLabel(.done)
+                .focused($focus, equals: .purpose)
+                // Cut here, not in the model: when a didSet put back the previous value, SwiftUI saw no change
+                // and the field kept showing the extra characters.
+                .onChange(of: model.purpose) { _, text in
+                    if text.count > RollPurpose.maxLength { model.purpose = String(text.prefix(RollPurpose.maxLength)) }
+                }
+            if model.purpose.count > Self.purposeCounterFrom {
+                Text(verbatim: "\(model.purpose.count)/\(RollPurpose.maxLength)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            if !model.purpose.isEmpty {
+                Button {
+                    model.purpose = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.tertiary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear purpose")
+            }
+        }
+        .padding(.horizontal, 12)
+        .frame(minHeight: 40)
+        .background(Color(.tertiarySystemFill), in: Capsule())
+        .overlay {
+            Capsule().strokeBorder(Color.accentColor.opacity(focus == .purpose ? 0.6 : 0), lineWidth: 1.5)
+        }
+        .contentShape(Capsule())
+        .onTapGesture { focus = .purpose }
+        .animation(.easeOut(duration: 0.15), value: focus)
+    }
+
     /// Tap the number to type a DC; the stepper is slow for large ones.
     @ViewBuilder
     private func dcValue(_ dc: Int) -> some View {
@@ -148,7 +183,10 @@ struct RollPanelView: View {
                 .keyboardType(.numberPad)
                 .focused($focus, equals: .dc)
                 .font(.body.monospacedDigit())
-                .frame(maxWidth: 64)
+                .multilineTextAlignment(.center)
+                .frame(width: 56, height: 32)
+                .background(Color(.tertiarySystemFill), in: Capsule())
+                .overlay { Capsule().strokeBorder(Color.accentColor.opacity(0.6), lineWidth: 1.5) }
                 .onAppear { focus = .dc }
         } else {
             Button {
