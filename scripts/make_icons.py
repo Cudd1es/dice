@@ -23,6 +23,11 @@ MESSAGES_ICONS = [
     ("icon-67x50@2x.png", "ipad", (67, 50), 2),
     ("icon-74x55@2x.png", "ipad", (74, 55), 2),
     ("icon-1024x768.png", "ios-marketing", (1024, 768), 1),
+    # Required by App Store Connect validation; the simulator and device builds do not check these.
+    ("icon-27x20@2x.png", "universal", (27, 20), 2),
+    ("icon-27x20@3x.png", "universal", (27, 20), 3),
+    ("icon-32x24@2x.png", "universal", (32, 24), 2),
+    ("icon-32x24@3x.png", "universal", (32, 24), 3),
 ]
 
 
@@ -86,7 +91,7 @@ def main():
     for filename, idiom, (pw, ph), scale in MESSAGES_ICONS:
         render(pw * scale, ph * scale).save(messages / filename)
         entry = {"filename": filename, "idiom": idiom, "size": f"{pw}x{ph}", "scale": f"{scale}x"}
-        if idiom == "ios-marketing":
+        if idiom in ("ios-marketing", "universal"):
             entry["platform"] = "ios"
         entries.append(entry)
     write_set(messages, entries, info)
