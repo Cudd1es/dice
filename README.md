@@ -80,6 +80,8 @@ project.yml         XcodeGen 工程定义
 
 发送方已在真机（iPhone 14 Pro）上验证：草稿只显示公式，发送后气泡自动显示结果，滑走再滑回、退出再进入都正常。
 
+App 内投骰已在模拟器上验收（iPhone 17 Pro、iPhone SE、深色模式、大字号），震动反馈的手感待真机确认。
+
 接收方视角和群聊还没验证，要等加入 Apple Developer Program、用 TestFlight 把 App 发给群友之后。
 
 ## 许可
