@@ -11,7 +11,21 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC，以及天然 20 / 天然 1 的大成功和大失败。
 
-## 测试内容（What to Test）— 0.3.0（构建号 5）
+## 测试内容（What to Test）— 0.3.1（构建号 6）
+
+修复：骰子气泡左上角的小图标挡住第一行文字（目的或公式）。
+
+1. 气泡的第一行（目的，没填目的时是公式）是否完整显示在小图标右边，没有被挡住？
+2. 0.3.0 要测的几项也请顺手再看一眼。
+
+### English
+
+Fix: the small app icon in the bubble's top-left corner no longer covers the first line (the purpose, or the formula when there is none).
+
+1. Does the first line of a dice bubble show in full, to the right of the small icon?
+2. Please also recheck the 0.3.0 items below.
+
+### 上一版：测试内容（What to Test）— 0.3.0（构建号 5）
 
 新功能：投骰前可以写一句目的；DC 上限提高到 999，还能直接输入。请大家都更新到这一版（旧版收到 DC 超过 40 的消息会显示"数据无效"）。
 
