@@ -10,7 +10,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-06-in-app-roller-design.md`
 
-**状态（2026-10-06）：** 3 个任务完成，整体审查后修复 3 个问题，均提交在本地 `dev`（未推送）。偏离与取舍见规格"实施记录"和 `docs/superpowers/autorun/2026-10-06-log.md`。
+**状态（2026-10-06）：** 3 个任务完成，整体审查后修复 3 个问题，已合并到 `main`。偏离与取舍见规格"实施记录"和 `docs/superpowers/autorun/2026-10-06-log.md`。
 
 ## Global Constraints
 

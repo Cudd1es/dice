@@ -21,6 +21,16 @@
         }
       }
     },
+    "Advantage and disadvantage need exactly one d20 as the main die": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主骰正好是 1 个 d20 时才能选优势或劣势"
+          }
+        }
+      }
+    },
     "Back": {
       "localizations": {
         "zh-Hans": {
@@ -197,6 +207,16 @@
         }
       }
     },
+    "Panel Tips": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "面板小技巧"
+          }
+        }
+      }
+    },
     "Pick your dice, then tap Roll": {
       "localizations": {
         "zh-Hans": {
@@ -297,12 +317,32 @@
         }
       }
     },
+    "Tap + Bonus to add dice such as +1d4 for Bless or −1d4 for Bane; tap a bonus tag to change or remove it": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点「＋ 加成」可以加入祝福术的 +1d4、灾祸术的 −1d4 等加成骰；点加成标签可以增减或删除"
+          }
+        }
+      }
+    },
     "Tap + next to the text field and choose DND Dice": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "点输入框左侧的 +，在 App 列表里选「DND Dice」"
+          }
+        }
+      }
+    },
+    "Tap the DC number to type a value up to 999": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点 DC 的数字可以直接输入，最高 999"
           }
         }
       }
