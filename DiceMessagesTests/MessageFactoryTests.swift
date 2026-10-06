@@ -42,4 +42,18 @@ final class MessageFactoryTests: XCTestCase {
     func test_message_usesLiveLayout() {
         XCTAssertTrue(message.layout is MSMessageLiveLayout)
     }
+
+    func test_message_withBonus() throws {
+        let bless = RollSpec(modifier: 5, extras: [BonusDice(sides: 4)])
+        let rolled = DiceEngine.evaluate(bless, dice: [20], bonusRolls: [[3]])
+        XCTAssertEqual(rolled.total, 28)
+        let message = MessageFactory.makeMessage(spec: bless, result: rolled, purpose: nil, session: nil)
+        let template = try XCTUnwrap(message.layout as? MSMessageLiveLayout).alternateLayout
+        XCTAssertEqual(template.caption, RollFormatter.formula(bless))
+        XCTAssertTrue(template.caption?.contains("1d4") ?? false)
+        XCTAssertTrue(message.summaryText?.contains("1d4") ?? false)
+        for text in [template.caption, template.subcaption, message.summaryText] {
+            XCTAssertFalse(text?.contains("28") ?? false, "\(text ?? "") reveals the total")
+        }
+    }
 }

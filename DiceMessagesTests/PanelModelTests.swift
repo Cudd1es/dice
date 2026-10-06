@@ -165,4 +165,56 @@ final class PanelModelTests: XCTestCase {
         XCTAssertEqual(model.spec.dc, 15)
         XCTAssertNil(model.dcDraft)
     }
+
+    func test_panel_addBonusClosesPicker() {
+        let model = PanelModel(store: store)
+        model.isPickingBonus = true
+        model.addBonus(sign: .plus, sides: 4)
+        XCTAssertEqual(model.spec.extras, [BonusDice(sides: 4)])
+        XCTAssertFalse(model.isPickingBonus)
+    }
+
+    func test_panel_incrementDecrementRemove() {
+        let model = PanelModel(store: store)
+        model.addBonus(sign: .plus, sides: 6)
+        model.incrementBonus(at: 0)
+        XCTAssertEqual(model.spec.extras, [BonusDice(count: 2, sides: 6)])
+        model.decrementBonus(at: 0)
+        model.decrementBonus(at: 0)
+        XCTAssertEqual(model.spec.extras, [])
+        model.addBonus(sign: .plus, sides: 4)
+        model.addBonus(sign: .plus, sides: 8)
+        model.removeBonus(at: 0)
+        XCTAssertEqual(model.spec.extras, [BonusDice(sides: 8)])
+    }
+
+    func test_panel_incrementCapsAt10() {
+        let model = PanelModel(store: store)
+        model.addBonus(sign: .plus, sides: 6)
+        for _ in 0..<12 { model.incrementBonus(at: 0) }
+        XCTAssertEqual(model.spec.extras, [BonusDice(count: 10, sides: 6)])
+    }
+
+    // A tag's menu can outlive its group; a stale index must do nothing.
+    func test_panel_bonusIndexOutOfRangeIgnored() {
+        let model = PanelModel(store: store)
+        model.incrementBonus(at: 0)
+        model.decrementBonus(at: 3)
+        model.removeBonus(at: -1)
+        XCTAssertEqual(model.spec.extras, [])
+    }
+
+    func test_panel_bonusSavedWithSpec() {
+        let model = PanelModel(store: store)
+        model.addBonus(sign: .minus, sides: 4)
+        _ = model.roll()
+        XCTAssertEqual(store.load().extras, [BonusDice(sign: .minus, sides: 4)])
+    }
+
+    func test_panel_rollIncludesBonus() {
+        let model = PanelModel(store: store)
+        model.addBonus(sign: .plus, sides: 4)
+        model.addBonus(sign: .minus, sides: 6)
+        XCTAssertEqual(model.roll().result.bonusRolls.map(\.count), [1, 1])
+    }
 }

@@ -71,4 +71,11 @@ final class ScreenTests: XCTestCase {
         XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: withPurpose, isPending: false, revealing: true),
                        .detail(spec, result, purpose: "攻击"))
     }
+
+    func test_resolve_bonusMessage() {
+        let bless = RollSpec(modifier: 2, extras: [BonusDice(sides: 4)])
+        let rolled = DiceEngine.evaluate(bless, dice: [11], bonusRolls: [[3]])
+        let screen = Screen.resolve(style: .transcript, messageURL: MessageCodec.url(for: bless, result: rolled), isPending: false)
+        XCTAssertEqual(screen, .revealedBubble(bless, rolled, purpose: nil))
+    }
 }
