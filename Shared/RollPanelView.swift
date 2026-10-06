@@ -22,12 +22,20 @@ struct RollPanelView: View {
         // so the roll button is always reachable.
         // One ScrollView capped at the content's height rather than ViewThatFits: switching between two copies
         // when the keyboard shrinks the space recreated the text field and dropped its focus.
-        ScrollView {
-            content
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+        // Roll sits below the scrolling part so it is always fully visible, even in the compact Messages drawer
+        // where the bonus row made the panel taller than the space.
+        VStack(spacing: 0) {
+            ScrollView {
+                content
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .frame(maxHeight: contentHeight)
+            if !model.isPickingBonus {
+                rollButton
+                    .padding([.horizontal, .bottom])
+            }
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .frame(maxHeight: contentHeight)
         .onChange(of: focus) { old, new in
             if new != nil { onKeyboardFocus?() }
             if old == .dc, new != .dc { model.commitDCDraft() }
@@ -79,18 +87,21 @@ struct RollPanelView: View {
                         .font(.footnote)
                         .foregroundStyle(.red)
                 }
-                Button {
-                    focus = nil
-                    onRoll()
-                } label: {
-                    Text("Roll")
-                        .font(.title3.weight(.bold))
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
         }
         .padding()
+    }
+
+    private var rollButton: some View {
+        Button {
+            focus = nil
+            onRoll()
+        } label: {
+            Text("Roll")
+                .font(.title3.weight(.bold))
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
     }
 
     /// Bonus dice tags, each with a menu to change or remove it, then the button that opens the picker.
