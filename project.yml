@@ -16,7 +16,7 @@ targets:
   DiceApp:
     type: application
     platform: iOS
-    sources: [DiceApp]
+    sources: [DiceApp, Shared]
     info:
       path: DiceApp/Info.plist
       properties:
@@ -39,6 +39,7 @@ targets:
     sources:
       - path: DiceMessages
         excludes: [Info.plist]
+      - Shared
     info:
       path: DiceMessages/Info.plist
       properties:
@@ -61,8 +62,8 @@ targets:
       - DiceMessages/Screen.swift
       - DiceMessages/MessageFactory.swift
       - DiceMessages/RevealState.swift
-      - DiceMessages/PanelModel.swift
-      - DiceMessages/SpecStore.swift
+      - Shared/PanelModel.swift
+      - Shared/SpecStore.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

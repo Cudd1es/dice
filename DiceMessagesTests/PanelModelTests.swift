@@ -69,20 +69,24 @@ final class PanelModelTests: XCTestCase {
         XCTAssertEqual(model.spec.mode, .normal)
     }
 
-    func test_panel_makeRollSavesSpec() {
+    func test_panel_rollSavesSpec() {
         let model = PanelModel(store: store)
         model.selectSides(12)
         model.changeModifier(by: 2)
-        _ = model.makeRoll()
+        _ = model.roll()
         XCTAssertEqual(store.load(), model.spec)
     }
 
-    func test_panel_makeRollMessageDecodes() throws {
+    func test_panel_rollIsReproducibleWithSeed() {
         let model = PanelModel(store: store)
         model.setMode(.advantage)
         model.setDC(15)
-        let message = model.makeRoll()
-        let decoded = try MessageCodec.decode(XCTUnwrap(message.url))
-        XCTAssertEqual(decoded.spec, model.spec)
+        var first = SplitMix64(seed: 7)
+        var second = SplitMix64(seed: 7)
+        let a = model.roll(using: &first)
+        let b = model.roll(using: &second)
+        XCTAssertEqual(a.spec, b.spec)
+        XCTAssertEqual(a.result, b.result)
+        XCTAssertEqual(a.spec, model.spec)
     }
 }

@@ -1,8 +1,8 @@
 import Combine
-import Messages
 import DiceKit
 
-/// Panel state. Holds only the formula; results exist only inside the message it builds.
+/// Panel state, shared by the app and the iMessage extension. Holds only the formula; each roll is handed
+/// straight to the caller, which shows it (app) or seals it into a message (extension).
 @MainActor
 final class PanelModel: ObservableObject {
     @Published private(set) var spec: RollSpec
@@ -38,11 +38,16 @@ final class PanelModel: ObservableObject {
         update { $0.dc = dc.map { Self.clamp($0, to: RollSpec.dcRange) } }
     }
 
-    func makeRoll() -> MSMessage {
-        var rng = SystemRandomNumberGenerator()
+    /// Rolls the current formula and remembers it for next time.
+    func roll<G: RandomNumberGenerator>(using rng: inout G) -> (spec: RollSpec, result: RollResult) {
         let result = DiceEngine.roll(spec, using: &rng)
         store.save(spec)
-        return MessageFactory.makeMessage(spec: spec, result: result, session: nil)
+        return (spec, result)
+    }
+
+    func roll() -> (spec: RollSpec, result: RollResult) {
+        var rng = SystemRandomNumberGenerator()
+        return roll(using: &rng)
     }
 
     private func update(_ change: (inout RollSpec) -> Void) {
