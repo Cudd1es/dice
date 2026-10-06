@@ -58,6 +58,8 @@ targets:
       - DiceMessagesTests
       - DiceMessages/Screen.swift
       - DiceMessages/MessageFactory.swift
+      - DiceMessages/PanelModel.swift
+      - DiceMessages/SpecStore.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

@@ -5,11 +5,13 @@ import DiceKit
 
 struct RootView: View {
     let screen: Screen
+    let model: PanelModel
+    let onRoll: () -> Void
 
     var body: some View {
         switch screen {
         case .panel:
-            Text("panel")
+            RollPanelView(model: model, onRoll: onRoll)
         default:
             ScrollView { BubbleView(screen: screen) }
         }
@@ -17,7 +19,8 @@ struct RootView: View {
 }
 
 final class MessagesViewController: MSMessagesAppViewController {
-    private lazy var host = UIHostingController(rootView: RootView(screen: .panel))
+    private let model = PanelModel(store: SpecStore())
+    private lazy var host = UIHostingController(rootView: makeRoot(.panel))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +63,25 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func refresh() {
         let message = activeConversation?.selectedMessage
         let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url, isPending: message?.isPending ?? false)
-        host.rootView = RootView(screen: screen)
+        host.rootView = makeRoot(screen)
+    }
+
+    private func makeRoot(_ screen: Screen) -> RootView {
+        RootView(screen: screen, model: model) { [weak self] in self?.roll() }
+    }
+
+    /// The result is fixed here and goes straight into the draft; nothing on screen shows it.
+    private func roll() {
+        guard let conversation = activeConversation else { return }
+        model.errorMessage = nil
+        conversation.insert(model.makeRoll()) { [weak self] error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.model.errorMessage = "插入失败，请重试"
+                } else {
+                    self?.dismiss()
+                }
+            }
+        }
     }
 }
