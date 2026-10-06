@@ -31,11 +31,11 @@ struct RollerView: View {
                         .layoutPriority(1)
                 }
             }
-            .navigationTitle("骰子")
+            .navigationTitle("DND Dice")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("使用说明", systemImage: "questionmark.circle") { showingGuide = true }
+                    Button("How to Use", systemImage: "questionmark.circle") { showingGuide = true }
                 }
             }
             .sheet(isPresented: $showingGuide) { GuideView() }
@@ -58,7 +58,7 @@ struct RollerView: View {
                     CubicKeyframe(1.0, duration: 0.18)
                 }
         } else {
-            Text("选好骰子，点「投掷」")
+            Text("Pick your dice, then tap Roll")
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -66,7 +66,7 @@ struct RollerView: View {
 
     private var historyList: some View {
         List {
-            Section("最近") {
+            Section("Recent") {
                 ForEach(history.entries) { entry in
                     HistoryRow(entry: entry)
                 }

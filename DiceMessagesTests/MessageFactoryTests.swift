@@ -22,7 +22,7 @@ final class MessageFactoryTests: XCTestCase {
         let live = try XCTUnwrap(message.layout as? MSMessageLiveLayout)
         let template = live.alternateLayout
         XCTAssertEqual(template.caption, RollFormatter.formula(spec))
-        XCTAssertEqual(template.subcaption, RollFormatter.installToRevealCaption)
+        XCTAssertEqual(template.subcaption, RollFormatter.installToRevealCaption())
     }
 
     // Device spike (docs/superpowers/spikes/2026-10-05-live-layout.md): the bubble renders itself.

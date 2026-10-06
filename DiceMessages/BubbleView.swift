@@ -18,7 +18,7 @@ struct BubbleView: View {
             VStack(alignment: .leading, spacing: 4) {
                 FormulaLabel(spec: spec)
                     .font(.headline)
-                Text(RollFormatter.pendingCaption)
+                Text(RollFormatter.pendingCaption())
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -27,7 +27,7 @@ struct BubbleView: View {
         case .detail(let spec, let result):
             ResultCard(spec: spec, result: result)
         case .invalid(let reason):
-            Label(reason == .needsUpdate ? RollFormatter.needsUpdateText : RollFormatter.corruptText,
+            Label(reason == .needsUpdate ? RollFormatter.needsUpdateText() : RollFormatter.corruptText(),
                   systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.secondary)
         case .panel:

@@ -45,7 +45,7 @@ struct RollPanelView: View {
                         .foregroundStyle(.red)
                 }
                 Button(action: onRoll) {
-                    Text("投掷")
+                    Text("Roll")
                         .font(.title3.weight(.bold))
                         .frame(maxWidth: .infinity)
                 }
@@ -56,11 +56,11 @@ struct RollPanelView: View {
     }
 
     private var countStepper: some View {
-        stepper(title: "数量", value: "\(model.spec.count)") { model.changeCount(by: $0) }
+        stepper(title: "Dice", value: "\(model.spec.count)") { model.changeCount(by: $0) }
     }
 
     private var modifierStepper: some View {
-        stepper(title: "加值", value: modifierText) { model.changeModifier(by: $0) }
+        stepper(title: "Modifier", value: modifierText) { model.changeModifier(by: $0) }
     }
 
     private var modifierText: String {
@@ -81,7 +81,7 @@ struct RollPanelView: View {
         }
     }
 
-    private func stepper(title: String, value: String, change: @escaping (Int) -> Void) -> some View {
+    private func stepper(title: LocalizedStringKey, value: String, change: @escaping (Int) -> Void) -> some View {
         HStack(spacing: 6) {
             Text(title)
                 .foregroundStyle(.secondary)
@@ -97,10 +97,10 @@ struct RollPanelView: View {
     }
 
     private var modeRow: some View {
-        Picker("模式", selection: Binding(get: { model.spec.mode }, set: { model.setMode($0) })) {
-            Text("劣势").tag(RollMode.disadvantage)
-            Text("普通").tag(RollMode.normal)
-            Text("优势").tag(RollMode.advantage)
+        Picker("Mode", selection: Binding(get: { model.spec.mode }, set: { model.setMode($0) })) {
+            Text("Disadvantage").tag(RollMode.disadvantage)
+            Text("Normal").tag(RollMode.normal)
+            Text("Advantage").tag(RollMode.advantage)
         }
         .pickerStyle(.segmented)
         .disabled(!model.isModeEnabled)
