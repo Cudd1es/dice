@@ -11,7 +11,21 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC，以及天然 20 / 天然 1 的大成功和大失败。
 
-## 测试内容（What to Test）— 0.2.0（构建号 3）
+## 测试内容（What to Test）— 0.2.1（构建号 4）
+
+修复「信息」App 列表里 DND Dice 不显示图标的问题。
+
+1. 「信息」→ + 里的 DND Dice 是否有图标？
+2. 之前发过的骰子消息还能正常显示结果吗？（这一版换了扩展的内部标识，旧消息可能只显示公式和安装提示；新发的消息应完全正常）
+
+### English
+
+Fixes the missing DND Dice icon in the Messages app list.
+
+1. Does DND Dice show its icon under + in Messages?
+2. Do dice messages sent before this update still show their results? (The extension's internal ID changed, so older messages may only show the formula and an install prompt; new messages should work normally.)
+
+### 上一版：测试内容（What to Test）— 0.2.0（构建号 3）
 
 这一版新增英文界面，App 统一改名为 DND Dice，并修复了图标：
 
