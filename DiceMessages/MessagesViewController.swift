@@ -4,26 +4,30 @@ import UIKit
 import DiceKit
 
 struct RootView: View {
-    let screen: Screen
+    /// nil until the transcript bubble knows which message it shows.
+    let screen: Screen?
     let model: PanelModel
     let onRoll: () -> Void
     let onRollAgain: () -> Void
 
     var body: some View {
         switch screen {
-        case .panel:
+        case nil:
+            Color.clear
+        case .panel?:
             RollPanelView(model: model, onRoll: onRoll)
-        case .detail(let spec, let result):
+        case .detail(let spec, let result)?:
             ResultCard(spec: spec, result: result, onRollAgain: onRollAgain)
-        default:
-            ScrollView { BubbleView(screen: screen) }
+        case let screen?:
+            // No ScrollView: the transcript bubble is sized from this view's fitting height.
+            BubbleView(screen: screen)
         }
     }
 }
 
 final class MessagesViewController: MSMessagesAppViewController {
     private let model = PanelModel(store: SpecStore())
-    private lazy var host = UIHostingController(rootView: makeRoot(.panel))
+    private lazy var host = UIHostingController(rootView: makeRoot(nil))
     private var reveal = RevealState()
 
     override func viewDidLoad() {
@@ -65,18 +69,28 @@ final class MessagesViewController: MSMessagesAppViewController {
         refresh()
     }
 
+    /// Height used before the bubble knows its message; fits the draft and a typical result.
+    private static let fallbackBubbleHeight: CGFloat = 110
+
     override func contentSizeThatFits(_ size: CGSize) -> CGSize {
-        host.sizeThatFits(in: CGSize(width: size.width, height: .greatestFiniteMagnitude))
+        refresh()
+        guard activeConversation != nil else {
+            return CGSize(width: size.width, height: Self.fallbackBubbleHeight)
+        }
+        return host.sizeThatFits(in: CGSize(width: size.width, height: .greatestFiniteMagnitude))
     }
 
     private func refresh() {
+        // A transcript bubble learns its message in willBecomeActive; until then there is nothing to draw,
+        // and resolving now would flash the corrupt-data text.
+        if presentationStyle == .transcript && activeConversation == nil { return }
         let message = activeConversation?.selectedMessage
         let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url,
                                     isPending: message?.isPending ?? false, revealing: reveal.revealing)
         host.rootView = makeRoot(screen)
     }
 
-    private func makeRoot(_ screen: Screen) -> RootView {
+    private func makeRoot(_ screen: Screen?) -> RootView {
         RootView(screen: screen, model: model,
                  onRoll: { [weak self] in self?.roll() },
                  onRollAgain: { [weak self] in self?.showPanel() })

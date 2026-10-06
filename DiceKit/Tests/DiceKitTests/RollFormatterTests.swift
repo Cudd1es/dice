@@ -9,6 +9,11 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.formula(RollSpec(mode: .disadvantage)), "1d20 · 劣势")
     }
 
+    func test_captions() {
+        XCTAssertEqual(RollFormatter.pendingCaption, "发送后揭晓")
+        XCTAssertEqual(RollFormatter.installToRevealCaption, "安装「骰子」App 查看结果")
+    }
+
     func test_summary() {
         XCTAssertEqual(RollFormatter.summary(RollSpec(mode: .advantage, modifier: 5, dc: 15)), "🎲 1d20+5 · 优势 · DC 15")
     }

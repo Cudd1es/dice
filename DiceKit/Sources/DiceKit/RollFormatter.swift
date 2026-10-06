@@ -1,7 +1,8 @@
 /// User-facing (Chinese) text for rolls.
 public enum RollFormatter {
     public static let pendingCaption = "发送后揭晓"
-    public static let tapToRevealCaption = "点开查看结果"
+    /// Subcaption of the fallback bubble that people without the app see.
+    public static let installToRevealCaption = "安装「骰子」App 查看结果"
     public static let needsUpdateText = "无法读取这次投骰，请更新 App"
     public static let corruptText = "数据无效"
 
