@@ -45,6 +45,7 @@ echo "DND Dice $current_version ($current_build) -> $version ($build)"
 
 restore() {
     git checkout -- project.yml 2>/dev/null || true
+    xcodegen generate >/dev/null 2>&1 || true
     echo "Restored project.yml." >&2
 }
 trap restore ERR
@@ -56,7 +57,7 @@ sed -i '' \
 xcodegen generate >/dev/null
 
 echo "Running tests..."
-(cd DiceKit && swift test >/dev/null)
+(cd DiceKit && swift test >/dev/null 2>&1) || { echo "DiceKit tests failed; run swift test in DiceKit to see why." >&2; false; }
 simulator=$(xcrun simctl list devices available --json | python3 -c '
 import json, sys
 devices = json.load(sys.stdin)["devices"]
