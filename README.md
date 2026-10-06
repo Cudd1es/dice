@@ -1,2 +1,78 @@
 # dice
-iMessage dice
+
+iMessage 骰子扩展，给固定跑团群用：在「信息」里用按钮面板投 DnD 5e / 博德之门风格的骰子。
+
+- d4 / d6 / d8 / d10 / d12 / d20 / d100，1–20 枚，加值 −20…+20
+- 1d20 的优势 / 劣势、大成功 / 大失败
+- 可选 DC（1–40），天然 20 必定成功、天然 1 必定失败
+
+## 怎么防止"不满意就重投"
+
+点「投掷」时结果就已确定并写进消息，但面板、草稿和消息气泡上都只显示公式，例如「1d20+5 · 优势 · DC 15 / 点开查看结果」。消息发出后，任何人点开它就能看到同一个结果。发送者在发送前看不到结果，所以删掉草稿重投没有意义。
+
+这是"防君子"级别的防护：结果以明文写在消息 URL 里，懂技术的人能读出来。
+
+> 最初的设计是发送后气泡直接显示结果，但在模拟器上 Messages 不让气泡读取自己的消息，详见 [spike 记录](docs/superpowers/spikes/2026-10-05-live-layout.md)。真机上能否实现仍待验证。
+
+## 构建与运行
+
+需要 Xcode 16 及以上（开发时用的是 Xcode 26.2）、iOS 17 及以上的模拟器，以及 [XcodeGen](https://github.com/yonaskolb/XcodeGen)。
+
+```bash
+brew install xcodegen
+```
+
+`.xcodeproj` 不入库，由 `project.yml` 生成：
+
+```bash
+xcodegen generate
+```
+
+```bash
+open Dice.xcodeproj
+```
+
+在 Xcode 里选 `DiceApp` scheme 运行到模拟器，然后打开「信息」，进入任意对话，点输入框左侧的 **+**，在 App 列表里选「骰子」。
+
+## 测试
+
+规则、编解码和文案都在纯 Swift 包 `DiceKit` 里，不依赖 Xcode 工程：
+
+```bash
+cd DiceKit && swift test
+```
+
+扩展的路由、消息组装和面板逻辑：
+
+```bash
+xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:DiceMessagesTests
+```
+
+模拟器名称按本机已有的调整。
+
+## 目录结构
+
+```
+DiceKit/            纯 Swift 包：RollSpec、DiceEngine、MessageCodec、RollFormatter
+DiceMessages/       iMessage 扩展（SwiftUI）：面板、结果详情、消息组装
+DiceMessagesTests/  扩展的单元测试
+DiceApp/            宿主 App，只有一页使用说明
+scripts/            make_icons.py：生成 App 与 iMessage 图标（需要 Pillow）
+docs/superpowers/   设计、实施计划、spike 与验收记录
+project.yml         XcodeGen 工程定义
+```
+
+## 文档
+
+- [设计](docs/superpowers/specs/2026-10-05-imessage-dice-design.md)
+- [实施计划](docs/superpowers/plans/2026-10-05-imessage-dice.md)
+- [Live Layout spike](docs/superpowers/spikes/2026-10-05-live-layout.md)
+- [模拟器验收](docs/superpowers/acceptance/2026-10-05-simulator.md)
+
+## 现状
+
+目前只在模拟器上测试过。接收方视角和群聊要等有真机后验收。
+
+## 许可
+
+[MIT](LICENSE)
