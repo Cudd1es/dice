@@ -6,6 +6,8 @@ struct ResultCard: View {
     let spec: RollSpec
     let result: RollResult
     var onRollAgain: (() -> Void)?
+    /// Smaller in the app's result area on short screens such as iPhone SE.
+    var totalFontSize: CGFloat = 72
 
     var body: some View {
         GeometryReader { geometry in
@@ -15,8 +17,9 @@ struct ResultCard: View {
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                     Text(verbatim: String(result.total))
-                        .font(.system(size: 72, weight: .bold, design: .rounded))
+                        .font(.system(size: totalFontSize, weight: .bold, design: .rounded))
                         .foregroundStyle(result.totalColor)
+                        .contentTransition(.numericText())
                     Text(detail)
                         .font(.body.monospacedDigit())
                         .foregroundStyle(.secondary)

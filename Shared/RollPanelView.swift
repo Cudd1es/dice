@@ -59,7 +59,9 @@ struct RollPanelView: View {
 
     private func stepper(title: String, value: String, change: @escaping (Int) -> Void) -> some View {
         HStack(spacing: 6) {
-            Text(title).foregroundStyle(.secondary)
+            Text(title)
+                .foregroundStyle(.secondary)
+                .fixedSize()
             Button { change(-1) } label: { Image(systemName: "minus") }
                 .buttonStyle(.bordered)
             Text(value)

@@ -36,7 +36,9 @@ open Dice.xcodeproj
 
 在 Xcode 里选 `DiceApp` scheme 运行，然后打开「信息」，进入任意对话，点输入框左侧的 **+**，在 App 列表里选「骰子」。
 
-投出的消息会先放进输入框。想说明这次投的是什么（比如「攻击哥布林」），直接在输入框的「添加注释」里写，会和骰子一起发出去。
+**打开 App 本身也能投骰**，适合线下跑团把手机当骰子用：面板和「信息」里的一样，结果大字显示在上方，下面列出最近 10 次记录，关掉 App 后清空。
+
+在「信息」里，投出的消息会先放进输入框。想说明这次投的是什么（比如「攻击哥布林」），直接在输入框的「添加注释」里写，会和骰子一起发出去。
 
 ## 测试
 
@@ -60,7 +62,8 @@ xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=i
 DiceKit/            纯 Swift 包：RollSpec、DiceEngine、MessageCodec、RollFormatter
 DiceMessages/       iMessage 扩展（SwiftUI）：面板、结果详情、消息组装
 DiceMessagesTests/  扩展的单元测试
-DiceApp/            宿主 App，只有一页使用说明
+DiceApp/            宿主 App：投骰主页（RollerView）与使用说明（GuideView）
+Shared/             App 与扩展共用的面板、结果卡片和公式存储
 scripts/            make_icons.py：生成 App 与 iMessage 图标（需要 Pillow）
 docs/superpowers/   设计、实施计划、spike 与验收记录
 project.yml         XcodeGen 工程定义
