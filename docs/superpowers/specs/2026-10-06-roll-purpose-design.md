@@ -61,7 +61,7 @@
 
 **扩展的键盘**
 - 「信息」不允许扩展在紧凑（compact）样式下弹出键盘
-- `RollPanelView` 新增可选回调 `onPurposeFocus: (() -> Void)?`；扩展传入 `requestPresentationStyle(.expanded)`。输入框获得焦点时调用；App 不传
+- `RollPanelView` 新增可选回调 `onKeyboardFocus: (() -> Void)?`（目的与 DC 输入共用，见第 6 节）；扩展传入 `requestPresentationStyle(.expanded)`。输入框获得焦点时调用；App 不传
 - 需真机确认：紧凑样式下点输入框 → 切换到展开样式 → 键盘出现并保持焦点。若切换后焦点丢失，展开后再次设置焦点
 
 **显示位置（有目的时；没有目的时与现在相同）**
@@ -118,7 +118,25 @@
 2. 草稿与发送后气泡显示目的；长目的单行截断
 3. 0.2.1 设备收到带目的的消息，结果正常显示
 
-## 6. 发布
+## 6. 顺带修复：DC 上限
+
+**问题**：`RollSpec.dcRange = 1...40`，1d100 等公式最高只能设 DC 40。
+
+**决策（经确认，方案 B）**
+- `RollSpec.dcRange` 改为 `1...999`
+- 面板的 DC 行保留 `Stepper`（±1），并让 DC 数字可点击：点开后变成数字键盘输入框（`.keyboardType(.numberPad)`），只接受数字，失去焦点或按「完成」时提交，经 `PanelModel.setDC` 夹到 1–999；输入为空则恢复原值
+- 扩展中点击 DC 数字与目的输入框相同：先 `requestPresentationStyle(.expanded)`（共用 `onKeyboardFocus` 回调，取代第 3 节的 `onPurposeFocus`）
+- 数字键盘没有回车键，键盘上方工具栏放「完成」按钮
+
+**兼容性**：0.2.1 解码时校验 DC ≤ 40，收到 DC > 40 的消息会显示"数据无效"。测试阶段可接受，在「测试内容」中提示大家更新。DC ≤ 40 的消息不受影响。
+
+**测试**
+- `RollSpecTests`：DC 999 合法，1000 与 0 不合法
+- `MessageCodecTests`：DC 999 往返
+- `PanelModelTests`：`setDC(1500)` 夹到 999，`setDC(0)` 夹到 1
+- 模拟器手工验收：点 DC 数字输入 120 → 显示 120；输入 5000 → 999
+
+## 7. 发布
 
 - 版本 `0.3.0`（新功能，升次版本号），`scripts/release.sh 0.3.0`
 - 更新 `docs/testflight/beta-info.md` 的「测试内容」与 README（删去"用「信息」注释说明投骰目的"那段，改为介绍目的输入框）
