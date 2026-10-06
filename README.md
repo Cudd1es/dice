@@ -34,7 +34,11 @@ xcodegen generate
 open Dice.xcodeproj
 ```
 
-在 Xcode 里选 `DiceApp` scheme 运行到模拟器，然后打开「信息」，进入任意对话，点输入框左侧的 **+**，在 App 列表里选「骰子」。
+在 Xcode 里选 `DiceApp` scheme 运行，然后打开「信息」，进入任意对话，点输入框左侧的 **+**，在 App 列表里选「骰子」。
+
+**打开 App 本身也能投骰**，适合线下跑团把手机当骰子用：面板和「信息」里的一样，结果大字显示在上方，下面列出最近 10 次记录，关掉 App 后清空。
+
+在「信息」里，投出的消息会先放进输入框。想说明这次投的是什么（比如「攻击哥布林」），直接在输入框的「添加注释」里写，会和骰子一起发出去。
 
 ## 测试
 
@@ -58,7 +62,8 @@ xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=i
 DiceKit/            纯 Swift 包：RollSpec、DiceEngine、MessageCodec、RollFormatter
 DiceMessages/       iMessage 扩展（SwiftUI）：面板、结果详情、消息组装
 DiceMessagesTests/  扩展的单元测试
-DiceApp/            宿主 App，只有一页使用说明
+DiceApp/            宿主 App：投骰主页（RollerView）与使用说明（GuideView）
+Shared/             App 与扩展共用的面板、结果卡片和公式存储
 scripts/            make_icons.py：生成 App 与 iMessage 图标（需要 Pillow）
 docs/superpowers/   设计、实施计划、spike 与验收记录
 project.yml         XcodeGen 工程定义
@@ -74,6 +79,8 @@ project.yml         XcodeGen 工程定义
 ## 现状
 
 发送方已在真机（iPhone 14 Pro）上验证：草稿只显示公式，发送后气泡自动显示结果，滑走再滑回、退出再进入都正常。
+
+App 内投骰已在模拟器上验收（iPhone 17 Pro、iPhone SE、深色模式、大字号），震动反馈的手感待真机确认。
 
 接收方视角和群聊还没验证，要等加入 Apple Developer Program、用 TestFlight 把 App 发给群友之后。
 

@@ -5,17 +5,34 @@ import DiceKit
 struct RollPanelView: View {
     @ObservedObject var model: PanelModel
     let onRoll: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private static let defaultDC = 10
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
+        // Full height when it fits; scrolls when space is short (landscape-sized sheets, large text),
+        // so the roll button is always reachable.
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView { content }
+        }
+    }
+
+    private var content: some View {
+        VStack(spacing: 12) {
                 sidesRow
-                HStack {
-                    stepper(title: "数量", value: "\(model.spec.count)") { model.changeCount(by: $0) }
-                    Spacer()
-                    stepper(title: "加值", value: modifierText) { model.changeModifier(by: $0) }
+                // Count and modifier stack vertically at accessibility text sizes, where one row is too wide.
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 8) {
+                        countStepper
+                        modifierStepper
+                    }
+                } else {
+                    HStack {
+                        countStepper
+                        Spacer()
+                        modifierStepper
+                    }
                 }
                 modeRow
                 dcRow
@@ -34,9 +51,16 @@ struct RollPanelView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
-            }
-            .padding()
         }
+        .padding()
+    }
+
+    private var countStepper: some View {
+        stepper(title: "数量", value: "\(model.spec.count)") { model.changeCount(by: $0) }
+    }
+
+    private var modifierStepper: some View {
+        stepper(title: "加值", value: modifierText) { model.changeModifier(by: $0) }
     }
 
     private var modifierText: String {
@@ -59,7 +83,9 @@ struct RollPanelView: View {
 
     private func stepper(title: String, value: String, change: @escaping (Int) -> Void) -> some View {
         HStack(spacing: 6) {
-            Text(title).foregroundStyle(.secondary)
+            Text(title)
+                .foregroundStyle(.secondary)
+                .fixedSize()
             Button { change(-1) } label: { Image(systemName: "minus") }
                 .buttonStyle(.bordered)
             Text(value)

@@ -1,3 +1,5 @@
+import Foundation
+
 /// User-facing (Chinese) text for rolls.
 public enum RollFormatter {
     public static let pendingCaption = "发送后揭晓"
@@ -46,5 +48,13 @@ public enum RollFormatter {
         case .failure: return "失败"
         case nil: return nil
         }
+    }
+
+    /// "HH:mm" in 24-hour time regardless of the device's 12/24-hour setting.
+    public static func clockTime(_ date: Date, timeZone: TimeZone = .current) -> String {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        let parts = calendar.dateComponents([.hour, .minute], from: date)
+        return String(format: "%02d:%02d", parts.hour ?? 0, parts.minute ?? 0)
     }
 }

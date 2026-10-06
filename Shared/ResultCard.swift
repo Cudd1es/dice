@@ -1,22 +1,25 @@
 import SwiftUI
 import DiceKit
 
-/// The revealed result, centered in whatever space the sheet gives it.
+/// The revealed result, centered in the space it is given: the extension's full-screen sheet or the app's result area.
 struct ResultCard: View {
     let spec: RollSpec
     let result: RollResult
     var onRollAgain: (() -> Void)?
+    /// Smaller in the app's result area on short screens such as iPhone SE.
+    var totalFontSize: CGFloat = 72
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 10) {
+                VStack(spacing: 6) {
                     Label(RollFormatter.formula(spec), systemImage: "dice")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                     Text(verbatim: String(result.total))
-                        .font(.system(size: 72, weight: .bold, design: .rounded))
+                        .font(.system(size: totalFontSize, weight: .bold, design: .rounded))
                         .foregroundStyle(result.totalColor)
+                        .contentTransition(.numericText())
                     Text(detail)
                         .font(.body.monospacedDigit())
                         .foregroundStyle(.secondary)
@@ -36,11 +39,12 @@ struct ResultCard: View {
                             .padding(.top, 8)
                     }
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.vertical, 8)
                 .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }
         }
-        // The expanded sheet reports a large bottom inset (~335pt on iPhone 17 Pro) over empty space,
+        // In the extension, the expanded sheet reports a large bottom inset (~335pt on iPhone 17 Pro) over empty space,
         // which pushed the card into the upper half; ignoring only .container was not enough.
         .ignoresSafeArea(.all, edges: .bottom)
     }

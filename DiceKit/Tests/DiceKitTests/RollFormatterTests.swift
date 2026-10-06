@@ -14,6 +14,13 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.installToRevealCaption, "安装「骰子」App 查看结果")
     }
 
+    // History rows always use 24-hour HH:mm, even when the phone is set to 12-hour time.
+    func test_clockTime_is24Hour() {
+        let utc = TimeZone(identifier: "UTC")!
+        XCTAssertEqual(RollFormatter.clockTime(Date(timeIntervalSince1970: 14 * 3600 + 30 * 60), timeZone: utc), "14:30")
+        XCTAssertEqual(RollFormatter.clockTime(Date(timeIntervalSince1970: 5 * 60), timeZone: utc), "00:05")
+    }
+
     func test_summary() {
         XCTAssertEqual(RollFormatter.summary(RollSpec(mode: .advantage, modifier: 5, dc: 15)), "🎲 1d20+5 · 优势 · DC 15")
     }

@@ -114,7 +114,9 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func roll() {
         guard let conversation = activeConversation else { return }
         model.errorMessage = nil
-        conversation.insert(model.makeRoll()) { [weak self] error in
+        let (spec, result) = model.roll()
+        let message = MessageFactory.makeMessage(spec: spec, result: result, session: nil)
+        conversation.insert(message) { [weak self] error in
             DispatchQueue.main.async {
                 if error != nil {
                     self?.model.errorMessage = "插入失败，请重试"
