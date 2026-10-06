@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Same Xcode as local development; listed in the macos-26 runner image.
+  DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+
+jobs:
+  dicekit:
+    name: DiceKit tests
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: swift test
+        working-directory: DiceKit
+        run: swift test
+
+  app:
+    name: App and extension
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # The .xcodeproj is not committed; this also checks that project.yml alone builds.
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          udid=$(xcrun simctl list devices available --json \
+            | python3 -c 'import json,sys
+          devices = json.load(sys.stdin)["devices"]
+          ios = [d for runtime, ds in devices.items() if "iOS" in runtime for d in ds if d["name"].startswith("iPhone")]
+          print(ios[-1]["udid"])')
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices available | grep "$udid"
+
+      # Also builds the app, which hosts the tests. GitHub runs bash with -o pipefail,
+      # so a failing xcodebuild still fails the step despite the tail.
+      - name: Extension tests
+        run: |
+          xcodebuild test \
+            -project Dice.xcodeproj -scheme DiceApp \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:DiceMessagesTests \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -n 40
