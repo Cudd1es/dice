@@ -33,7 +33,7 @@ targets:
       testTargets:
         - DiceMessagesTests
   DiceMessages:
-    type: app-extension
+    type: app-extension.messages
     platform: iOS
     sources:
       - path: DiceMessages
