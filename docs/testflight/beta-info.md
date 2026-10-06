@@ -11,7 +11,29 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC，以及天然 20 / 天然 1 的大成功和大失败。
 
-## 测试内容（What to Test）— 0.1.0（构建号 2）
+## 测试内容（What to Test）— 0.2.0（构建号 3）
+
+这一版新增英文界面，App 统一改名为 DND Dice，并修复了图标：
+
+1. 手机系统语言是英文的朋友：App 和「信息」里的面板、气泡是否显示英文？中文系统是否仍显示中文？
+2. 一个英文手机、一个中文手机互发投骰：双方看到的是否是同一个结果，只是各自用自己的语言显示？
+3. 主屏幕和「信息」的 App 列表里，名字是否为 DND Dice，图标是否正常显示？
+4. 上一版要测的四项（大家看到的结果是否一致、草稿里是否只有公式、滑走再滑回结果是否还在、App 内投骰与震动）也请顺手再看一眼。
+
+遇到问题请截图，在 TestFlight 里"发送 Beta 版反馈"，或直接在群里说。
+
+### English
+
+What's new: English interface, the app is now called DND Dice, and the icons are fixed.
+
+1. If your phone is set to English: are the app, the Messages panel and the bubbles in English?
+2. Send rolls between an English phone and a Chinese phone: does everyone see the same result, each in their own language?
+3. Is the app called DND Dice with its icon on the Home Screen and in the Messages app list?
+4. Please also recheck: everyone sees the same result, drafts show only the formula, results survive scrolling away and back, and rolling in the app (with haptics) works.
+
+Please send screenshots through TestFlight feedback or in the group chat.
+
+### 上一版：测试内容（What to Test）— 0.1.0（构建号 2）
 
 这是第一个测试版，最想确认的是"别人能不能看到你投的结果"：
 
