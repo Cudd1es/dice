@@ -11,7 +11,23 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC，以及天然 20 / 天然 1 的大成功和大失败。
 
-## 测试内容（What to Test）— 0.3.1（构建号 6）
+## 测试内容（What to Test）— 0.3.2（构建号 7）
+
+目的输入框换了新样式：浅灰圆角底，和面板按钮统一；有文字时右边出现清空按钮，超过 30 字显示字数。
+
+1. 目的输入框在浅色和深色模式下是否好看、好点？清空按钮能否正常清空？
+2. 点 DC 数字输入时，输入框样式是否正常？
+3. 0.3.1 要测的气泡第一行（不被小图标挡住）也请再看一眼。
+
+### English
+
+The purpose field has a new look: a filled rounded field matching the panel's buttons, a clear button once there is text, and a character counter past 30.
+
+1. Does the purpose field look right and feel easy to tap in light and dark mode? Does the clear button work?
+2. Does the DC field look right when you tap the number to type?
+3. Please also recheck the 0.3.1 item: the first line of a bubble is not covered by the small icon.
+
+### 上一版：测试内容（What to Test）— 0.3.1（构建号 6）
 
 修复：骰子气泡左上角的小图标挡住第一行文字（目的或公式）。
 
