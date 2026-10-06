@@ -22,7 +22,9 @@ public enum MessageCodec {
 
     private static let modeCodes: [RollMode: String] = [.normal: "n", .advantage: "a", .disadvantage: "d"]
 
-    public static func url(for spec: RollSpec, result: RollResult) -> URL {
+    /// The purpose rides in an optional `p` field. Version 1 decoders ignore unknown fields, so 0.2.1 still
+    /// shows the result; without a purpose the URL is unchanged.
+    public static func url(for spec: RollSpec, result: RollResult, purpose: String? = nil) -> URL {
         var components = URLComponents(string: base)!
         var items = [
             URLQueryItem(name: "v", value: String(currentVersion)),
@@ -35,11 +37,15 @@ public enum MessageCodec {
             items.append(URLQueryItem(name: "dc", value: String(dc)))
         }
         items.append(URLQueryItem(name: "d", value: result.dice.map(String.init).joined(separator: ",")))
+        if let purpose = purpose.flatMap(RollPurpose.normalize) {
+            items.append(URLQueryItem(name: "p", value: purpose))
+        }
         components.queryItems = items
         return components.url!
     }
 
-    public static func decode(_ url: URL) throws -> (spec: RollSpec, result: RollResult) {
+    /// A missing, blank or oversized purpose never fails decoding; it is normalized like typed input.
+    public static func decode(_ url: URL) throws -> (spec: RollSpec, result: RollResult, purpose: String?) {
         let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
         func value(_ name: String) -> String? { items.first { $0.name == name }?.value }
         func required(_ name: String) throws -> String {
@@ -76,6 +82,6 @@ public enum MessageCodec {
         guard dice.count == spec.diceToRoll, dice.allSatisfy({ (1...sides).contains($0) }) else {
             throw CodecError.invalidDice
         }
-        return (spec, DiceEngine.evaluate(spec, dice: dice))
+        return (spec, DiceEngine.evaluate(spec, dice: dice), value("p").flatMap(RollPurpose.normalize))
     }
 }

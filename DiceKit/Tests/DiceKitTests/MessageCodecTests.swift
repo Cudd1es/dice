@@ -32,6 +32,41 @@ final class MessageCodecTests: XCTestCase {
         XCTAssertEqual(decoded.spec.dc, 999)
     }
 
+    private let legacy = "https://dice.invalid/roll?v=1&n=1&s=20&m=a&k=5&dc=15&d=17,8"
+    private let advantage = RollSpec(mode: .advantage, modifier: 5, dc: 15)
+
+    func test_purposeRoundTrips() throws {
+        let result = DiceEngine.evaluate(advantage, dice: [17, 8])
+        let decoded = try MessageCodec.decode(MessageCodec.url(for: advantage, result: result, purpose: "察觉检定：门后有没有人"))
+        XCTAssertEqual(decoded.purpose, "察觉检定：门后有没有人")
+        XCTAssertEqual(decoded.spec, advantage)
+        XCTAssertEqual(decoded.result, result)
+    }
+
+    func test_purpose_specialCharactersRoundTrip() throws {
+        let purpose = "100% & a=b + c #1 🎲"
+        let result = DiceEngine.evaluate(advantage, dice: [17, 8])
+        let decoded = try MessageCodec.decode(MessageCodec.url(for: advantage, result: result, purpose: purpose))
+        XCTAssertEqual(decoded.purpose, purpose)
+    }
+
+    // Without a purpose the URL is exactly what 0.2.1 produced.
+    func test_noPurposeURLUnchanged() {
+        let result = DiceEngine.evaluate(advantage, dice: [17, 8])
+        XCTAssertEqual(MessageCodec.url(for: advantage, result: result).absoluteString, legacy)
+        XCTAssertEqual(MessageCodec.url(for: advantage, result: result, purpose: "  ").absoluteString, legacy)
+    }
+
+    func test_decode_legacyURLHasNoPurpose() throws {
+        XCTAssertNil(try MessageCodec.decode(URL(string: legacy)!).purpose)
+    }
+
+    func test_decode_normalizesPurpose() throws {
+        let long = try MessageCodec.decode(URL(string: legacy + "&p=" + String(repeating: "a", count: 50))!)
+        XCTAssertEqual(long.purpose, String(repeating: "a", count: 40))
+        XCTAssertNil(try MessageCodec.decode(URL(string: legacy + "&p=%20%20")!).purpose)
+    }
+
     func test_url_containsVersion() {
         let spec = RollSpec()
         let url = MessageCodec.url(for: spec, result: DiceEngine.evaluate(spec, dice: [7]))

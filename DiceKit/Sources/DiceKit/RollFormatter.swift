@@ -33,8 +33,9 @@ public enum RollFormatter {
         return text
     }
 
-    public static func summary(_ spec: RollSpec, _ language: RollLanguage = .current) -> String {
-        "🎲 " + formula(spec, language)
+    public static func summary(_ spec: RollSpec, purpose: String? = nil, _ language: RollLanguage = .current) -> String {
+        guard let purpose else { return "🎲 " + formula(spec, language) }
+        return "🎲 \(purpose) · " + formula(spec, language)
     }
 
     /// e.g. "[17, ~~8~~] + 5 = 22"; dropped dice are struck through for `AttributedString(markdown:)`.

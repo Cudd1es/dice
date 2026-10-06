@@ -58,6 +58,13 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.summary(RollSpec(mode: .advantage, modifier: 5, dc: 15), en), "🎲 1d20+5 · Advantage · DC 15")
     }
 
+    func test_summary_withPurpose() {
+        let spec = RollSpec(mode: .advantage, modifier: 5)
+        XCTAssertEqual(RollFormatter.summary(spec, purpose: "察觉检定", zh), "🎲 察觉检定 · 1d20+5 · 优势")
+        XCTAssertEqual(RollFormatter.summary(spec, purpose: "Perception", en), "🎲 Perception · 1d20+5 · Advantage")
+        XCTAssertEqual(RollFormatter.summary(spec, purpose: nil, en), "🎲 1d20+5 · Advantage")
+    }
+
     func test_detail() {
         let advantage = RollSpec(mode: .advantage, modifier: 5)
         let advantageResult = RollResult(dice: [17, 8], keptIndices: [0], total: 22, critical: .none, dcOutcome: nil)
