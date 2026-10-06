@@ -37,3 +37,21 @@
   接收方视角与群聊均推迟到有真机后验证。
 
 Decision: B
+
+---
+
+## 真机复测（2026-10-05）
+
+环境：iPhone 14 Pro，Xcode 26.2，个人开发者签名；同一个 spike 改为把诊断信息直接画在气泡上
+（实例号、`activeConversation`、`selectedMessage`、`isPending`、回调顺序）。只验证了发送方。
+
+1. **草稿气泡**：显示 `PENDING`。扩展实例依次收到 `viewDidLoad › viewWillAppear › willBecomeActive › didBecomeActive › viewDidAppear`，
+   `willBecomeActive` 时 `conversation.selectedMessage` 就是这条草稿（URL 可读，`isPending == true`）。→ **成立**
+2. **发送后**：不做任何操作，气泡自动变为 `SENT`。「信息」为它新建了实例
+   （`viewWillAppear › viewDidAppear › willBecomeActive › didBecomeActive`），`willBecomeActive` 时 `isPending == false`。→ **成立**
+3. **接收方**：待验证。朋友未安装 App，需要 TestFlight 分发后再测。
+4. **点已发送的 Live Layout 气泡**：没有任何反应，不会展开扩展。方案 A 不依赖点开，所以不影响。
+
+结论：模拟器上方案 A 不成立，真机上发送方成立。模拟器的行为不能代表真机。
+
+Decision（真机）：A 在发送方可行；接收方待 TestFlight 验证。

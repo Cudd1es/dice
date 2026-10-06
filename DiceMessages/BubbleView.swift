@@ -50,7 +50,10 @@ private struct ResultView: View {
     let result: RollResult
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
+            FormulaLabel(spec: spec)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             Text(verbatim: String(result.total))
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(result.totalColor)

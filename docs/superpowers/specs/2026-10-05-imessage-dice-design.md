@@ -1,7 +1,7 @@
 # iMessage 骰子扩展 — 设计文档
 
 日期：2026-10-05
-状态：待审阅
+状态：已实施（方案 A；见文末"实施记录"）
 
 ## 1. 目标与约束
 
@@ -128,3 +128,15 @@ dice/
 - Live Layout 行为依赖 iOS 版本，spike 结论需记录测试的 iOS 版本
 - 只在模拟器测试：模拟器的「信息」App 不走真实 iMessage 网络，Live Layout 在真机上的渲染时机可能不同；spike 结论在有真机前视为暂定，方案 B 的降级路径保留
 - 最低系统版本暂定 iOS 17（SwiftUI 与 Messages 框架均稳定），实施时可调整
+
+## 实施记录（2026-10-05）
+
+- 模拟器 spike 不成立，先按方案 B 实现；真机 spike 证明方案 A 在发送方成立，随后切换到 A。
+  见 `docs/superpowers/spikes/2026-10-05-live-layout.md`。
+- 消息 URL 用 `https://dice.invalid/roll?v=1&…`：「信息」会丢弃自定义 scheme 的 URL。
+- `alternateLayout` 的副标题为「安装「骰子」App 查看结果」，给没装 App 的人看，不含结果。
+- 第 3 节"`.expanded` 且选中已发送消息 → 结果详情"仍保留，用于方案 B 时期发出的旧消息：
+  只有刚点开时才显示（由 `RevealState` 判断），显示为全屏居中的结果卡片，带「再投一次」。
+- 「信息」重新创建滑出屏幕的气泡时，`willBecomeActive` 里 `activeConversation` 仍为 nil，
+  必须使用回调参数里的 `conversation`。
+- 成功标准 2、3 的接收方与群聊部分待 TestFlight 分发后验收。

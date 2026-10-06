@@ -17,15 +17,16 @@ final class MessageFactoryTests: XCTestCase {
         XCTAssertEqual(message.summaryText, RollFormatter.summary(spec))
     }
 
+    // Shown only to people without the app, so it asks them to install it and never shows the result.
     func test_message_alternateLayoutHasNoResult() throws {
-        let template = try XCTUnwrap(message.layout as? MSMessageTemplateLayout)
+        let live = try XCTUnwrap(message.layout as? MSMessageLiveLayout)
+        let template = live.alternateLayout
         XCTAssertEqual(template.caption, RollFormatter.formula(spec))
-        XCTAssertEqual(template.subcaption, RollFormatter.tapToRevealCaption)
+        XCTAssertEqual(template.subcaption, RollFormatter.installToRevealCaption)
     }
 
-    // Spike decision B (docs/superpowers/spikes/2026-10-05-live-layout.md).
-    func test_message_layoutMatchesSpikeDecision() {
-        XCTAssertTrue(message.layout is MSMessageTemplateLayout)
-        XCTAssertFalse(message.layout is MSMessageLiveLayout)
+    // Device spike (docs/superpowers/spikes/2026-10-05-live-layout.md): the bubble renders itself.
+    func test_message_usesLiveLayout() {
+        XCTAssertTrue(message.layout is MSMessageLiveLayout)
     }
 }
