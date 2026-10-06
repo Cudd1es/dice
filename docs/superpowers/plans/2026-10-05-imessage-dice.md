@@ -242,10 +242,9 @@ public enum RollFormatter {
 - [ ] **Step 1: 写失败测试** `RollFormatterTests`：
   - `test_formula`：`1d20+5 · 优势 · DC 15`、`2d6`、`1d8-2`、`1d20 · 劣势`
   - `test_summary`：`"🎲 1d20+5 · 优势 · DC 15"`
-  - `test_detail`：优势 `[17, 8]` 保留下标 0、+5 → `"[17, ~~8~~] + 5 = 22"`；`2d6-2` `[3, 4]` → `"[3, 4] - 2 = 5"`；`1d6` `[7]`… 改为 `[6]` → `"[6] = 6"`
+  - `test_detail`：优势 `[17, 8]` 保留下标 0、+5 → `"[17, ~~8~~] + 5 = 22"`；`2d6-2` `[3, 4]` → `"[3, 4] - 2 = 5"`；`1d6` `[6]` → `"[6] = 6"`
   - `test_detail_twentyDice`：20d100 输出包含 20 个数字、以 `" = {total}"` 结尾
   - `test_outcome`：大成功 / 大失败 / 成功 / 失败 / `nil`；大成功且有 DC 时返回 `"大成功"`
-  - `test_summary_neverContainsResult`：对任意 result，`summary(spec)` 与 result 无关（只接收 spec，编译期即保证；此测试断言 `summary` 不包含 `"="`）
 - [ ] **Step 2:** `swift test --filter RollFormatterTests`，预期失败
 - [ ] **Step 3:** 实现
 - [ ] **Step 4:** `swift test`（全部），预期 PASS
@@ -285,7 +284,7 @@ enum MessageFactory {
 `MessageFactory`：`url = MessageCodec.url(...)`；`summaryText = RollFormatter.summary(spec)`；template = caption `formula(spec)`、subcaption `tapToRevealCaption`；**变体 A** `layout = MSMessageLiveLayout(alternateLayout: template)`，**变体 B** `layout = template`。
 
 - [ ] **Step 1:** 写 `project.yml` 和空壳文件，运行 `xcodegen generate && xcodebuild build -project Dice.xcodeproj -scheme DiceApp $SIM`，预期 `BUILD SUCCEEDED`
-- [ ] **Step 2: 写失败测试** `ScreenTests`：`test_resolve_transcriptPending`、`test_resolve_transcriptSent`、`test_resolve_transcriptFutureVersionNeedsUpdate`、`test_resolve_transcriptGarbageIsCorrupt`、`test_resolve_compactNoMessageShowsPanel`、`test_resolve_expandedPendingShowsPanel`、`test_resolve_expandedSentShowsDetail`；`MessageFactoryTests`：`test_message_urlDecodesBack`、`test_message_summaryHasNoResult`（等于 `summary(spec)`）、`test_message_alternateLayoutHasNoResult`（caption/subcaption 不含 `String(result.total)` 以外…直接断言等于 `formula` 与 `tapToRevealCaption`）、`test_message_layoutMatchesSpikeDecision`
+- [ ] **Step 2: 写失败测试** `ScreenTests`：`test_resolve_transcriptPending`、`test_resolve_transcriptSent`、`test_resolve_transcriptFutureVersionNeedsUpdate`、`test_resolve_transcriptGarbageIsCorrupt`、`test_resolve_compactNoMessageShowsPanel`、`test_resolve_expandedPendingShowsPanel`、`test_resolve_expandedSentShowsDetail`；`MessageFactoryTests`：`test_message_urlDecodesBack`、`test_message_summaryHasNoResult`（等于 `summary(spec)`）、`test_message_alternateLayoutHasNoResult`（caption 等于 `formula(spec)`，subcaption 等于 `tapToRevealCaption`）、`test_message_layoutMatchesSpikeDecision`（变体 A：`layout is MSMessageLiveLayout`；变体 B：`layout is MSMessageTemplateLayout`）
 - [ ] **Step 3:** `xcodebuild test -project Dice.xcodeproj -scheme DiceApp $SIM -only-testing:DiceMessagesTests`，预期失败
 - [ ] **Step 4:** 实现 `Screen.swift`、`MessageFactory.swift`（按 Task 1 的 Decision 选 A/B）
 - [ ] **Step 5:** 再次运行，预期 PASS
@@ -307,7 +306,7 @@ struct BubbleView: View { let screen: Screen }   // renders .pendingBubble / .re
 final class MessagesViewController: MSMessagesAppViewController  // hosts RootView(screen:)
 ```
 
-- `BubbleView`：pending → 🎲 + `formula` + `pendingCaption`；revealed → 大字 `total`、`detailMarkdown`（`Text(AttributedString(markdown:))`，允许多行换行）、`outcome`；大成功用 `.yellow`/金色，大失败用 `.red`；detail 与 revealed 同内容但字号更大、额外显示 `formula`；invalid → 对应文案。颜色用系统语义色，深色模式可读
+- `BubbleView`：pending → 🎲 + `formula` + `pendingCaption`；revealed → 大字 `total`、`detailMarkdown`（`Text(AttributedString(markdown:))`，允许多行换行）、`outcome`；大成功用 `.orange`，大失败用 `.red`；detail 与 revealed 同内容但字号更大、额外显示 `formula`；invalid → 对应文案。颜色用系统语义色，深色模式可读
 - `MessagesViewController`：一个 `UIHostingController<RootView>` 子控制器；在 `willBecomeActive(with:)`、`didTransition(to:)`、`didSelect(_:conversation:)`、`didReceive(_:conversation:)` 中调用私有 `refresh()`：取 `activeConversation?.selectedMessage`，算 `Screen.resolve(style: presentationStyle, messageURL: msg?.url, isPending: msg?.isPending ?? false)`，更新 `RootView`。`RootView` 在 `.panel` 时显示 `RollPanelView`（Task 8 前用 `Text("panel")` 占位），其余显示 `BubbleView`
 - 覆盖 `contentSizeThatFits(_ size: CGSize) -> CGSize`：用 hosting controller 的 `sizeThatFits(in: CGSize(width: size.width, height: .greatestFiniteMagnitude))`
 - 若 Task 1 观察到发送后需要特定回调才刷新，在对应回调里调用 `refresh()`（以 spike 文档为准）
