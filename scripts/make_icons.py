@@ -13,6 +13,20 @@ ROOT = Path(__file__).resolve().parent.parent
 TOP, BOTTOM = (88, 60, 190), (34, 22, 92)
 FACE, EDGE, ACCENT = (250, 248, 255), (60, 40, 140), (255, 196, 64)
 
+# (filename, idiom, size in points, scale) for the app icon set.
+APP_ICONS = [
+    ("app-1024.png", "ios-marketing", 1024, 1),
+    ("app-20@2x.png", "iphone", 20, 2), ("app-20@3x.png", "iphone", 20, 3),
+    ("app-29@2x.png", "iphone", 29, 2), ("app-29@3x.png", "iphone", 29, 3),
+    ("app-40@2x.png", "iphone", 40, 2), ("app-40@3x.png", "iphone", 40, 3),
+    ("app-60@2x.png", "iphone", 60, 2), ("app-60@3x.png", "iphone", 60, 3),
+    ("app-20-ipad@1x.png", "ipad", 20, 1), ("app-20-ipad@2x.png", "ipad", 20, 2),
+    ("app-29-ipad@1x.png", "ipad", 29, 1), ("app-29-ipad@2x.png", "ipad", 29, 2),
+    ("app-40-ipad@1x.png", "ipad", 40, 1), ("app-40-ipad@2x.png", "ipad", 40, 2),
+    ("app-76-ipad@1x.png", "ipad", 76, 1), ("app-76-ipad@2x.png", "ipad", 76, 2),
+    ("app-83.5-ipad@2x.png", "ipad", 83.5, 2),
+]
+
 # (filename, idiom, size in points, scale) for the iMessage app icon set.
 MESSAGES_ICONS = [
     ("icon-29@2x.png", "iphone", (29, 29), 2),
@@ -80,10 +94,19 @@ def write_set(folder, images, info):
 def main():
     info = {"author": "xcode", "version": 1}
 
+    # Full legacy size list, as Xcode generates for an app with a Messages extension; App Store Connect
+    # takes its icon from the ios-marketing entry.
     app = ROOT / "DiceApp/Assets.xcassets/AppIcon.appiconset"
     app.mkdir(parents=True, exist_ok=True)
-    render(1024, 1024).save(app / "icon-1024.png")
-    write_set(app, [{"filename": "icon-1024.png", "idiom": "universal", "platform": "ios", "size": "1024x1024"}], info)
+    for old in app.glob("*.png"):
+        old.unlink()
+    app_entries = []
+    for filename, idiom, size, scale in APP_ICONS:
+        pixels = round(size * scale)
+        render(pixels, pixels).save(app / filename)
+        label = f"{size:g}x{size:g}"
+        app_entries.append({"filename": filename, "idiom": idiom, "size": label, "scale": f"{scale}x"})
+    write_set(app, app_entries, info)
 
     messages = ROOT / "DiceMessages/Assets.xcassets/iMessage App Icon.stickersiconset"
     messages.mkdir(parents=True, exist_ok=True)
