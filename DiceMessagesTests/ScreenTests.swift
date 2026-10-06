@@ -30,6 +30,11 @@ final class ScreenTests: XCTestCase {
         XCTAssertEqual(Screen.resolve(style: .compact, messageURL: nil, isPending: false), .panel)
     }
 
+    // Spec §3: only .expanded shows a selected sent message; collapsing back to compact must offer the panel.
+    func test_resolve_compactWithSentMessageShowsPanel() {
+        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false), .panel)
+    }
+
     func test_resolve_expandedPendingShowsPanel() {
         XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: true), .panel)
     }

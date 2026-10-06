@@ -21,13 +21,15 @@ enum Screen: Equatable {
             case .failure(let reason): return .invalid(reason)
             case .success(let roll): return isPending ? .pendingBubble(roll.spec) : .revealedBubble(roll.spec, roll.result)
             }
-        default:
+        case .expanded:
             // A pending (draft) message must never reveal its result, so it falls back to the panel.
             guard let messageURL, !isPending else { return .panel }
             switch decode(messageURL) {
             case .failure(let reason): return .invalid(reason)
             case .success(let roll): return .detail(roll.spec, roll.result)
             }
+        default:
+            return .panel
         }
     }
 
