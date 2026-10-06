@@ -7,11 +7,14 @@ struct RootView: View {
     let screen: Screen
     let model: PanelModel
     let onRoll: () -> Void
+    let onRollAgain: () -> Void
 
     var body: some View {
         switch screen {
         case .panel:
             RollPanelView(model: model, onRoll: onRoll)
+        case .detail(let spec, let result):
+            ResultCard(spec: spec, result: result, onRollAgain: onRollAgain)
         default:
             ScrollView { BubbleView(screen: screen) }
         }
@@ -21,6 +24,7 @@ struct RootView: View {
 final class MessagesViewController: MSMessagesAppViewController {
     private let model = PanelModel(store: SpecStore())
     private lazy var host = UIHostingController(rootView: makeRoot(.panel))
+    private var reveal = RevealState()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,16 +42,21 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
+        reveal.activate()
         refresh()
     }
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
         super.didTransition(to: presentationStyle)
+        if presentationStyle == .expanded, let message = activeConversation?.selectedMessage {
+            reveal.didExpand(selected: message.url, isPending: message.isPending)
+        }
         refresh()
     }
 
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
         super.didSelect(message, conversation: conversation)
+        reveal.didSelect(isPending: message.isPending)
         refresh()
     }
 
@@ -62,12 +71,20 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     private func refresh() {
         let message = activeConversation?.selectedMessage
-        let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url, isPending: message?.isPending ?? false)
+        let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url,
+                                    isPending: message?.isPending ?? false, revealing: reveal.revealing)
         host.rootView = makeRoot(screen)
     }
 
     private func makeRoot(_ screen: Screen) -> RootView {
-        RootView(screen: screen, model: model) { [weak self] in self?.roll() }
+        RootView(screen: screen, model: model,
+                 onRoll: { [weak self] in self?.roll() },
+                 onRollAgain: { [weak self] in self?.showPanel() })
+    }
+
+    private func showPanel() {
+        reveal.closeResult(selected: activeConversation?.selectedMessage?.url)
+        refresh()
     }
 
     /// The result is fixed here and goes straight into the draft; nothing on screen shows it.

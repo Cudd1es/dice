@@ -26,6 +26,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.ansel.dice
         GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     dependencies:
       - target: DiceMessages
       - package: DiceKit
@@ -33,7 +34,7 @@ targets:
       testTargets:
         - DiceMessagesTests
   DiceMessages:
-    type: app-extension
+    type: app-extension.messages
     platform: iOS
     sources:
       - path: DiceMessages
@@ -49,6 +50,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.ansel.dice.messages
         GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: iMessage App Icon
     dependencies:
       - package: DiceKit
   DiceMessagesTests:
@@ -58,6 +60,7 @@ targets:
       - DiceMessagesTests
       - DiceMessages/Screen.swift
       - DiceMessages/MessageFactory.swift
+      - DiceMessages/RevealState.swift
       - DiceMessages/PanelModel.swift
       - DiceMessages/SpecStore.swift
     settings:

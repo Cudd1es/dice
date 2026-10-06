@@ -13,23 +13,21 @@ enum Screen: Equatable {
     case detail(RollSpec, RollResult)
     case invalid(InvalidReason)
 
-    static func resolve(style: MSMessagesAppPresentationStyle, messageURL: URL?, isPending: Bool) -> Screen {
-        switch style {
-        case .transcript:
+    /// - Parameter revealing: the user just tapped a sent message. A message that merely stays selected
+    ///   from earlier must not replace the panel, so only this flag shows a result outside the transcript.
+    static func resolve(style: MSMessagesAppPresentationStyle, messageURL: URL?, isPending: Bool, revealing: Bool = false) -> Screen {
+        if style == .transcript {
             guard let messageURL else { return .invalid(.corrupt) }
             switch decode(messageURL) {
             case .failure(let reason): return .invalid(reason)
             case .success(let roll): return isPending ? .pendingBubble(roll.spec) : .revealedBubble(roll.spec, roll.result)
             }
-        case .expanded:
-            // A pending (draft) message must never reveal its result, so it falls back to the panel.
-            guard let messageURL, !isPending else { return .panel }
-            switch decode(messageURL) {
-            case .failure(let reason): return .invalid(reason)
-            case .success(let roll): return .detail(roll.spec, roll.result)
-            }
-        default:
-            return .panel
+        }
+        // A pending (draft) message must never reveal its result.
+        guard revealing, let messageURL, !isPending else { return .panel }
+        switch decode(messageURL) {
+        case .failure(let reason): return .invalid(reason)
+        case .success(let roll): return .detail(roll.spec, roll.result)
         }
     }
 

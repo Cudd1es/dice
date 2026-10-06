@@ -1,7 +1,7 @@
 import SwiftUI
 import DiceKit
 
-/// Renders every non-panel screen: draft bubble, revealed bubble, expanded detail and errors.
+/// Renders every non-panel screen: draft bubble, revealed bubble, result detail and errors.
 struct BubbleView: View {
     let screen: Screen
 
@@ -23,13 +23,9 @@ struct BubbleView: View {
                     .foregroundStyle(.secondary)
             }
         case .revealedBubble(let spec, let result):
-            ResultView(spec: spec, result: result, large: false)
+            ResultView(spec: spec, result: result)
         case .detail(let spec, let result):
-            VStack(alignment: .leading, spacing: 12) {
-                FormulaLabel(spec: spec)
-                    .font(.title2.weight(.semibold))
-                ResultView(spec: spec, result: result, large: true)
-            }
+            ResultCard(spec: spec, result: result)
         case .invalid(let reason):
             Label(reason == .needsUpdate ? RollFormatter.needsUpdateText : RollFormatter.corruptText,
                   systemImage: "exclamationmark.triangle")
@@ -52,28 +48,19 @@ private struct FormulaLabel: View {
 private struct ResultView: View {
     let spec: RollSpec
     let result: RollResult
-    let large: Bool
-
-    private var accent: Color {
-        switch result.critical {
-        case .success: return .orange
-        case .failure: return .red
-        case .none: return .primary
-        }
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(verbatim: String(result.total))
-                .font(.system(size: large ? 64 : 40, weight: .bold, design: .rounded))
-                .foregroundStyle(accent)
+                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .foregroundStyle(result.totalColor)
             Text(detail)
-                .font(large ? .title3 : .body)
+                .font(.body)
                 .fixedSize(horizontal: false, vertical: true)
             if let outcome = RollFormatter.outcome(result) {
                 Text(outcome)
-                    .font((large ? Font.title2 : .headline).weight(.semibold))
-                    .foregroundStyle(result.critical == .none ? (result.dcOutcome == .success ? .green : .secondary) : accent)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(result.outcomeColor)
             }
         }
     }
@@ -95,10 +82,6 @@ private func revealed(_ spec: RollSpec, _ dice: [Int]) -> Screen {
 #Preview("dcSuccess") { BubbleView(screen: revealed(RollSpec(modifier: 3, dc: 15), [13])) }
 #Preview("dcFailure") { BubbleView(screen: revealed(RollSpec(modifier: 3, dc: 15), [9])) }
 #Preview("twentyD100") { BubbleView(screen: revealed(RollSpec(count: 20, sides: 100, modifier: -4), Array(81...100))) }
-#Preview("detail") {
-    let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15)
-    return BubbleView(screen: .detail(spec, DiceEngine.evaluate(spec, dice: [17, 8])))
-}
 #Preview("needsUpdate") { BubbleView(screen: .invalid(.needsUpdate)) }
 #Preview("corrupt") { BubbleView(screen: .invalid(.corrupt)) }
 #Preview("twentyD100 dark") {

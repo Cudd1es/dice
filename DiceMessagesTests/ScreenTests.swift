@@ -30,21 +30,31 @@ final class ScreenTests: XCTestCase {
         XCTAssertEqual(Screen.resolve(style: .compact, messageURL: nil, isPending: false), .panel)
     }
 
-    // Spec §3: only .expanded shows a selected sent message; collapsing back to compact must offer the panel.
-    func test_resolve_compactWithSentMessageShowsPanel() {
-        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false), .panel)
+    // A message left selected from earlier must not hijack the drawer: only a fresh tap reveals.
+    func test_resolve_compactWithSentMessageNotRevealingShowsPanel() {
+        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false, revealing: false), .panel)
     }
 
-    func test_resolve_expandedPendingShowsPanel() {
-        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: true), .panel)
+    // If the user drags the result sheet down to compact, the result stays visible.
+    func test_resolve_compactRevealingSentShowsDetail() {
+        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false, revealing: true), .detail(spec, result))
     }
 
-    func test_resolve_expandedSentShowsDetail() {
-        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: false), .detail(spec, result))
+    func test_resolve_expandedRevealingSentShowsDetail() {
+        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: false, revealing: true), .detail(spec, result))
     }
 
-    func test_resolve_expandedSentGarbageIsInvalid() {
+    func test_resolve_expandedNotRevealingShowsPanel() {
+        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: false, revealing: false), .panel)
+    }
+
+    func test_resolve_revealingPendingShowsPanel() {
+        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: url, isPending: true, revealing: true), .panel)
+        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: true, revealing: true), .panel)
+    }
+
+    func test_resolve_revealingGarbageIsInvalid() {
         let garbage = URL(string: "https://dice.invalid/roll?v=9")!
-        XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: garbage, isPending: false), .invalid(.needsUpdate))
+        XCTAssertEqual(Screen.resolve(style: .compact, messageURL: garbage, isPending: false, revealing: true), .invalid(.needsUpdate))
     }
 }
