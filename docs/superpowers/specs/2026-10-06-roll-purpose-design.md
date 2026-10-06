@@ -125,7 +125,7 @@
 **决策（经确认，方案 B）**
 - `RollSpec.dcRange` 改为 `1...999`
 - 面板的 DC 行保留 `Stepper`（±1），并让 DC 数字可点击：点开后变成数字键盘输入框（`.keyboardType(.numberPad)`），只接受数字，失去焦点或按「完成」时提交，经 `PanelModel.setDC` 夹到 1–999；输入为空则恢复原值
-- 扩展中点击 DC 数字与目的输入框相同：先 `requestPresentationStyle(.expanded)`（共用 `onKeyboardFocus` 回调，取代第 3 节的 `onPurposeFocus`）
+- 扩展中点击 DC 数字与目的输入框相同：先 `requestPresentationStyle(.expanded)`（共用第 3 节的 `onKeyboardFocus` 回调）
 - 数字键盘没有回车键，键盘上方工具栏放「完成」按钮
 
 **兼容性**：0.2.1 解码时校验 DC ≤ 40，收到 DC > 40 的消息会显示"数据无效"。测试阶段可接受，在「测试内容」中提示大家更新。DC ≤ 40 的消息不受影响。
