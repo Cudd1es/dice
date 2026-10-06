@@ -19,6 +19,7 @@ struct BubbleView: View {
                 PurposeLine(purpose: purpose)
                 FormulaLabel(spec: spec)
                     .font(.headline)
+                    .clearsAppIcon(purpose == nil)
                 Text(RollFormatter.pendingCaption())
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -26,7 +27,7 @@ struct BubbleView: View {
         case .revealedBubble(let spec, let result, let purpose):
             VStack(alignment: .leading, spacing: 4) {
                 PurposeLine(purpose: purpose)
-                ResultView(spec: spec, result: result)
+                ResultView(spec: spec, result: result, clearsAppIcon: purpose == nil)
             }
         case .detail(let spec, let result, let purpose):
             ResultCard(spec: spec, result: result, purpose: purpose)
@@ -34,9 +35,18 @@ struct BubbleView: View {
             Label(reason == .needsUpdate ? RollFormatter.needsUpdateText() : RollFormatter.corruptText(),
                   systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.secondary)
+                .clearsAppIcon()
         case .panel:
             EmptyView()
         }
+    }
+}
+
+private extension View {
+    /// Messages draws the app's small icon (about 32x24pt) over the bubble's top-left corner, so the first line
+    /// starts to its right. Seen on device: without this the icon hid the start of the purpose or formula.
+    func clearsAppIcon(_ clears: Bool = true) -> some View {
+        padding(.leading, clears ? 30 : 0)
     }
 }
 
@@ -49,6 +59,7 @@ private struct PurposeLine: View {
             Text(purpose)
                 .font(.headline)
                 .lineLimit(1)
+                .clearsAppIcon()
         }
     }
 }
@@ -65,12 +76,14 @@ private struct FormulaLabel: View {
 private struct ResultView: View {
     let spec: RollSpec
     let result: RollResult
+    let clearsAppIcon: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             FormulaLabel(spec: spec)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+                .clearsAppIcon(clearsAppIcon)
             Text(verbatim: String(result.total))
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(result.totalColor)
