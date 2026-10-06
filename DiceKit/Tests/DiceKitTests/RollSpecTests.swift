@@ -47,4 +47,38 @@ final class RollSpecTests: XCTestCase {
         XCTAssertEqual(RollSpec(count: 3, sides: 6).diceToRoll, 3)
         XCTAssertEqual(RollSpec(mode: .disadvantage).diceToRoll, 2)
     }
+
+    func test_validate_rejectsBadExtras() {
+        let d4 = BonusDice(sides: 4)
+        assertThrows(RollSpec(extras: [4, 6, 8, 10, 12].map { BonusDice(sides: $0) }), .invalidExtras)
+        assertThrows(RollSpec(extras: [BonusDice(count: 0, sides: 6)]), .invalidExtras)
+        assertThrows(RollSpec(extras: [BonusDice(count: 11, sides: 6)]), .invalidExtras)
+        assertThrows(RollSpec(extras: [BonusDice(sides: 7)]), .invalidExtras)
+        assertThrows(RollSpec(extras: [d4, d4]), .invalidExtras)
+        XCTAssertNoThrow(try RollSpec(extras: [d4, BonusDice(sign: .minus, count: 2, sides: 6)]).validate())
+    }
+
+    func test_validate_allowsAdvantageWithExtras() {
+        XCTAssertNoThrow(try RollSpec(mode: .advantage, extras: [BonusDice(sides: 4)]).validate())
+    }
+
+    func test_normalized_keepsExtras() {
+        let spec = RollSpec(sides: 6, mode: .advantage, extras: [BonusDice(sides: 4)]).normalized()
+        XCTAssertEqual(spec.mode, .normal)
+        XCTAssertEqual(spec.extras, [BonusDice(sides: 4)])
+    }
+
+    // A formula saved by 0.3.x has no "extras" key.
+    func test_decode_legacyJSONWithoutExtras() throws {
+        let json = #"{"count":1,"sides":20,"mode":"advantage","modifier":5,"dc":15}"#
+        let spec = try JSONDecoder().decode(RollSpec.self, from: Data(json.utf8))
+        XCTAssertEqual(spec, RollSpec(mode: .advantage, modifier: 5, dc: 15))
+        XCTAssertEqual(spec.extras, [])
+    }
+
+    func test_codable_roundTripsExtras() throws {
+        let spec = RollSpec(modifier: 2, dc: 12, extras: [BonusDice(sides: 4), BonusDice(sign: .minus, count: 2, sides: 6)])
+        let decoded = try JSONDecoder().decode(RollSpec.self, from: JSONEncoder().encode(spec))
+        XCTAssertEqual(decoded, spec)
+    }
 }
