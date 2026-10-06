@@ -32,6 +32,6 @@ final class SpecStoreTests: XCTestCase {
         SpecStore(defaults: defaults).save(RollSpec(mode: .advantage, modifier: 5, dc: 15))
         let data = try XCTUnwrap(defaults.data(forKey: "lastRollSpec"))
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
-        XCTAssertTrue(Set(object.keys).isSubset(of: ["count", "sides", "mode", "modifier", "dc"]), "\(object.keys)")
+        XCTAssertTrue(Set(object.keys).isSubset(of: ["count", "sides", "mode", "modifier", "dc", "extras"]), "\(object.keys)")
     }
 }

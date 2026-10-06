@@ -22,6 +22,9 @@ public enum RollFormatter {
     /// e.g. "1d20+5 · Advantage · DC 15" / "1d20+5 · 优势 · DC 15"
     public static func formula(_ spec: RollSpec, _ language: RollLanguage = .current) -> String {
         var text = "\(spec.count)d\(spec.sides)"
+        for group in spec.extras {
+            text += (group.sign == .plus ? "+" : "-") + "\(group.count)d\(group.sides)"
+        }
         if spec.modifier > 0 { text += "+\(spec.modifier)" }
         if spec.modifier < 0 { text += "\(spec.modifier)" }
         switch spec.mode {
@@ -44,6 +47,9 @@ public enum RollFormatter {
             result.keptIndices.contains(index) ? "\(value)" : "~~\(value)~~"
         }
         var text = "[" + dice.joined(separator: ", ") + "]"
+        for (group, rolls) in zip(spec.extras, result.bonusRolls) {
+            text += (group.sign == .plus ? " + " : " - ") + "[" + rolls.map(String.init).joined(separator: ", ") + "]"
+        }
         if spec.modifier > 0 { text += " + \(spec.modifier)" }
         if spec.modifier < 0 { text += " - \(-spec.modifier)" }
         return text + " = \(result.total)"

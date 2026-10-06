@@ -16,7 +16,7 @@ final class ScreenTests: XCTestCase {
     }
 
     func test_resolve_transcriptFutureVersionNeedsUpdate() {
-        let future = URL(string: "https://dice.invalid/roll?v=2&n=1&s=20&m=n&k=0&d=7")!
+        let future = URL(string: "https://dice.invalid/roll?v=3&n=1&s=20&m=n&k=0&d=7")!
         XCTAssertEqual(Screen.resolve(style: .transcript, messageURL: future, isPending: false), .invalid(.needsUpdate))
     }
 
@@ -70,5 +70,12 @@ final class ScreenTests: XCTestCase {
         let withPurpose = MessageCodec.url(for: spec, result: result, purpose: "攻击")
         XCTAssertEqual(Screen.resolve(style: .expanded, messageURL: withPurpose, isPending: false, revealing: true),
                        .detail(spec, result, purpose: "攻击"))
+    }
+
+    func test_resolve_bonusMessage() {
+        let bless = RollSpec(modifier: 2, extras: [BonusDice(sides: 4)])
+        let rolled = DiceEngine.evaluate(bless, dice: [11], bonusRolls: [[3]])
+        let screen = Screen.resolve(style: .transcript, messageURL: MessageCodec.url(for: bless, result: rolled), isPending: false)
+        XCTAssertEqual(screen, .revealedBubble(bless, rolled, purpose: nil))
     }
 }

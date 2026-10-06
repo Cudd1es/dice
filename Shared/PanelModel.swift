@@ -12,6 +12,8 @@ final class PanelModel: ObservableObject {
     /// Text of the DC field while it is being typed; nil when not editing. Kept here, not in the view, so rolling
     /// can commit it first: the view's focus-loss commit runs only after the Roll action returns.
     @Published var dcDraft: String?
+    /// The bonus dice picker replaces the panel in place while this is true.
+    @Published var isPickingBonus = false
 
     private let store: SpecStore
 
@@ -42,6 +44,37 @@ final class PanelModel: ObservableObject {
     func setDC(_ dc: Int?) {
         if dc == nil { dcDraft = nil }
         update { $0.dc = dc.map { Self.clamp($0, to: RollSpec.dcRange) } }
+    }
+
+    func canAddBonus(sign: BonusDice.Sign, sides: Int) -> Bool {
+        spec.canAddBonus(sign: sign, sides: sides)
+    }
+
+    /// Adds one bonus die (merging into its group) and closes the picker.
+    func addBonus(sign: BonusDice.Sign, sides: Int) {
+        update { $0.addBonus(sign: sign, sides: sides) }
+        isPickingBonus = false
+    }
+
+    func incrementBonus(at index: Int) {
+        guard spec.extras.indices.contains(index) else { return }
+        update { $0.extras[index].count = min($0.extras[index].count + 1, BonusDice.countRange.upperBound) }
+    }
+
+    /// Removing the last die of a group removes the group.
+    func decrementBonus(at index: Int) {
+        guard spec.extras.indices.contains(index) else { return }
+        if spec.extras[index].count <= 1 {
+            removeBonus(at: index)
+        } else {
+            update { $0.extras[index].count -= 1 }
+        }
+    }
+
+    // Menus can outlive their group, so every index is checked.
+    func removeBonus(at index: Int) {
+        guard spec.extras.indices.contains(index) else { return }
+        update { $0.extras.remove(at: index) }
     }
 
     /// Starts empty; the view shows the current DC as the placeholder.

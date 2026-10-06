@@ -86,7 +86,7 @@ final class MessageCodecTests: XCTestCase {
     }
 
     func test_decode_futureVersion() {
-        assertDecodeThrows("v=2&n=1&s=20&m=n&k=0&d=7", .unsupportedVersion(2))
+        assertDecodeThrows("v=3&n=1&s=20&m=n&k=0&d=7", .unsupportedVersion(3))
     }
 
     func test_decode_missingField() {
@@ -112,5 +112,48 @@ final class MessageCodecTests: XCTestCase {
 
     func test_decode_dieOutOfRange() {
         assertDecodeThrows("v=1&n=1&s=6&m=n&k=0&d=7", .invalidDice)
+    }
+
+    private let bonusSpec = RollSpec(modifier: 5, extras: [BonusDice(sides: 4), BonusDice(sign: .minus, count: 2, sides: 6)])
+
+    func test_bonusURLUsesV2() {
+        let result = DiceEngine.evaluate(bonusSpec, dice: [12], bonusRolls: [[3], [2, 5]])
+        XCTAssertEqual(MessageCodec.url(for: bonusSpec, result: result).absoluteString,
+                       "https://dice.invalid/roll?v=2&n=1&s=20&m=n&k=5&x=1d4,-2d6&d=12,3,2,5")
+    }
+
+    func test_bonusRoundTrips() throws {
+        let plain = DiceEngine.evaluate(bonusSpec, dice: [12], bonusRolls: [[3], [2, 5]])
+        let decoded = try MessageCodec.decode(MessageCodec.url(for: bonusSpec, result: plain))
+        XCTAssertEqual(decoded.spec, bonusSpec)
+        XCTAssertEqual(decoded.result, plain)
+
+        let bless = RollSpec(mode: .advantage, modifier: 3, dc: 15, extras: [BonusDice(sides: 4)])
+        let rolled = DiceEngine.evaluate(bless, dice: [8, 17], bonusRolls: [[2]])
+        let withPurpose = try MessageCodec.decode(MessageCodec.url(for: bless, result: rolled, purpose: "攻击哥布林"))
+        XCTAssertEqual(withPurpose.spec, bless)
+        XCTAssertEqual(withPurpose.result, rolled)
+        XCTAssertEqual(withPurpose.purpose, "攻击哥布林")
+    }
+
+    func test_decode_invalidExtrasRejected() {
+        let head = "v=2&n=1&s=20&m=n&k=0"
+        assertDecodeThrows(head + "&x=1d4,1d6,1d8,1d10,1d12&d=1,1,1,1,1,1", .invalidSpec(.invalidExtras))
+        assertDecodeThrows(head + "&x=1d4,1d4&d=1,1,1", .invalidSpec(.invalidExtras))
+        assertDecodeThrows(head + "&x=1d&d=1,1", .malformed("x"))
+        assertDecodeThrows(head + "&x=0d6&d=1", .invalidSpec(.invalidExtras))
+        assertDecodeThrows(head + "&x=1d7&d=1,1", .invalidSpec(.invalidExtras))
+    }
+
+    func test_decode_bonusDiceCountMismatch() {
+        assertDecodeThrows("v=2&n=1&s=20&m=n&k=0&x=2d6&d=1,1", .invalidDice)
+        assertDecodeThrows("v=2&n=1&s=20&m=n&k=0&x=1d4&d=1,5", .invalidDice)
+    }
+
+    // Version 1 never had bonus dice, so a stray x is ignored as before.
+    func test_decode_v1IgnoresX() throws {
+        let decoded = try MessageCodec.decode(url("v=1&n=1&s=20&m=n&k=0&x=1d4&d=7"))
+        XCTAssertEqual(decoded.spec.extras, [])
+        XCTAssertEqual(decoded.result.total, 7)
     }
 }

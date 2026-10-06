@@ -22,12 +22,20 @@ struct RollPanelView: View {
         // so the roll button is always reachable.
         // One ScrollView capped at the content's height rather than ViewThatFits: switching between two copies
         // when the keyboard shrinks the space recreated the text field and dropped its focus.
-        ScrollView {
-            content
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+        // Roll sits below the scrolling part so it is always fully visible, even in the compact Messages drawer
+        // where the bonus row made the panel taller than the space.
+        VStack(spacing: 0) {
+            ScrollView {
+                content
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeight = $0 }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .frame(maxHeight: contentHeight)
+            if !model.isPickingBonus {
+                rollButton
+                    .padding([.horizontal, .bottom])
+            }
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .frame(maxHeight: contentHeight)
         .onChange(of: focus) { old, new in
             if new != nil { onKeyboardFocus?() }
             if old == .dc, new != .dc { model.commitDCDraft() }
@@ -40,7 +48,18 @@ struct RollPanelView: View {
         }
     }
 
+    @ViewBuilder
     private var content: some View {
+        if model.isPickingBonus {
+            BonusPickerView(model: model)
+                .transition(.move(edge: .trailing).combined(with: .opacity))
+        } else {
+            panel
+                .transition(.move(edge: .leading).combined(with: .opacity))
+        }
+    }
+
+    private var panel: some View {
         VStack(spacing: 12) {
                 purposeField
                 sidesRow
@@ -57,6 +76,7 @@ struct RollPanelView: View {
                         modifierStepper
                     }
                 }
+                bonusRow
                 modeRow
                 dcRow
                 Text(RollFormatter.formula(model.spec))
@@ -67,18 +87,48 @@ struct RollPanelView: View {
                         .font(.footnote)
                         .foregroundStyle(.red)
                 }
-                Button {
-                    focus = nil
-                    onRoll()
-                } label: {
-                    Text("Roll")
-                        .font(.title3.weight(.bold))
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
         }
         .padding()
+    }
+
+    private var rollButton: some View {
+        Button {
+            focus = nil
+            onRoll()
+        } label: {
+            Text("Roll")
+                .font(.title3.weight(.bold))
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+    }
+
+    /// Bonus dice tags, each with a menu to change or remove it, then the button that opens the picker.
+    private var bonusRow: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(Array(model.spec.extras.enumerated()), id: \.offset) { index, group in
+                    Menu {
+                        Button("One More", systemImage: "plus") { model.incrementBonus(at: index) }
+                            .disabled(group.count >= BonusDice.countRange.upperBound)
+                        Button("One Fewer", systemImage: "minus") { model.decrementBonus(at: index) }
+                        Button("Remove", systemImage: "trash", role: .destructive) { model.removeBonus(at: index) }
+                    } label: {
+                        Text(verbatim: (group.sign == .plus ? "+" : "−") + "\(group.count)d\(group.sides)")
+                            .fontWeight(.semibold)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.accentColor)
+                }
+                Button("Bonus", systemImage: "plus") {
+                    focus = nil
+                    withAnimation(BonusPickerView.animation) { model.isPickingBonus = true }
+                }
+                .buttonStyle(.bordered)
+                .tint(.secondary)
+            }
+        }
     }
 
     private var countStepper: some View {

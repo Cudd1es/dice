@@ -102,4 +102,21 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.outcome(result(.none, .failure), en), "Failure")
         XCTAssertNil(RollFormatter.outcome(result(.none, nil), en))
     }
+
+    func test_formula_withBonus() {
+        let bless = RollSpec(mode: .advantage, modifier: 5, dc: 15, extras: [BonusDice(sides: 4)])
+        XCTAssertEqual(RollFormatter.formula(bless, zh), "1d20+1d4+5 · 优势 · DC 15")
+        XCTAssertEqual(RollFormatter.formula(bless, en), "1d20+1d4+5 · Advantage · DC 15")
+        XCTAssertEqual(RollFormatter.formula(RollSpec(sides: 8, modifier: 3, extras: [BonusDice(count: 2, sides: 6)]), en), "1d8+2d6+3")
+        XCTAssertEqual(RollFormatter.formula(RollSpec(extras: [BonusDice(sign: .minus, sides: 4)]), en), "1d20-1d4")
+    }
+
+    func test_detail_withBonus() {
+        let bless = RollSpec(mode: .advantage, modifier: 5, extras: [BonusDice(sides: 4)])
+        XCTAssertEqual(RollFormatter.detailMarkdown(bless, DiceEngine.evaluate(bless, dice: [17, 8], bonusRolls: [[3]])),
+                       "[17, ~~8~~] + [3] + 5 = 25")
+        let bane = RollSpec(extras: [BonusDice(sign: .minus, count: 2, sides: 6)])
+        XCTAssertEqual(RollFormatter.detailMarkdown(bane, DiceEngine.evaluate(bane, dice: [10], bonusRolls: [[2, 5]])),
+                       "[10] - [2, 5] = 3")
+    }
 }
