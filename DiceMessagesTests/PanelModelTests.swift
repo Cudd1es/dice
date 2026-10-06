@@ -38,8 +38,8 @@ final class PanelModelTests: XCTestCase {
 
     func test_panel_clampsDC() {
         let model = PanelModel(store: store)
-        model.setDC(99)
-        XCTAssertEqual(model.spec.dc, 40)
+        model.setDC(1500)
+        XCTAssertEqual(model.spec.dc, 999)
         model.setDC(0)
         XCTAssertEqual(model.spec.dc, 1)
         model.setDC(nil)

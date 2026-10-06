@@ -26,6 +26,12 @@ final class MessageCodecTests: XCTestCase {
         }
     }
 
+    func test_dc999RoundTrips() throws {
+        let spec = RollSpec(sides: 100, dc: 999)
+        let decoded = try MessageCodec.decode(MessageCodec.url(for: spec, result: DiceEngine.evaluate(spec, dice: [42])))
+        XCTAssertEqual(decoded.spec.dc, 999)
+    }
+
     func test_url_containsVersion() {
         let spec = RollSpec()
         let url = MessageCodec.url(for: spec, result: DiceEngine.evaluate(spec, dice: [7]))

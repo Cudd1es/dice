@@ -15,7 +15,7 @@ public struct RollSpec: Codable, Equatable, Sendable {
     public static let allowedSides = [4, 6, 8, 10, 12, 20, 100]
     public static let countRange = 1...20
     public static let modifierRange = -20...20
-    public static let dcRange = 1...40
+    public static let dcRange = 1...999
 
     public var count: Int
     public var sides: Int
