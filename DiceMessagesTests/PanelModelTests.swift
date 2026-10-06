@@ -89,4 +89,48 @@ final class PanelModelTests: XCTestCase {
         XCTAssertEqual(a.result, b.result)
         XCTAssertEqual(a.spec, model.spec)
     }
+
+    func test_panel_rollReturnsPurposeAndClears() {
+        let model = PanelModel(store: store)
+        model.purpose = "  攻击哥布林 "
+        XCTAssertEqual(model.roll().purpose, "攻击哥布林")
+        XCTAssertEqual(model.purpose, "")
+    }
+
+    func test_panel_blankPurposeIsNil() {
+        let model = PanelModel(store: store)
+        model.purpose = "  "
+        XCTAssertNil(model.roll().purpose)
+    }
+
+    // Pasting a long text must not get past the limit, even before rolling.
+    func test_panel_purposeTruncatesWhileTyping() {
+        let model = PanelModel(store: store)
+        model.purpose = String(repeating: "a", count: 50)
+        XCTAssertEqual(model.purpose.count, 40)
+    }
+
+    func test_panel_purposeNotSaved() {
+        let model = PanelModel(store: store)
+        model.purpose = "察觉检定"
+        _ = model.roll()
+        XCTAssertEqual(PanelModel(store: store).purpose, "")
+    }
+
+    func test_panel_setDCText() {
+        let model = PanelModel(store: store)
+        model.setDC(15)
+        model.setDC(text: "120")
+        XCTAssertEqual(model.spec.dc, 120)
+        model.setDC(text: "5000")
+        XCTAssertEqual(model.spec.dc, 999)
+        model.setDC(text: "007")
+        XCTAssertEqual(model.spec.dc, 7)
+        model.setDC(text: "-5")
+        XCTAssertEqual(model.spec.dc, 1)
+        model.setDC(text: "")
+        XCTAssertEqual(model.spec.dc, 1)
+        model.setDC(text: "abc")
+        XCTAssertEqual(model.spec.dc, 1)
+    }
 }

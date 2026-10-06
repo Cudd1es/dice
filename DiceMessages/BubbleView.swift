@@ -14,7 +14,7 @@ struct BubbleView: View {
     @ViewBuilder
     private var content: some View {
         switch screen {
-        case .pendingBubble(let spec):
+        case .pendingBubble(let spec, _):
             VStack(alignment: .leading, spacing: 4) {
                 FormulaLabel(spec: spec)
                     .font(.headline)
@@ -22,10 +22,10 @@ struct BubbleView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-        case .revealedBubble(let spec, let result):
+        case .revealedBubble(let spec, let result, _):
             ResultView(spec: spec, result: result)
-        case .detail(let spec, let result):
-            ResultCard(spec: spec, result: result)
+        case .detail(let spec, let result, let purpose):
+            ResultCard(spec: spec, result: result, purpose: purpose)
         case .invalid(let reason):
             Label(reason == .needsUpdate ? RollFormatter.needsUpdateText() : RollFormatter.corruptText(),
                   systemImage: "exclamationmark.triangle")
@@ -75,10 +75,10 @@ private struct ResultView: View {
 }
 
 private func revealed(_ spec: RollSpec, _ dice: [Int]) -> Screen {
-    .revealedBubble(spec, DiceEngine.evaluate(spec, dice: dice))
+    .revealedBubble(spec, DiceEngine.evaluate(spec, dice: dice), purpose: nil)
 }
 
-#Preview("pending") { BubbleView(screen: .pendingBubble(RollSpec(mode: .advantage, modifier: 5, dc: 15))) }
+#Preview("pending") { BubbleView(screen: .pendingBubble(RollSpec(mode: .advantage, modifier: 5, dc: 15), purpose: nil)) }
 #Preview("normal") { BubbleView(screen: revealed(RollSpec(count: 2, sides: 6, modifier: 3), [2, 5])) }
 #Preview("critSuccess") { BubbleView(screen: revealed(RollSpec(mode: .advantage, modifier: 5), [20, 8])) }
 #Preview("critFailure") { BubbleView(screen: revealed(RollSpec(mode: .disadvantage), [1, 14])) }

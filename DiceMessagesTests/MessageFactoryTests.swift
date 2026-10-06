@@ -5,7 +5,7 @@ import DiceKit
 final class MessageFactoryTests: XCTestCase {
     private let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15)
     private var result: RollResult { DiceEngine.evaluate(spec, dice: [20, 3]) }
-    private var message: MSMessage { MessageFactory.makeMessage(spec: spec, result: result, session: nil) }
+    private var message: MSMessage { MessageFactory.makeMessage(spec: spec, result: result, purpose: nil, session: nil) }
 
     func test_message_urlDecodesBack() throws {
         let decoded = try MessageCodec.decode(XCTUnwrap(message.url))
@@ -23,6 +23,19 @@ final class MessageFactoryTests: XCTestCase {
         let template = live.alternateLayout
         XCTAssertEqual(template.caption, RollFormatter.formula(spec))
         XCTAssertEqual(template.subcaption, RollFormatter.installToRevealCaption())
+    }
+
+    func test_message_withPurpose() throws {
+        let message = MessageFactory.makeMessage(spec: spec, result: result, purpose: "察觉检定", session: nil)
+        XCTAssertEqual(try MessageCodec.decode(XCTUnwrap(message.url)).purpose, "察觉检定")
+        XCTAssertEqual(message.summaryText, RollFormatter.summary(spec, purpose: "察觉检定"))
+        let template = try XCTUnwrap(message.layout as? MSMessageLiveLayout).alternateLayout
+        XCTAssertEqual(template.caption, "察觉检定")
+        XCTAssertEqual(template.subcaption, RollFormatter.formula(spec) + " · " + RollFormatter.installToRevealCaption())
+        let total = String(result.total)
+        for text in [template.caption, template.subcaption, message.summaryText] {
+            XCTAssertFalse(text?.contains(total) ?? false, "\(text ?? "") reveals the total")
+        }
     }
 
     // Device spike (docs/superpowers/spikes/2026-10-05-live-layout.md): the bubble renders itself.

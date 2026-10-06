@@ -78,7 +78,7 @@ struct RollerView: View {
     private func roll() {
         let rolled = model.roll()
         withAnimation {
-            history.add(spec: rolled.spec, result: rolled.result)
+            history.add(spec: rolled.spec, result: rolled.result, purpose: rolled.purpose)
         }
     }
 

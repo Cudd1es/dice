@@ -17,8 +17,8 @@ struct RootView: View {
             Color.clear.frame(height: 1)
         case .panel?:
             RollPanelView(model: model, onRoll: onRoll)
-        case .detail(let spec, let result)?:
-            ResultCard(spec: spec, result: result, onRollAgain: onRollAgain)
+        case .detail(let spec, let result, let purpose)?:
+            ResultCard(spec: spec, result: result, purpose: purpose, onRollAgain: onRollAgain)
         case let screen?:
             // No ScrollView: the transcript bubble is sized from this view's fitting height.
             BubbleView(screen: screen)
@@ -114,8 +114,8 @@ final class MessagesViewController: MSMessagesAppViewController {
     private func roll() {
         guard let conversation = activeConversation else { return }
         model.errorMessage = nil
-        let (spec, result) = model.roll()
-        let message = MessageFactory.makeMessage(spec: spec, result: result, session: nil)
+        let (spec, result, purpose) = model.roll()
+        let message = MessageFactory.makeMessage(spec: spec, result: result, purpose: purpose, session: nil)
         conversation.insert(message) { [weak self] error in
             DispatchQueue.main.async {
                 if error != nil {

@@ -5,6 +5,7 @@ import DiceKit
 struct ResultCard: View {
     let spec: RollSpec
     let result: RollResult
+    var purpose: String?
     var onRollAgain: (() -> Void)?
     /// Smaller in the app's result area on short screens such as iPhone SE.
     var totalFontSize: CGFloat = 72

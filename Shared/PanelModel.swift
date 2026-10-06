@@ -1,12 +1,18 @@
 import Combine
 import DiceKit
 
-/// Panel state, shared by the app and the iMessage extension. Holds only the formula; each roll is handed
-/// straight to the caller, which shows it (app) or seals it into a message (extension).
+/// Panel state, shared by the app and the iMessage extension. Holds the formula and the purpose being typed;
+/// each roll is handed straight to the caller, which shows it (app) or seals it into a message (extension).
 @MainActor
 final class PanelModel: ObservableObject {
     @Published private(set) var spec: RollSpec
     @Published var errorMessage: String?
+    /// Raw text of the purpose field. Cut to the limit as it is typed or pasted; never saved.
+    @Published var purpose = "" {
+        didSet {
+            if purpose.count > RollPurpose.maxLength { purpose = String(purpose.prefix(RollPurpose.maxLength)) }
+        }
+    }
 
     private let store: SpecStore
 
@@ -38,14 +44,22 @@ final class PanelModel: ObservableObject {
         update { $0.dc = dc.map { Self.clamp($0, to: RollSpec.dcRange) } }
     }
 
-    /// Rolls the current formula and remembers it for next time.
-    func roll<G: RandomNumberGenerator>(using rng: inout G) -> (spec: RollSpec, result: RollResult) {
-        let result = DiceEngine.roll(spec, using: &rng)
-        store.save(spec)
-        return (spec, result)
+    /// Typed DC: a number is clamped into range; empty or non-numeric text keeps the current DC.
+    func setDC(text: String) {
+        guard let dc = Int(text.trimmingCharacters(in: .whitespaces)) else { return }
+        setDC(dc)
     }
 
-    func roll() -> (spec: RollSpec, result: RollResult) {
+    /// Rolls the current formula and remembers it for next time. The purpose goes with this roll only.
+    func roll<G: RandomNumberGenerator>(using rng: inout G) -> (spec: RollSpec, result: RollResult, purpose: String?) {
+        let result = DiceEngine.roll(spec, using: &rng)
+        store.save(spec)
+        let rolledPurpose = RollPurpose.normalize(purpose)
+        purpose = ""
+        return (spec, result, rolledPurpose)
+    }
+
+    func roll() -> (spec: RollSpec, result: RollResult, purpose: String?) {
         var rng = SystemRandomNumberGenerator()
         return roll(using: &rng)
     }
