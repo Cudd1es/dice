@@ -1,7 +1,7 @@
 # Spike：Live Layout 的 pending/sent 行为
 
 日期：2026-10-05
-环境：Xcode 26.2 (17C52)，iPhone 17 Pro 模拟器，iOS 26.2；最低部署目标 iOS 17
+环境：Xcode 26.2 (17C52, iOS 26.2 SDK)，iPhone 17 Pro 模拟器，运行时 iOS 26.3.1 (23D8133)；最低部署目标 iOS 17
 
 ## 做法
 
