@@ -35,7 +35,7 @@ final class ScreenTests: XCTestCase {
         XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false, revealing: false), .panel)
     }
 
-    // Tapping a sent message collapses to compact and shows the result there.
+    // If the user drags the result sheet down to compact, the result stays visible.
     func test_resolve_compactRevealingSentShowsDetail() {
         XCTAssertEqual(Screen.resolve(style: .compact, messageURL: url, isPending: false, revealing: true), .detail(spec, result))
     }

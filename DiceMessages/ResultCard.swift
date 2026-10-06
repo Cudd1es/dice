@@ -1,7 +1,7 @@
 import SwiftUI
 import DiceKit
 
-/// The revealed result, centered so it reads well in the compact sheet.
+/// The revealed result, centered in whatever space the sheet gives it.
 struct ResultCard: View {
     let spec: RollSpec
     let result: RollResult
@@ -40,6 +40,9 @@ struct ResultCard: View {
                 .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }
         }
+        // The expanded sheet reports a large bottom inset (~335pt on iPhone 17 Pro) over empty space,
+        // which pushed the card into the upper half; ignoring only .container was not enough.
+        .ignoresSafeArea(.all, edges: .bottom)
     }
 
     private var detail: AttributedString {

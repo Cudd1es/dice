@@ -6,28 +6,27 @@ final class RevealStateTests: XCTestCase {
 
     // Seen on the simulator: tapping a sent message with the extension closed activates it compact
     // with nothing selected, then expands with the message selected and never calls didSelect.
-    func test_tapWhileClosed_revealsAndCollapsesOnce() {
+    func test_tapWhileClosed_reveals() {
         var state = RevealState()
         state.activate()
         XCTAssertFalse(state.revealing)
-        XCTAssertTrue(state.didExpand(selected: url, isPending: false))
-        XCTAssertTrue(state.revealing)
-        XCTAssertFalse(state.didExpand(selected: url, isPending: false), "collapse only once")
+        state.didExpand(selected: url, isPending: false)
         XCTAssertTrue(state.revealing)
     }
 
-    func test_tapWhileOpen_revealsThenCollapsesOnExpand() {
+    func test_tapWhileOpen_reveals() {
         var state = RevealState()
         state.activate()
         state.didSelect(isPending: false)
         XCTAssertTrue(state.revealing)
-        XCTAssertTrue(state.didExpand(selected: url, isPending: false))
+        state.didExpand(selected: url, isPending: false)
+        XCTAssertTrue(state.revealing)
     }
 
     func test_draggingPanelUpWithoutSelection_staysOnPanel() {
         var state = RevealState()
         state.activate()
-        XCTAssertFalse(state.didExpand(selected: nil, isPending: false))
+        state.didExpand(selected: nil, isPending: false)
         XCTAssertFalse(state.revealing)
     }
 
@@ -36,17 +35,17 @@ final class RevealStateTests: XCTestCase {
         state.activate()
         state.didSelect(isPending: true)
         XCTAssertFalse(state.revealing)
-        XCTAssertFalse(state.didExpand(selected: url, isPending: true))
+        state.didExpand(selected: url, isPending: true)
         XCTAssertFalse(state.revealing)
     }
 
     func test_closedResult_doesNotReopenWhenPanelExpands() {
         var state = RevealState()
         state.activate()
-        _ = state.didExpand(selected: url, isPending: false)
+        state.didExpand(selected: url, isPending: false)
         state.closeResult(selected: url)
         XCTAssertFalse(state.revealing)
-        XCTAssertFalse(state.didExpand(selected: url, isPending: false))
+        state.didExpand(selected: url, isPending: false)
         XCTAssertFalse(state.revealing)
     }
 
@@ -54,7 +53,7 @@ final class RevealStateTests: XCTestCase {
         var state = RevealState()
         state.activate()
         state.closeResult(selected: url)
-        XCTAssertTrue(state.didExpand(selected: other, isPending: false))
+        state.didExpand(selected: other, isPending: false)
         XCTAssertTrue(state.revealing)
     }
 
@@ -64,6 +63,7 @@ final class RevealStateTests: XCTestCase {
         state.closeResult(selected: url)
         state.activate()
         XCTAssertFalse(state.revealing)
-        XCTAssertTrue(state.didExpand(selected: url, isPending: false), "a fresh tap on the same message reveals again")
+        state.didExpand(selected: url, isPending: false)
+        XCTAssertTrue(state.revealing, "a fresh tap on the same message reveals again")
     }
 }

@@ -48,16 +48,10 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
         super.didTransition(to: presentationStyle)
-        let message = activeConversation?.selectedMessage
-        let collapse = presentationStyle == .expanded
-            && reveal.didExpand(selected: message?.url, isPending: message?.isPending ?? false)
-        refresh()
-        if collapse {
-            // Requests made while Messages is still transitioning are ignored (seen on the iOS 26.3 simulator).
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                self?.requestPresentationStyle(.compact)
-            }
+        if presentationStyle == .expanded, let message = activeConversation?.selectedMessage {
+            reveal.didExpand(selected: message.url, isPending: message.isPending)
         }
+        refresh()
     }
 
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
