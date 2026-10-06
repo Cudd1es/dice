@@ -56,6 +56,13 @@ xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=i
 
 模拟器名称按本机已有的调整。
 
+## 版本号与发布
+
+- 版本号（`MARKETING_VERSION`）遵循 [SemVer](https://semver.org/lang/zh-CN/) 的 `主.次.修订`；TestFlight 测试阶段保持 `0.x.y`，正式上架时为 `1.0.0`。App Store 不接受 `-beta` 之类的后缀
+- 构建号（`CURRENT_PROJECT_VERSION`）是整数，**每次上传都必须比上一次大**，不随版本号归零
+- 两者都在 `project.yml` 里改，改完运行 `xcodegen generate`
+- TestFlight 的外部测试说明见 [docs/testflight/beta-info.md](docs/testflight/beta-info.md)
+
 ## 目录结构
 
 ```
