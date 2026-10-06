@@ -26,8 +26,9 @@ struct RollerView: View {
                     Divider()
                     historyList
                     Divider()
+                    // Laid out first so it gets its full height; history takes what is left.
                     RollPanelView(model: model, onRoll: roll)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .layoutPriority(1)
                 }
             }
             .navigationTitle("骰子")
@@ -38,6 +39,8 @@ struct RollerView: View {
                 }
             }
             .sheet(isPresented: $showingGuide) { GuideView() }
+            // Beyond this the result card and panel no longer fit an iPhone screen.
+            .dynamicTypeSize(...DynamicTypeSize.accessibility2)
             .sensoryFeedback(trigger: latest?.id) { _, _ in feedback(for: latest?.result) }
         }
     }
@@ -94,7 +97,7 @@ private struct HistoryRow: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Text(entry.date, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+            Text(RollFormatter.clockTime(entry.date))
                 .font(.caption.monospacedDigit())
                 .foregroundStyle(.secondary)
             Text(RollFormatter.formula(entry.spec))
