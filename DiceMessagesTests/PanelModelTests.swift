@@ -217,4 +217,12 @@ final class PanelModelTests: XCTestCase {
         model.addBonus(sign: .minus, sides: 6)
         XCTAssertEqual(model.roll().result.bonusRolls.map(\.count), [1, 1])
     }
+
+    // Leaving the Messages drawer with the picker open must not bring the picker back next time.
+    func test_panel_didActivateClosesPicker() {
+        let model = PanelModel(store: store)
+        model.isPickingBonus = true
+        model.didActivate()
+        XCTAssertFalse(model.isPickingBonus)
+    }
 }

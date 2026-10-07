@@ -46,6 +46,11 @@ final class PanelModel: ObservableObject {
         update { $0.dc = dc.map { Self.clamp($0, to: RollSpec.dcRange) } }
     }
 
+    /// The Messages extension calls this each time it becomes active: a picker left open last time starts closed.
+    func didActivate() {
+        isPickingBonus = false
+    }
+
     func canAddBonus(sign: BonusDice.Sign, sides: Int) -> Bool {
         spec.canAddBonus(sign: sign, sides: sides)
     }
