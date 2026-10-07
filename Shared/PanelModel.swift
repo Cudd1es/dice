@@ -46,6 +46,11 @@ final class PanelModel: ObservableObject {
         update { $0.dc = dc.map { Self.clamp($0, to: RollSpec.dcRange) } }
     }
 
+    /// The Messages extension calls this each time it becomes active: a picker left open last time starts closed.
+    func didActivate() {
+        isPickingBonus = false
+    }
+
     func canAddBonus(sign: BonusDice.Sign, sides: Int) -> Bool {
         spec.canAddBonus(sign: sign, sides: sides)
     }
@@ -53,6 +58,16 @@ final class PanelModel: ObservableObject {
     /// Adds one bonus die (merging into its group) and closes the picker.
     func addBonus(sign: BonusDice.Sign, sides: Int) {
         update { $0.addBonus(sign: sign, sides: sides) }
+        isPickingBonus = false
+    }
+
+    func canAddPreset(_ preset: BonusPreset) -> Bool {
+        spec.canAddBonus(sign: preset.sign, sides: preset.sides, count: preset.count)
+    }
+
+    /// Adds a preset's dice (merging like any bonus) and closes the picker.
+    func addPreset(_ preset: BonusPreset) {
+        update { $0.addBonus(sign: preset.sign, sides: preset.sides, count: preset.count) }
         isPickingBonus = false
     }
 

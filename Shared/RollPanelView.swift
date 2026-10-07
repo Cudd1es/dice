@@ -1,6 +1,9 @@
 import SwiftUI
 import DiceKit
 
+/// The panel's text fields, for focus.
+enum PanelField { case purpose, dc }
+
 /// Button panel for building a roll. Reads only the formula, never a result.
 struct RollPanelView: View {
     @ObservedObject var model: PanelModel
@@ -9,13 +12,8 @@ struct RollPanelView: View {
     var onKeyboardFocus: (() -> Void)? = nil
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private enum Field { case purpose, dc }
-    @FocusState private var focus: Field?
+    @FocusState private var focus: PanelField?
     @State private var contentHeight: CGFloat?
-
-    private static let defaultDC = 10
-    /// The purpose counter appears only near the limit, so the field stays clean otherwise.
-    private static let purposeCounterFrom = 30
 
     var body: some View {
         // Full height when it fits; scrolls when space is short (landscape-sized sheets, large text),
@@ -60,8 +58,9 @@ struct RollPanelView: View {
     }
 
     private var panel: some View {
-        VStack(spacing: 12) {
-                purposeField
+        // 8pt rather than 12pt between rows, so the panel fits the compact Messages drawer.
+        VStack(spacing: 8) {
+                PurposeField(model: model, focus: $focus)
                 sidesRow
                 // Count and modifier stack vertically at accessibility text sizes, where one row is too wide.
                 if dynamicTypeSize.isAccessibilitySize {
@@ -76,9 +75,11 @@ struct RollPanelView: View {
                         modifierStepper
                     }
                 }
-                bonusRow
+                if !model.spec.extras.isEmpty {
+                    BonusTags(model: model)
+                }
                 modeRow
-                dcRow
+                dcAndBonusRow
                 Text(RollFormatter.formula(model.spec))
                     .font(.headline.monospacedDigit())
                     .frame(maxWidth: .infinity)
@@ -104,29 +105,20 @@ struct RollPanelView: View {
         .controlSize(.large)
     }
 
-    /// Bonus dice tags, each with a menu to change or remove it, then the button that opens the picker.
-    private var bonusRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(Array(model.spec.extras.enumerated()), id: \.offset) { index, group in
-                    Menu {
-                        Button("One More", systemImage: "plus") { model.incrementBonus(at: index) }
-                            .disabled(group.count >= BonusDice.countRange.upperBound)
-                        Button("One Fewer", systemImage: "minus") { model.decrementBonus(at: index) }
-                        Button("Remove", systemImage: "trash", role: .destructive) { model.removeBonus(at: index) }
-                    } label: {
-                        Text(verbatim: (group.sign == .plus ? "+" : "−") + "\(group.count)d\(group.sides)")
-                            .fontWeight(.semibold)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(.accentColor)
-                }
-                Button("Bonus", systemImage: "plus") {
-                    focus = nil
-                    withAnimation(BonusPickerView.animation) { model.isPickingBonus = true }
-                }
-                .buttonStyle(.bordered)
-                .tint(.secondary)
+    /// "+ Bonus" lives at the end of the DC row instead of a row of its own, so an unused feature costs no height.
+    /// At accessibility text sizes the row is too narrow for both, so the button drops below.
+    @ViewBuilder
+    private var dcAndBonusRow: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            HStack { DCControls(model: model, focus: $focus) }
+            HStack {
+                BonusButton(model: model, focus: $focus)
+                Spacer()
+            }
+        } else {
+            HStack {
+                DCControls(model: model, focus: $focus)
+                BonusButton(model: model, focus: $focus)
             }
         }
     }
@@ -182,88 +174,5 @@ struct RollPanelView: View {
         .disabled(!model.isModeEnabled)
     }
 
-    /// Filled like the panel's buttons rather than the system's bordered style. Shows a clear button once there is
-    /// text and a counter near the limit.
-    private var purposeField: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "pencil")
-                .foregroundStyle(.secondary)
-            TextField("Purpose (optional), e.g. Perception check", text: $model.purpose)
-                .submitLabel(.done)
-                .focused($focus, equals: .purpose)
-                // Cut here, not in the model: when a didSet put back the previous value, SwiftUI saw no change
-                // and the field kept showing the extra characters.
-                .onChange(of: model.purpose) { _, text in
-                    if text.count > RollPurpose.maxLength { model.purpose = String(text.prefix(RollPurpose.maxLength)) }
-                }
-            if model.purpose.count > Self.purposeCounterFrom {
-                Text(verbatim: "\(model.purpose.count)/\(RollPurpose.maxLength)")
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
-            }
-            if !model.purpose.isEmpty {
-                Button {
-                    model.purpose = ""
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.tertiary)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Clear purpose")
-            }
-        }
-        .padding(.horizontal, 12)
-        .frame(minHeight: 40)
-        .background(Color(.tertiarySystemFill), in: Capsule())
-        .overlay {
-            Capsule().strokeBorder(Color.accentColor.opacity(focus == .purpose ? 0.6 : 0), lineWidth: 1.5)
-        }
-        .contentShape(Capsule())
-        .onTapGesture { focus = .purpose }
-        .animation(.easeOut(duration: 0.15), value: focus)
-    }
 
-    /// Tap the number to type a DC; the stepper is slow for large ones.
-    @ViewBuilder
-    private func dcValue(_ dc: Int) -> some View {
-        // The field must exist before it can take focus, so editing is the model's dcDraft, not the focus state.
-        if let draft = model.dcDraft {
-            // Starts empty with the current DC as the placeholder, so typing replaces it; leaving it empty keeps it.
-            TextField(String(dc), text: Binding(get: { draft }, set: { model.dcDraft = $0 }))
-                .keyboardType(.numberPad)
-                .focused($focus, equals: .dc)
-                .font(.body.monospacedDigit())
-                .multilineTextAlignment(.center)
-                .frame(width: 56, height: 32)
-                .background(Color(.tertiarySystemFill), in: Capsule())
-                .overlay { Capsule().strokeBorder(Color.accentColor.opacity(0.6), lineWidth: 1.5) }
-                .onAppear { focus = .dc }
-        } else {
-            Button {
-                model.beginEditingDC()
-            } label: {
-                Text("\(dc)").font(.body.monospacedDigit())
-            }
-        }
-    }
-
-    private var dcRow: some View {
-        HStack {
-            Toggle("DC", isOn: Binding(
-                get: { model.spec.dc != nil },
-                set: { on in
-                    // Turning DC off drops any typed draft (setDC(nil)); also close the number pad.
-                    if !on, focus == .dc { focus = nil }
-                    model.setDC(on ? Self.defaultDC : nil)
-                }
-            ))
-            .fixedSize()
-            if let dc = model.spec.dc {
-                Stepper(value: Binding(get: { dc }, set: { model.setDC($0) }), in: RollSpec.dcRange) {
-                    dcValue(dc)
-                }
-            }
-            Spacer()
-        }
-    }
 }

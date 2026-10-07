@@ -13,6 +13,7 @@
 - 单个 d20 的优势 / 劣势、大成功 / 大失败
 - 可选 DC（1–999），可以加减，也可以直接输入；天然 20 必定成功、天然 1 必定失败
 - **加成骰：**在主骰之外最多加 4 组，每组 1–10 个 d4–d100，可加可减。例如祝福术 `1d20+1d4`、灾祸术 `1d20-1d4`、伤害 `1d8+2d6+3`。优势和大成功只看主骰
+- **加成预设：**按 2024 年规则（SRD 5.2.1）整理：祝福术、神导术、灾祸术、诗人激励（d6–d12）、猎人印记、脆弱诅咒、神恩术、至圣斩
 - **目的：**可选的一句话，最多 40 字，例如「察觉检定：门后有没有人」。它跟着这次投骰一起显示，投完自动清空
 - **在 App 里投：**结果大字显示，下面保留最近 10 次记录，关掉 App 后清空
 - **在「信息」里投：**
@@ -155,4 +156,8 @@ project.yml         XcodeGen 工程定义
 
 ## 许可
 
-[MIT](LICENSE)
+代码：[MIT](LICENSE)。
+
+预设的法术和职业特性来自 Wizards of the Coast 的 System Reference Document 5.2.1，以 CC-BY-4.0 授权：
+
+This work includes material from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.

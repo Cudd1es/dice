@@ -33,9 +33,10 @@ Nobody, including you, can see the result before it is sent, so there are no rer
 |---|---|
 | Ability check against a DC | Main die d20, set the modifier, turn on **DC** and tap the number to type it |
 | Advantage / disadvantage | Main die 1d20, pick **Advantage** or **Disadvantage** |
-| Bless (+1d4) | Tap **+ Bonus** → **d4** |
-| Bane (−1d4) | Tap **+ Bonus** → **Subtract** → **d4** |
-| Damage `1d8+2d6+3` | Main die d8, modifier +3, then **+ Bonus** → d6 twice |
+| Bless (+1d4) | Tap **+ Bonus** → **Bless** |
+| Bane (−1d4) | Tap **+ Bonus** → **Bane** |
+| Damage `1d8+2d6+3` | Main die d8, modifier +3, then **+ Bonus** → d6, twice |
+| Divine Smite on a longsword hit | Main die d8, modifier, then **+ Bonus** → **Divine Smite** (+2d8) |
 | Say what it's for | Type in the purpose field at the top, e.g. "Perception: anyone behind the door?" |
 
 Every control is described in the [user guide](user-guide.md).

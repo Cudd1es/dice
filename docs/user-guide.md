@@ -15,13 +15,14 @@ From top to bottom:
 
 | Control | What it does |
 |---|---|
-| **Purpose** | Optional, up to 40 characters, e.g. "Attack the goblin". Shown with the roll and cleared after each roll. The ✕ clears it; a counter appears past 30 characters. |
+| **Purpose** | Optional, up to 40 characters, e.g. "Attack the goblin". Shown with the roll and cleared after each roll. The ✕ clears it. A counter appears past 30 characters and turns red past 40; rolling keeps the first 40. |
 | **Die** | d4, d6, d8, d10, d12, d20, d100. This is the *main* die. |
 | **Dice** | How many main dice, 1–20. |
 | **Modifier** | A flat number added to the total, −20 to +20. |
-| **Bonus** | Extra dice groups such as +1d4. See [Bonus dice](#bonus-dice). |
+| **Bonus tags** | Bonus dice you've added, such as +1d4. Shown only when there are any. See [Bonus dice](#bonus-dice). |
 | **Normal / Advantage / Disadvantage** | Only available when the main dice are exactly 1d20. |
 | **DC** | Optional target number, 1–999. Use − / + or tap the number to type it; tap **Done** or roll to apply it. If you leave the field empty, the DC stays as it was. |
+| **+ Bonus** | At the end of the DC row. Opens the bonus picker. |
 | **Formula** | What will be rolled, e.g. `1d20+1d4+5 · Advantage · DC 15`. |
 | **Roll** | Rolls. Always visible at the bottom of the panel. |
 
@@ -37,6 +38,23 @@ Bonus dice are extra groups rolled after the main dice and added to (or subtract
 3. Tap a die. It is added and you are back on the panel at once.
 
 Tap the same kind again and it merges: +1d4 twice becomes +2d4.
+
+**Presets**
+
+The picker also has one-tap bonuses from the 2024 rules ([SRD 5.2.1](https://www.dndbeyond.com/srd)). They carry their own sign, so the Add / Subtract switch doesn't affect them.
+
+| Section | Preset | Adds | Rule |
+|---|---|---|---|
+| Checks | Bless | +1d4 | Attack rolls and saving throws |
+| Checks | Guidance | +1d4 | Ability checks with the chosen skill |
+| Checks | Bane | −1d4 | The target's attack rolls and saving throws |
+| Checks | Bardic Inspiration | +d6 / d8 / d10 / d12 | Pick the die for your Bard level: d6, then d8 at 5, d10 at 10, d12 at 15 |
+| Damage | Hunter's Mark | +1d6 | Each hit on the marked target |
+| Damage | Hex | +1d6 | Each hit on the cursed target |
+| Damage | Divine Favor | +1d4 | Weapon hits |
+| Damage | Divine Smite | +2d8 | Level 1 slot. For higher slots or Fiends/Undead, tap the d8 tag's **One More** |
+
+Presets merge like any bonus: Bless and Guidance together make +2d4.
 
 **Changing one**
 
@@ -107,3 +125,7 @@ Version notes:
 The result is decided when you tap Roll and is hidden from everyone, you included, until the message is sent.
 
 It is stored in plain text inside the message, though. This stops casual rerolling among friends but is not tamper-proof against someone determined to cheat.
+
+## Credits
+
+This work includes material from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.

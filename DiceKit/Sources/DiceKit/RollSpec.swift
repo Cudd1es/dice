@@ -61,22 +61,23 @@ public struct RollSpec: Codable, Equatable, Sendable {
     /// Main dice plus every bonus die.
     public var totalDiceCount: Int { diceToRoll + extras.reduce(0) { $0 + $1.count } }
 
-    /// True when the bonus can merge into an existing group or open a new one.
-    public func canAddBonus(sign: BonusDice.Sign, sides: Int) -> Bool {
-        guard BonusDice.allowedSides.contains(sides) else { return false }
+    /// True when `count` dice can merge into an existing group or open a new one without passing the limits.
+    public func canAddBonus(sign: BonusDice.Sign, sides: Int, count: Int = 1) -> Bool {
+        guard BonusDice.allowedSides.contains(sides), BonusDice.countRange.contains(count) else { return false }
         if let group = extras.first(where: { $0.sign == sign && $0.sides == sides }) {
-            return group.count < BonusDice.countRange.upperBound
+            return group.count + count <= BonusDice.countRange.upperBound
         }
         return extras.count < Self.maxExtras
     }
 
-    /// Adds one die of this kind, merging into an existing group; does nothing past the limits.
-    public mutating func addBonus(sign: BonusDice.Sign, sides: Int) {
-        guard canAddBonus(sign: sign, sides: sides) else { return }
+    /// Adds `count` dice of this kind, merging into an existing group. Past the limits it does nothing rather
+    /// than adding part of them.
+    public mutating func addBonus(sign: BonusDice.Sign, sides: Int, count: Int = 1) {
+        guard canAddBonus(sign: sign, sides: sides, count: count) else { return }
         if let index = extras.firstIndex(where: { $0.sign == sign && $0.sides == sides }) {
-            extras[index].count += 1
+            extras[index].count += count
         } else {
-            extras.append(BonusDice(sign: sign, sides: sides))
+            extras.append(BonusDice(sign: sign, count: count, sides: sides))
         }
     }
 

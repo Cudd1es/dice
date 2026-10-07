@@ -49,6 +49,7 @@ final class MessagesViewController: MSMessagesAppViewController {
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
         reveal.activate()
+        model.didActivate()
         // activeConversation is still nil inside this callback when Messages recreates a bubble that was
         // scrolled off screen (seen on device), so use the conversation it hands us.
         refresh(conversation)
