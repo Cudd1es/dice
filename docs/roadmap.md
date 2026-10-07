@@ -50,12 +50,12 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 ## Tech debt
 
 - ~~`RollPanelView` was the largest file (about 270 lines).~~ Split into `PurposeField`, `DCControls` and `BonusControls` (now about 180 lines).
-- **View wiring has no automated tests.** Focus order, keyboard expansion and the picker swap are checked by hand. Model logic is covered (DiceKit 79 tests, DiceMessagesTests 55 tests). A small XCUITest smoke test of the app (roll, add a bonus, type a purpose) would catch layout regressions like the half-visible Roll button.
+- **View wiring has no automated tests.** Focus order, keyboard expansion and the picker swap are checked by hand. Model logic is covered (DiceKit 92 tests, DiceMessagesTests 70 tests). A small XCUITest smoke test of the app (roll, add a bonus, type a purpose) would catch layout regressions like the half-visible Roll button.
 - **Device-only acceptance is manual for every release.** Keep the "Waiting on a device check" list current.
 
 ## Before 1.0 (App Store)
 
-- [ ] **Privacy manifest** (`PrivacyInfo.xcprivacy`) for the app and the extension. `SpecStore` uses `UserDefaults`, a required-reason API (reason `CA92.1`). App Store review expects it to be declared.
+- [x] **Privacy manifest** (`PrivacyInfo.xcprivacy`) in the app and the extension (on `dev`, ships with the next build): no tracking, no data collected; `UserDefaults` declared with `CA92.1` (`SpecStore`, the app's own defaults) and `1C8F.1` (`SettingsStore`, the App Group). Add a reason here whenever new code uses another required-reason API (file timestamps, system boot time, disk space, keyboards).
 - [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
 - [ ] Protect `main` (require PRs and passing CI); it is unprotected today
 - [ ] Clear known issues 1–2 above
@@ -73,5 +73,5 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | Dice sounds / animation | Out of scope so far; the app uses haptics only. |
 
 Suggested order:
-1. Run the device checks above on 0.5.0.
-2. The before-1.0 list, starting with the privacy manifest and the accessibility pass (known issues 2 and 4).
+1. Run the device checks above on 0.6.0.
+2. The rest of the before-1.0 list, starting with the accessibility pass and known issues 1, 2 and 4.
