@@ -61,12 +61,12 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 
 | Candidate | Notes |
 |---|---|
-| ~~Bonus presets~~ | Done on `dev` for 0.5.0: Bless, Guidance, Bane, Bardic Inspiration d6–d12, Hunter's Mark, Hex, Divine Favor, Divine Smite (SRD 5.2.1). |
+| ~~Bonus presets~~ | Shipped in 0.5.0: Bless, Guidance, Bane, Bardic Inspiration d6–d12, Hunter's Mark, Hex, Divine Favor, Divine Smite (SRD 5.2.1). |
 | More presets | Candidates the SRD also has but that need a choice the app can't know: Sneak Attack (scales by level), higher-slot Divine Smite. |
 | Saved formulas | Name and reuse whole rolls ("Longsword", "Fireball 8d6"). Needs storage and a list UI. |
 | Roll history in Messages | The extension has none today. |
 | Dice sounds / animation | Out of scope so far; the app uses haptics only. |
 
 Suggested order:
-1. Release 0.5.0 and run the device checks above.
+1. Run the device checks above on 0.5.0.
 2. The before-1.0 list, starting with the privacy manifest and the accessibility pass (known issues 2 and 4).
