@@ -16,13 +16,24 @@ final class PanelModel: ObservableObject {
     @Published var isPickingBonus = false
 
     private let store: SpecStore
+    private let settings: SettingsStore
 
-    init(store: SpecStore) {
+    init(store: SpecStore, settings: SettingsStore = SettingsStore()) {
         self.store = store
+        self.settings = settings
         // Bonus dice never carry over; 0.4.0 and 0.5.0 saved them with the formula.
         var saved = store.load()
         saved.extras = []
+        // The critical rule comes from Settings, not from whatever was saved with the formula.
+        saved.criticalsEnabled = settings.criticalsEnabled
         spec = saved
+    }
+
+    /// Picks up the critical rule from Settings. Called when the panel appears again and before every roll,
+    /// because the setting can change in the app while the Messages extension is open.
+    func refreshSettings() {
+        let enabled = settings.criticalsEnabled
+        if spec.criticalsEnabled != enabled { update { $0.criticalsEnabled = enabled } }
     }
 
     var isModeEnabled: Bool { spec.isSingleD20 }
@@ -52,6 +63,7 @@ final class PanelModel: ObservableObject {
     /// The Messages extension calls this each time it becomes active: a picker left open last time starts closed.
     func didActivate() {
         isPickingBonus = false
+        refreshSettings()
     }
 
     func canAddBonus(sign: BonusDice.Sign, sides: Int) -> Bool {
@@ -116,6 +128,7 @@ final class PanelModel: ObservableObject {
     /// Rolls the current formula and remembers it for next time. The purpose and bonus dice go with this roll only.
     func roll<G: RandomNumberGenerator>(using rng: inout G) -> (spec: RollSpec, result: RollResult, purpose: String?) {
         commitDCDraft()
+        refreshSettings()
         let rolled = spec
         let result = DiceEngine.roll(rolled, using: &rng)
         // Bonus dice and the purpose belong to this roll only; the rest of the formula is kept for next time.

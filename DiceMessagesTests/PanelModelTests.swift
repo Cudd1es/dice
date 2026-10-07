@@ -236,4 +236,37 @@ final class PanelModelTests: XCTestCase {
         model.didActivate()
         XCTAssertFalse(model.isPickingBonus)
     }
+
+    private func settings(criticals: Bool) -> SettingsStore {
+        let settings = SettingsStore(defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        settings.criticalsEnabled = criticals
+        return settings
+    }
+
+    func test_panel_rollUsesSettings() {
+        let model = PanelModel(store: store, settings: settings(criticals: false))
+        XCTAssertFalse(model.roll().spec.criticalsEnabled)
+    }
+
+    func test_panel_refreshSettingsUpdatesFormula() {
+        let settings = settings(criticals: true)
+        let model = PanelModel(store: store, settings: settings)
+        settings.criticalsEnabled = false
+        model.refreshSettings()
+        XCTAssertEqual(RollFormatter.formula(model.spec), RollFormatter.formula(RollSpec(criticalsEnabled: false)))
+    }
+
+    // The setting can change in the app while the Messages extension is already open.
+    func test_panel_didActivateRefreshesSettings() {
+        let settings = settings(criticals: true)
+        let model = PanelModel(store: store, settings: settings)
+        settings.criticalsEnabled = false
+        model.didActivate()
+        XCTAssertFalse(model.spec.criticalsEnabled)
+    }
+
+    func test_panel_settingOverridesStoredFlag() {
+        store.save(RollSpec(criticalsEnabled: false))
+        XCTAssertTrue(PanelModel(store: store, settings: settings(criticals: true)).spec.criticalsEnabled)
+    }
 }

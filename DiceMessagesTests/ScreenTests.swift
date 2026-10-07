@@ -16,7 +16,7 @@ final class ScreenTests: XCTestCase {
     }
 
     func test_resolve_transcriptFutureVersionNeedsUpdate() {
-        let future = URL(string: "https://dice.invalid/roll?v=3&n=1&s=20&m=n&k=0&d=7")!
+        let future = URL(string: "https://dice.invalid/roll?v=4&n=1&s=20&m=n&k=0&d=7")!
         XCTAssertEqual(Screen.resolve(style: .transcript, messageURL: future, isPending: false), .invalid(.needsUpdate))
     }
 
@@ -77,5 +77,14 @@ final class ScreenTests: XCTestCase {
         let rolled = DiceEngine.evaluate(bless, dice: [11], bonusRolls: [[3]])
         let screen = Screen.resolve(style: .transcript, messageURL: MessageCodec.url(for: bless, result: rolled), isPending: false)
         XCTAssertEqual(screen, .revealedBubble(bless, rolled, purpose: nil))
+    }
+
+    // A received roll follows the sender's setting; Screen never reads the receiver's.
+    func test_resolve_criticalsOffIgnoresReceiverSetting() {
+        let url = URL(string: "https://dice.invalid/roll?v=3&n=1&s=20&m=n&k=0&dc=25&c=0&d=20")!
+        guard case .revealedBubble(_, let result, _) = Screen.resolve(style: .transcript, messageURL: url, isPending: false)
+        else { return XCTFail("expected a revealed bubble") }
+        XCTAssertEqual(result.critical, .none)
+        XCTAssertEqual(result.dcOutcome, .failure)
     }
 }
