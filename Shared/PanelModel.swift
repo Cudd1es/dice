@@ -19,7 +19,10 @@ final class PanelModel: ObservableObject {
 
     init(store: SpecStore) {
         self.store = store
-        spec = store.load()
+        // Bonus dice never carry over; 0.4.0 and 0.5.0 saved them with the formula.
+        var saved = store.load()
+        saved.extras = []
+        spec = saved
     }
 
     var isModeEnabled: Bool { spec.isSingleD20 }
@@ -110,14 +113,17 @@ final class PanelModel: ObservableObject {
         setDC(dc)
     }
 
-    /// Rolls the current formula and remembers it for next time. The purpose goes with this roll only.
+    /// Rolls the current formula and remembers it for next time. The purpose and bonus dice go with this roll only.
     func roll<G: RandomNumberGenerator>(using rng: inout G) -> (spec: RollSpec, result: RollResult, purpose: String?) {
         commitDCDraft()
-        let result = DiceEngine.roll(spec, using: &rng)
+        let rolled = spec
+        let result = DiceEngine.roll(rolled, using: &rng)
+        // Bonus dice and the purpose belong to this roll only; the rest of the formula is kept for next time.
+        update { $0.extras = [] }
         store.save(spec)
         let rolledPurpose = RollPurpose.normalize(purpose)
         purpose = ""
-        return (spec, result, rolledPurpose)
+        return (rolled, result, rolledPurpose)
     }
 
     func roll() -> (spec: RollSpec, result: RollResult, purpose: String?) {

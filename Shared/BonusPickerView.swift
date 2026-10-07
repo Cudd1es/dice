@@ -28,6 +28,7 @@ struct BonusPickerView: View {
                 ForEach(BonusDice.allowedSides, id: \.self) { sides in
                     Button("d\(sides)") { withAnimation(Self.animation) { model.addBonus(sign: sign, sides: sides) } }
                         .buttonStyle(.bordered)
+                        .tint(.accentColor)
                         .frame(maxWidth: .infinity)
                         .disabled(!model.canAddBonus(sign: sign, sides: sides))
                 }
@@ -36,6 +37,8 @@ struct BonusPickerView: View {
         }
         .padding()
     }
+
+    // Buttons are tinted, not the default bordered grey: that grey vanished against the Messages drawer background.
 
     /// Common bonuses from the rules, one tap each. They ignore the Add/Subtract switch: each carries its own sign.
     private var presets: some View {
@@ -50,6 +53,7 @@ struct BonusPickerView: View {
                 ForEach(BonusPreset.bardicInspiration) { preset in
                     Button("d\(preset.sides)") { add(preset) }
                         .buttonStyle(.bordered)
+                        .tint(.accentColor)
                         .disabled(!model.canAddPreset(preset))
                 }
             }
@@ -70,6 +74,7 @@ struct BonusPickerView: View {
                     .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
+                .tint(.accentColor)
                 .disabled(!model.canAddPreset(preset))
             }
         }
