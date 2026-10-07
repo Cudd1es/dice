@@ -29,7 +29,7 @@ public enum DiceEngine {
         let total = kept.reduce(0) { $0 + dice[$1] } + bonus + spec.modifier
 
         var critical = Critical.none
-        if spec.isSingleD20, let index = kept.first {
+        if spec.isSingleD20, spec.criticalsEnabled, let index = kept.first {
             if dice[index] == 20 { critical = .success }
             if dice[index] == 1 { critical = .failure }
         }
