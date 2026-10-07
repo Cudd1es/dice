@@ -204,11 +204,22 @@ final class PanelModelTests: XCTestCase {
         XCTAssertEqual(model.spec.extras, [])
     }
 
-    func test_panel_bonusSavedWithSpec() {
+    // Bonus dice belong to one roll, like the purpose: rolling uses them, then the panel starts without any.
+    func test_panel_rollClearsBonus() {
         let model = PanelModel(store: store)
         model.addBonus(sign: .minus, sides: 4)
-        _ = model.roll()
-        XCTAssertEqual(store.load().extras, [BonusDice(sign: .minus, sides: 4)])
+        let rolled = model.roll()
+        XCTAssertEqual(rolled.spec.extras, [BonusDice(sign: .minus, sides: 4)])
+        XCTAssertEqual(rolled.result.bonusRolls.count, 1)
+        XCTAssertEqual(model.spec.extras, [])
+        XCTAssertEqual(store.load().extras, [])
+    }
+
+    // 0.4.0 and 0.5.0 saved bonus dice with the formula; they no longer carry over.
+    func test_panel_loadDropsSavedBonus() {
+        store.save(RollSpec(modifier: 3, extras: [BonusDice(sides: 4)]))
+        let model = PanelModel(store: store)
+        XCTAssertEqual(model.spec, RollSpec(modifier: 3))
     }
 
     func test_panel_rollIncludesBonus() {

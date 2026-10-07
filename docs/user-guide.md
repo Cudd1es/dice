@@ -26,7 +26,7 @@ From top to bottom:
 | **Formula** | What will be rolled, e.g. `1d20+1d4+5 · Advantage · DC 15`. |
 | **Roll** | Rolls. Always visible at the bottom of the panel. |
 
-The panel remembers your last formula, bonus dice included, but not the purpose. The app and the Messages panel each remember their own.
+The panel remembers your last formula (dice, modifier, advantage, DC). The purpose and bonus dice are for one roll only: they are cleared after each roll. The app and the Messages panel each remember their own.
 
 ### Bonus dice
 

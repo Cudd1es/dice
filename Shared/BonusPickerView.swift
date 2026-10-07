@@ -28,6 +28,8 @@ struct BonusPickerView: View {
                 ForEach(BonusDice.allowedSides, id: \.self) { sides in
                     Button("d\(sides)") { withAnimation(Self.animation) { model.addBonus(sign: sign, sides: sides) } }
                         .buttonStyle(.bordered)
+                        .tint(.secondary)
+                        .foregroundStyle(.primary)
                         .frame(maxWidth: .infinity)
                         .disabled(!model.canAddBonus(sign: sign, sides: sides))
                 }
@@ -36,6 +38,9 @@ struct BonusPickerView: View {
         }
         .padding()
     }
+
+    // Buttons use the panel's neutral die-button grey with primary text: the default bordered grey vanished against
+    // the Messages drawer, and a blue fill read as "selected". Blue is kept for selected dice and added bonus tags.
 
     /// Common bonuses from the rules, one tap each. They ignore the Add/Subtract switch: each carries its own sign.
     private var presets: some View {
@@ -50,6 +55,8 @@ struct BonusPickerView: View {
                 ForEach(BonusPreset.bardicInspiration) { preset in
                     Button("d\(preset.sides)") { add(preset) }
                         .buttonStyle(.bordered)
+                        .tint(.secondary)
+                        .foregroundStyle(.primary)
                         .disabled(!model.canAddPreset(preset))
                 }
             }
@@ -70,6 +77,8 @@ struct BonusPickerView: View {
                     .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
+                .tint(.secondary)
+                .foregroundStyle(.primary)
                 .disabled(!model.canAddPreset(preset))
             }
         }
