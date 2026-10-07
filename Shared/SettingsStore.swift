@@ -5,8 +5,9 @@ import Foundation
 struct SettingsStore {
     static let appGroup = "group.dev.ansel.dice"
 
-    /// The App Group's defaults; falls back to the app's own if the group is unavailable (e.g. a signing problem),
-    /// so settings still work, just without sharing.
+    /// The App Group's defaults. Without the App Group entitlement (an unsigned build, a signing problem) iOS still
+    /// returns a store, just a private one, so settings keep working without being shared; `.standard` is only a
+    /// last resort if no store is returned at all.
     static var shared: UserDefaults { UserDefaults(suiteName: appGroup) ?? .standard }
 
     private static let criticalsKey = "criticalsEnabled"

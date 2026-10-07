@@ -1,6 +1,6 @@
 # Roadmap
 
-Last reviewed: 2026-10-06, at 0.5.2 (build 11).
+Last reviewed: 2026-10-07, at 0.6.0 (critical toggle; not yet released).
 
 ## Shipped
 

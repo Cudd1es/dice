@@ -6,21 +6,24 @@ import DiceKit
 final class PanelModelTests: XCTestCase {
     private var defaults: UserDefaults!
     private var store: SpecStore { SpecStore(defaults: defaults) }
+    /// Never the real App Group: the developer's own setting on the simulator must not change test results.
+    private var settings: SettingsStore!
 
     override func setUp() {
         super.setUp()
         defaults = UserDefaults(suiteName: UUID().uuidString)
+        settings = SettingsStore(defaults: UserDefaults(suiteName: UUID().uuidString)!)
     }
 
     func test_panel_loadsLastSpec() {
         let spec = RollSpec(count: 3, sides: 8, modifier: -1)
         store.save(spec)
-        XCTAssertEqual(PanelModel(store: store).spec, spec)
+        XCTAssertEqual(PanelModel(store: store, settings: settings).spec, spec)
     }
 
     func test_panel_clampsCount() {
         store.save(RollSpec(count: 20, sides: 6))
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.changeCount(by: 1)
         XCTAssertEqual(model.spec.count, 20)
         model.changeCount(by: -19)
@@ -29,7 +32,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_clampsModifier() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.changeModifier(by: 25)
         XCTAssertEqual(model.spec.modifier, 20)
         model.changeModifier(by: -50)
@@ -37,7 +40,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_clampsDC() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setDC(1500)
         XCTAssertEqual(model.spec.dc, 999)
         model.setDC(0)
@@ -47,7 +50,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_changingSidesResetsMode() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setMode(.advantage)
         XCTAssertEqual(model.spec.mode, .advantage)
         model.selectSides(6)
@@ -56,21 +59,21 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_changingCountResetsMode() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setMode(.disadvantage)
         model.changeCount(by: 1)
         XCTAssertEqual(model.spec.mode, .normal)
     }
 
     func test_panel_modeIgnoredWhenDisabled() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.selectSides(8)
         model.setMode(.advantage)
         XCTAssertEqual(model.spec.mode, .normal)
     }
 
     func test_panel_rollSavesSpec() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.selectSides(12)
         model.changeModifier(by: 2)
         _ = model.roll()
@@ -78,7 +81,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_rollIsReproducibleWithSeed() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setMode(.advantage)
         model.setDC(15)
         var first = SplitMix64(seed: 7)
@@ -91,34 +94,34 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_rollReturnsPurposeAndClears() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.purpose = "  攻击哥布林 "
         XCTAssertEqual(model.roll().purpose, "攻击哥布林")
         XCTAssertEqual(model.purpose, "")
     }
 
     func test_panel_blankPurposeIsNil() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.purpose = "  "
         XCTAssertNil(model.roll().purpose)
     }
 
     // The field cuts at 40 as you type (RollPanelView); a longer value still never leaves the panel.
     func test_panel_longPurposeRollsAs40() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.purpose = String(repeating: "a", count: 50)
         XCTAssertEqual(model.roll().purpose, String(repeating: "a", count: 40))
     }
 
     func test_panel_purposeNotSaved() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.purpose = "察觉检定"
         _ = model.roll()
-        XCTAssertEqual(PanelModel(store: store).purpose, "")
+        XCTAssertEqual(PanelModel(store: store, settings: settings).purpose, "")
     }
 
     func test_panel_setDCText() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setDC(15)
         model.setDC(text: "120")
         XCTAssertEqual(model.spec.dc, 120)
@@ -136,7 +139,7 @@ final class PanelModelTests: XCTestCase {
 
     // Tapping Roll with the number pad still up must roll the DC that was typed, not the old one.
     func test_panel_rollCommitsTypedDC() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setDC(15)
         model.beginEditingDC()
         model.dcDraft = "18"
@@ -147,7 +150,7 @@ final class PanelModelTests: XCTestCase {
 
     // Switching DC off mid-edit drops the draft, so the later focus-loss commit cannot turn it back on.
     func test_panel_turningDCOffDropsDraft() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setDC(15)
         model.beginEditingDC()
         model.dcDraft = "2"
@@ -158,7 +161,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_emptyDCDraftKeepsDC() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.setDC(15)
         model.beginEditingDC()
         model.commitDCDraft()
@@ -167,7 +170,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_addBonusClosesPicker() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.isPickingBonus = true
         model.addBonus(sign: .plus, sides: 4)
         XCTAssertEqual(model.spec.extras, [BonusDice(sides: 4)])
@@ -175,7 +178,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_incrementDecrementRemove() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.addBonus(sign: .plus, sides: 6)
         model.incrementBonus(at: 0)
         XCTAssertEqual(model.spec.extras, [BonusDice(count: 2, sides: 6)])
@@ -189,7 +192,7 @@ final class PanelModelTests: XCTestCase {
     }
 
     func test_panel_incrementCapsAt10() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.addBonus(sign: .plus, sides: 6)
         for _ in 0..<12 { model.incrementBonus(at: 0) }
         XCTAssertEqual(model.spec.extras, [BonusDice(count: 10, sides: 6)])
@@ -197,7 +200,7 @@ final class PanelModelTests: XCTestCase {
 
     // A tag's menu can outlive its group; a stale index must do nothing.
     func test_panel_bonusIndexOutOfRangeIgnored() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.incrementBonus(at: 0)
         model.decrementBonus(at: 3)
         model.removeBonus(at: -1)
@@ -206,7 +209,7 @@ final class PanelModelTests: XCTestCase {
 
     // Bonus dice belong to one roll, like the purpose: rolling uses them, then the panel starts without any.
     func test_panel_rollClearsBonus() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.addBonus(sign: .minus, sides: 4)
         let rolled = model.roll()
         XCTAssertEqual(rolled.spec.extras, [BonusDice(sign: .minus, sides: 4)])
@@ -218,12 +221,12 @@ final class PanelModelTests: XCTestCase {
     // 0.4.0 and 0.5.0 saved bonus dice with the formula; they no longer carry over.
     func test_panel_loadDropsSavedBonus() {
         store.save(RollSpec(modifier: 3, extras: [BonusDice(sides: 4)]))
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         XCTAssertEqual(model.spec, RollSpec(modifier: 3))
     }
 
     func test_panel_rollIncludesBonus() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.addBonus(sign: .plus, sides: 4)
         model.addBonus(sign: .minus, sides: 6)
         XCTAssertEqual(model.roll().result.bonusRolls.map(\.count), [1, 1])
@@ -231,25 +234,25 @@ final class PanelModelTests: XCTestCase {
 
     // Leaving the Messages drawer with the picker open must not bring the picker back next time.
     func test_panel_didActivateClosesPicker() {
-        let model = PanelModel(store: store)
+        let model = PanelModel(store: store, settings: settings)
         model.isPickingBonus = true
         model.didActivate()
         XCTAssertFalse(model.isPickingBonus)
     }
 
-    private func settings(criticals: Bool) -> SettingsStore {
+    private func makeSettings(criticals: Bool) -> SettingsStore {
         let settings = SettingsStore(defaults: UserDefaults(suiteName: UUID().uuidString)!)
         settings.criticalsEnabled = criticals
         return settings
     }
 
     func test_panel_rollUsesSettings() {
-        let model = PanelModel(store: store, settings: settings(criticals: false))
+        let model = PanelModel(store: store, settings: makeSettings(criticals: false))
         XCTAssertFalse(model.roll().spec.criticalsEnabled)
     }
 
     func test_panel_refreshSettingsUpdatesFormula() {
-        let settings = settings(criticals: true)
+        let settings = makeSettings(criticals: true)
         let model = PanelModel(store: store, settings: settings)
         settings.criticalsEnabled = false
         model.refreshSettings()
@@ -258,7 +261,7 @@ final class PanelModelTests: XCTestCase {
 
     // The setting can change in the app while the Messages extension is already open.
     func test_panel_didActivateRefreshesSettings() {
-        let settings = settings(criticals: true)
+        let settings = makeSettings(criticals: true)
         let model = PanelModel(store: store, settings: settings)
         settings.criticalsEnabled = false
         model.didActivate()
@@ -267,6 +270,6 @@ final class PanelModelTests: XCTestCase {
 
     func test_panel_settingOverridesStoredFlag() {
         store.save(RollSpec(criticalsEnabled: false))
-        XCTAssertTrue(PanelModel(store: store, settings: settings(criticals: true)).spec.criticalsEnabled)
+        XCTAssertTrue(PanelModel(store: store, settings: makeSettings(criticals: true)).spec.criticalsEnabled)
     }
 }

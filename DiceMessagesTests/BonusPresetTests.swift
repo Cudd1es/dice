@@ -33,7 +33,8 @@ final class BonusPresetTests: XCTestCase {
 
     // Presets merge like any bonus: Bless and Guidance together are +2d4.
     func test_panel_addPresetMergesAndClosesPicker() {
-        let model = PanelModel(store: SpecStore(defaults: UserDefaults(suiteName: UUID().uuidString)!))
+        let model = PanelModel(store: SpecStore(defaults: UserDefaults(suiteName: UUID().uuidString)!),
+                               settings: SettingsStore(defaults: UserDefaults(suiteName: UUID().uuidString)!))
         model.isPickingBonus = true
         model.addPreset(BonusPreset.checks[0])
         XCTAssertFalse(model.isPickingBonus)
