@@ -16,6 +16,7 @@ Last reviewed: 2026-10-06, at 0.5.2 (build 11).
 | 0.5.0 | 8 | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | #12 |
 | 0.5.1 | 10 | Bonus dice reset after every roll | #14 |
 | 0.5.2 | 11 | Bonus picker buttons in the panel's neutral grey (0.5.1's blue read as "selected") | #14 |
+| 0.6.0 | — | Settings page with the critical success / failure toggle (App Group); message version 3 | — |
 
 ## Waiting on a device check
 
@@ -27,6 +28,8 @@ These can't be checked in the simulator, because simulator bubbles are blank. Th
 4. Long purpose: is the bubble's first line truncated cleanly and clear of the icon?
 5. A tester other than the developer receives the rolls (the receiver's view in a group chat)
 6. Haptics on Roll and on a critical, in the app
+7. App Group in the TestFlight build: turning criticals off in the app takes effect in Messages
+8. A 0.5.x phone receiving a roll with criticals off asks to update
 
 ## Known issues (deferred minors)
 

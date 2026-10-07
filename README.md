@@ -14,6 +14,7 @@ Dice for D&D 5e / Baldur's Gate style tabletop games. You can roll them two ways
 - Optional DC from 1 to 999; you can step it or type it in. A natural 20 always succeeds and a natural 1 always fails.
 - **Bonus dice:** up to 4 groups after the main dice, each 1–10 dice from d4 to d100, added or subtracted. Examples: Bless `1d20+1d4`, Bane `1d20-1d4`, damage `1d8+2d6+3`. Advantage and criticals look only at the main dice.
 - **Bonus presets** from the 2024 rules (SRD 5.2.1): Bless, Guidance, Bane, Bardic Inspiration (d6–d12), Hunter's Mark, Hex, Divine Favor, Divine Smite.
+- **Critical rule setting:** turn critical success / failure off in Settings for tables whose house rules don't use them. Then only the total meets the DC, and the formula says "No crits". The app and Messages share the setting (App Group).
 - **Purpose:** an optional line of up to 40 characters, such as "Perception: anyone behind the door?". It travels with the roll and is cleared after each one.
 - **In the app:** a big result, plus the last 10 rolls (kept until the app closes)
 - **In Messages:**
@@ -107,9 +108,12 @@ After uploading:
 2. paste "What to Test" from [docs/testflight/beta-info.md](docs/testflight/beta-info.md).
 
 **Message format**
-- The current version is `v=2`. Rolls without bonus dice are still written as `v=1`, so older apps keep reading them.
-- An app that meets a newer version asks the user to update.
-- Any format change must keep that promise; see `DiceKit/Sources/DiceKit/MessageCodec.swift`.
+- The current version is `v=3`. Each roll is written at the **lowest version that can carry it**:
+  - `v=1` for a plain roll;
+  - `v=2` with bonus dice;
+  - `v=3` when criticals are off for a single main d20.
+- An app that meets a newer version asks the user to update instead of guessing.
+- **Rule for future changes:** any change that would make an older app show a different result must raise the version. Features an older app can safely ignore (like the purpose) may stay at the old version. See `DiceKit/Sources/DiceKit/MessageCodec.swift`.
 
 ## Project layout
 

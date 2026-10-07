@@ -11,7 +11,25 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.5.2（构建号 11）
+## 测试内容（What to Test）— 0.6.0
+
+新功能：设置页里可以关闭大成功 / 大失败判定（App 右上角齿轮）。关掉后天然 20 / 1 只是普通点数，只用总值和 DC 比较，公式末尾标出"不判定大成功"。「信息」里用的也是这个设置；你发出的投骰按你的设置判定，大家看到的结果一致。请大家都更新：旧版收到关闭判定的投骰会提示"请更新 App"。
+
+1. 在设置里关掉判定，App 里投一次带 DC 的 1d20：公式是否带"不判定大成功"？天然 20 是否不再显示大成功？
+2. 回到「信息」打开 DND Dice：面板公式是否也带这句？发一条给朋友：朋友那边的结果是否和你一致？
+3. 重新打开判定：两边是否恢复？
+4. 还没更新的朋友收到关闭判定的投骰，是否提示"请更新 App"？
+
+### English
+
+New: a Settings page (the gear at the top right of the app) can turn critical success / failure off. When off, a natural 20 or 1 is just a number, only the total meets the DC, and the formula ends with "No crits". Messages uses the same setting; rolls you send follow your setting, so everyone sees the same result. Please update: older versions ask to update when they receive a roll with criticals off.
+
+1. Turn criticals off and roll a 1d20 with a DC in the app: does the formula say "No crits", and does a natural 20 no longer show Critical Success?
+2. Open DND Dice in Messages: does the panel's formula say it too? Send one to a friend: do they see the same result?
+3. Turn criticals back on: do both places go back to normal?
+4. Friends who haven't updated: does a roll with criticals off ask them to update?
+
+### 上一版：测试内容（What to Test）— 0.5.2（构建号 11）
 
 加成菜单的按钮改成和主面板骰子按钮一样的灰底、黑字：在「信息」小窗口里看得清楚，也不会像"已选中"。蓝色只用在选中的骰子和已加上的加成标签上。
 
