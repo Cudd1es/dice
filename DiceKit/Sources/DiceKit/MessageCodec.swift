@@ -14,9 +14,10 @@ public enum CodecError: Error, Equatable {
 /// The total is not stored: decoding recomputes it with `DiceEngine.evaluate`,
 /// so a URL whose total disagrees with its dice cannot exist.
 public enum MessageCodec {
-    /// Newest version this build reads. Version 2 adds bonus dice (`x`); a roll without them is still written as
-    /// version 1, byte for byte as before, so older apps keep reading it.
-    public static let currentVersion = 2
+    /// Newest version this build reads. Version 2 adds bonus dice (`x`), version 3 the critical setting (`c=0`).
+    /// Each roll is written at the lowest version that carries it (see `version(for:)`), so older apps keep reading
+    /// every roll they would show the same way; a newer version makes them ask to update instead of guessing.
+    public static let currentVersion = 3
 
     /// Messages drops custom-scheme URLs, so the payload rides on an https URL.
     /// `.invalid` is a reserved TLD and never resolves.
@@ -29,7 +30,7 @@ public enum MessageCodec {
     public static func url(for spec: RollSpec, result: RollResult, purpose: String? = nil) -> URL {
         var components = URLComponents(string: base)!
         var items = [
-            URLQueryItem(name: "v", value: spec.extras.isEmpty ? "1" : "2"),
+            URLQueryItem(name: "v", value: String(version(for: spec))),
             URLQueryItem(name: "n", value: String(spec.count)),
             URLQueryItem(name: "s", value: String(spec.sides)),
             URLQueryItem(name: "m", value: modeCodes[spec.mode]),
@@ -42,6 +43,9 @@ public enum MessageCodec {
             // "+" is left out: in a query it is easily read as a space.
             let groups = spec.extras.map { ($0.sign == .minus ? "-" : "") + "\($0.count)d\($0.sides)" }
             items.append(URLQueryItem(name: "x", value: groups.joined(separator: ",")))
+        }
+        if hasCriticalsOff(spec) {
+            items.append(URLQueryItem(name: "c", value: "0"))
         }
         // Main dice first, then each bonus group in order.
         let allDice = result.dice + result.bonusRolls.flatMap { $0 }
@@ -85,7 +89,16 @@ public enum MessageCodec {
         // Version 1 never had bonus dice, so a stray x there is ignored as before.
         let extras = version >= 2 ? try value("x").map(parseExtras) ?? [] : []
 
-        let spec = RollSpec(count: count, sides: sides, mode: mode, modifier: modifier, dc: dc, extras: extras)
+        // Versions 1 and 2 never had c, so a stray one there is ignored as older apps do.
+        let criticalsEnabled: Bool
+        switch version >= 3 ? value("c") : nil {
+        case nil: criticalsEnabled = true
+        case "0"?: criticalsEnabled = false
+        default: throw CodecError.malformed("c")
+        }
+
+        let spec = RollSpec(count: count, sides: sides, mode: mode, modifier: modifier, dc: dc, extras: extras,
+                            criticalsEnabled: criticalsEnabled)
         do {
             try spec.validate()
         } catch let error as RollSpecError {
@@ -104,6 +117,19 @@ public enum MessageCodec {
         }
         return (spec, DiceEngine.evaluate(spec, dice: main, bonusRolls: bonusRolls),
                 value("p").flatMap(RollPurpose.normalize))
+    }
+
+    /// The lowest version that can carry this roll, so older apps keep reading every roll they can show correctly:
+    /// 3 when criticals are off for a single main d20 (an older app would show a critical the sender didn't get),
+    /// 2 with bonus dice, else 1.
+    private static func version(for spec: RollSpec) -> Int {
+        if hasCriticalsOff(spec) { return 3 }
+        return spec.extras.isEmpty ? 1 : 2
+    }
+
+    /// Only a single main d20 can roll a critical, so only then does the setting change anything.
+    private static func hasCriticalsOff(_ spec: RollSpec) -> Bool {
+        !spec.criticalsEnabled && spec.isSingleD20
     }
 
     /// "1d4,-2d6" → [+1d4, −2d6]. Only the shape is checked here; counts and sizes are checked by `validate()`.
