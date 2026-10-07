@@ -73,6 +73,35 @@ public enum RollFormatter {
         }
     }
 
+    /// The formula for VoiceOver: commas instead of " · ", which may be read aloud as "middle dot".
+    public static func spokenFormula(_ spec: RollSpec, _ language: RollLanguage = .current) -> String {
+        formula(spec, language).replacingOccurrences(of: " · ", with: language == .english ? ", " : "，")
+    }
+
+    /// The whole result as one VoiceOver sentence, e.g.
+    /// "Perception. 1d20+5, Advantage, DC 15. Rolled 17, 8; kept 17. Total 22. Success".
+    /// Says which die was kept, since the struck-through dropped die in `detailMarkdown` is not read aloud.
+    public static func spokenResult(_ spec: RollSpec, _ result: RollResult, purpose: String? = nil,
+                                    _ language: RollLanguage = .current) -> String {
+        let english = language == .english
+        let list = { (values: [Int]) in values.map(String.init).joined(separator: english ? ", " : "、") }
+        var parts: [String] = []
+        if let purpose { parts.append(purpose) }
+        parts.append(spokenFormula(spec, language))
+        var rolled = (english ? "Rolled " : "掷出 ") + list(result.dice)
+        if spec.mode != .normal {
+            rolled += (english ? "; kept " : "，取 ") + list(result.keptIndices.map { result.dice[$0] })
+        }
+        parts.append(rolled)
+        for (group, rolls) in zip(spec.extras, result.bonusRolls) {
+            let sign = group.sign == .plus ? (english ? "Plus" : "加") : (english ? "Minus" : "减")
+            parts.append("\(sign) \(group.count)d\(group.sides)" + (english ? ": " : "：") + list(rolls))
+        }
+        parts.append((english ? "Total " : "总计 ") + String(result.total))
+        if let outcome = outcome(result, language) { parts.append(outcome) }
+        return parts.joined(separator: english ? ". " : "。")
+    }
+
     /// "HH:mm" in 24-hour time regardless of the device's 12/24-hour setting.
     public static func clockTime(_ date: Date, timeZone: TimeZone = .current) -> String {
         var calendar = Calendar(identifier: .gregorian)
