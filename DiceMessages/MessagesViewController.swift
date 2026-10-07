@@ -12,6 +12,13 @@ struct RootView: View {
     let onKeyboardFocus: () -> Void
 
     var body: some View {
+        content
+            // Same cap as the app (RollerView): beyond it the panel and the result card no longer fit the screen.
+            .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+    }
+
+    @ViewBuilder
+    private var content: some View {
         switch screen {
         case nil:
             // Fixed height: Color.clear alone is greedy and made the bubble very tall.

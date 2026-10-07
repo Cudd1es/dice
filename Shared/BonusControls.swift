@@ -21,6 +21,10 @@ struct BonusTags: View {
                     }
                     .buttonStyle(.bordered)
                     .tint(.accentColor)
+                    // "−1d6" uses a minus sign that VoiceOver may read oddly; say the action instead.
+                    .accessibilityLabel(group.sign == .plus ? Text("Add \(group.count)d\(group.sides)")
+                                                            : Text("Subtract \(group.count)d\(group.sides)"))
+                    .accessibilityHint("Change or remove this bonus")
                 }
             }
         }

@@ -79,6 +79,12 @@ Panel logic, screen routing and message building for the extension:
 xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:DiceMessagesTests
 ```
 
+Accessibility audit (UI tests, slow, not in CI; run before a release):
+
+```bash
+xcodebuild test -project Dice.xcodeproj -scheme Accessibility -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+```
+
 Change the simulator name to one you have.
 
 CI (GitHub Actions, `.github/workflows/ci.yml`) runs both suites on every pull request and every push to `main`.

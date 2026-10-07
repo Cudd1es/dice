@@ -347,7 +347,7 @@
         }
       }
     },
-    "Purpose (optional), e.g. Perception check": {
+    "Purpose (optional), e.g. Stealth": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -523,6 +523,76 @@
           "stringUnit": {
             "state": "translated",
             "value": "在「信息」里使用"
+          }
+        }
+      }
+    },
+    "Add or Subtract": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加或减"
+          }
+        }
+      }
+    },
+    "DC %lld": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DC %lld"
+          }
+        }
+      }
+    },
+    "Double-tap to type a DC": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "轻点两下输入 DC"
+          }
+        }
+      }
+    },
+    "Add %lldd%lld": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加 %lldd%lld"
+          }
+        }
+      }
+    },
+    "Subtract %lldd%lld": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "减 %lldd%lld"
+          }
+        }
+      }
+    },
+    "Change or remove this bonus": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更改或删除这个加成"
+          }
+        }
+      }
+    },
+    "%lld of %lld characters": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld/%lld 个字"
           }
         }
       }

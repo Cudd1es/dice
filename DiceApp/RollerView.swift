@@ -111,6 +111,9 @@ private struct HistoryRow: View {
                     .lineLimit(1)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(RollFormatter.clockTime(entry.date) + ". "
+                            + RollFormatter.spokenResult(entry.spec, entry.result, purpose: entry.purpose))
     }
 
     private var row: some View {
@@ -118,8 +121,9 @@ private struct HistoryRow: View {
             Text(RollFormatter.clockTime(entry.date))
                 .font(.caption.monospacedDigit())
                 .foregroundStyle(.secondary)
+            // Wraps rather than truncating: with advantage, a DC and "No crits" one line is too short.
             Text(RollFormatter.formula(entry.spec))
-                .lineLimit(1)
+                .lineLimit(2)
             Spacer()
             Text(verbatim: String(entry.result.total))
                 .font(.headline.monospacedDigit())

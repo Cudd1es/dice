@@ -79,6 +79,12 @@ swift test --package-path DiceKit
 xcodebuild test -project Dice.xcodeproj -scheme DiceApp -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:DiceMessagesTests
 ```
 
+无障碍检查（UI 测试，比较慢，不在 CI 里跑；发版前跑一次）：
+
+```bash
+xcodebuild test -project Dice.xcodeproj -scheme Accessibility -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+```
+
 模拟器名称按本机已有的调整。
 
 CI（GitHub Actions，`.github/workflows/ci.yml`）在每个 PR 和每次推送到 `main` 时跑这两套测试。

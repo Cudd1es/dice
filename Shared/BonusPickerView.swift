@@ -19,7 +19,7 @@ struct BonusPickerView: View {
                 // Balances the back button so the title stays centered.
                 Button("Back", systemImage: "chevron.left") {}.hidden()
             }
-            Picker("Bonus Dice", selection: $sign) {
+            Picker("Add or Subtract", selection: $sign) {
                 Text("Add").tag(BonusDice.Sign.plus)
                 Text("Subtract").tag(BonusDice.Sign.minus)
             }
@@ -71,7 +71,8 @@ struct BonusPickerView: View {
             ForEach(presets) { preset in
                 Button { add(preset) } label: {
                     HStack(spacing: 4) {
-                        Text(preset.name).lineLimit(1)
+                        // Shrinks rather than truncating long English names ("Hunter's Mark") in narrow columns.
+                        Text(preset.name).lineLimit(1).minimumScaleFactor(0.7)
                         Text(verbatim: preset.diceText).fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)

@@ -83,6 +83,7 @@ struct RollPanelView: View {
                 Text(RollFormatter.formula(model.spec))
                     .font(.headline.monospacedDigit())
                     .frame(maxWidth: .infinity)
+                    .accessibilityLabel(RollFormatter.spokenFormula(model.spec))
                 if let error = model.errorMessage {
                     Text(error)
                         .font(.footnote)
@@ -144,6 +145,7 @@ struct RollPanelView: View {
                         .buttonStyle(.bordered)
                         .tint(selected ? .accentColor : .secondary)
                         .fontWeight(selected ? .bold : .regular)
+                        .accessibilityAddTraits(selected ? .isSelected : [])
                 }
             }
         }
@@ -161,6 +163,17 @@ struct RollPanelView: View {
                 .frame(minWidth: 32)
             Button { change(1) } label: { Image(systemName: "plus") }
                 .buttonStyle(.bordered)
+        }
+        // One adjustable element ("Dice, 1", swipe up or down) instead of unlabeled minus and plus buttons.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue(value)
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: change(1)
+            case .decrement: change(-1)
+            @unknown default: break
+            }
         }
     }
 
