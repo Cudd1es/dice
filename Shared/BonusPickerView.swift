@@ -32,7 +32,50 @@ struct BonusPickerView: View {
                         .disabled(!model.canAddBonus(sign: sign, sides: sides))
                 }
             }
+            presets
         }
         .padding()
+    }
+
+    /// Common bonuses from the rules, one tap each. They ignore the Add/Subtract switch: each carries its own sign.
+    private var presets: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Checks").font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
+            presetGrid(BonusPreset.checks)
+            HStack(spacing: 8) {
+                Text(BonusPreset.bardicInspiration[0].name)
+                    .font(.subheadline)
+                    .fixedSize()
+                Spacer(minLength: 0)
+                ForEach(BonusPreset.bardicInspiration) { preset in
+                    Button("d\(preset.sides)") { add(preset) }
+                        .buttonStyle(.bordered)
+                        .disabled(!model.canAddPreset(preset))
+                }
+            }
+            Text("Damage").font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
+                .padding(.top, 4)
+            presetGrid(BonusPreset.damage)
+        }
+    }
+
+    private func presetGrid(_ presets: [BonusPreset]) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 8)], spacing: 8) {
+            ForEach(presets) { preset in
+                Button { add(preset) } label: {
+                    HStack(spacing: 4) {
+                        Text(preset.name).lineLimit(1)
+                        Text(verbatim: preset.diceText).fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!model.canAddPreset(preset))
+            }
+        }
+    }
+
+    private func add(_ preset: BonusPreset) {
+        withAnimation(Self.animation) { model.addPreset(preset) }
     }
 }

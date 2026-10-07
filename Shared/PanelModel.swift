@@ -61,6 +61,16 @@ final class PanelModel: ObservableObject {
         isPickingBonus = false
     }
 
+    func canAddPreset(_ preset: BonusPreset) -> Bool {
+        spec.canAddBonus(sign: preset.sign, sides: preset.sides, count: preset.count)
+    }
+
+    /// Adds a preset's dice (merging like any bonus) and closes the picker.
+    func addPreset(_ preset: BonusPreset) {
+        update { $0.addBonus(sign: preset.sign, sides: preset.sides, count: preset.count) }
+        isPickingBonus = false
+    }
+
     func incrementBonus(at index: Int) {
         guard spec.extras.indices.contains(index) else { return }
         update { $0.extras[index].count = min($0.extras[index].count + 1, BonusDice.countRange.upperBound) }

@@ -75,6 +75,7 @@ targets:
       - DiceMessages/RevealState.swift
       - Shared/PanelModel.swift
       - Shared/SpecStore.swift
+      - Shared/BonusPreset.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

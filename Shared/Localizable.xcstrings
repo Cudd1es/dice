@@ -41,6 +41,36 @@
         }
       }
     },
+    "Bane": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "灾祸术"
+          }
+        }
+      }
+    },
+    "Bardic Inspiration": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "诗人激励"
+          }
+        }
+      }
+    },
+    "Bless": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "祝福术"
+          }
+        }
+      }
+    },
     "Bonus": {
       "localizations": {
         "zh-Hans": {
@@ -57,6 +87,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "加成骰"
+          }
+        }
+      }
+    },
+    "Checks": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检定"
           }
         }
       }
@@ -81,8 +121,38 @@
         }
       }
     },
+    "Damage": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "伤害"
+          }
+        }
+      }
+    },
     "DC": {
       "shouldTranslate": false
+    },
+    "Divine Favor": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "神恩术"
+          }
+        }
+      }
+    },
+    "Divine Smite": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "至圣斩"
+          }
+        }
+      }
     },
     "DND Dice": {
       "shouldTranslate": false
@@ -127,12 +197,42 @@
         }
       }
     },
+    "Guidance": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "神导术"
+          }
+        }
+      }
+    },
+    "Hex": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "脆弱诅咒"
+          }
+        }
+      }
+    },
     "How to Use": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "使用说明"
+          }
+        }
+      }
+    },
+    "Hunter's Mark": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "猎人印记"
           }
         }
       }
