@@ -11,7 +11,21 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.5.1（构建号 10）
+## 测试内容（What to Test）— 0.5.2
+
+加成菜单的按钮改成和主面板骰子按钮一样的灰底、黑字：在「信息」小窗口里看得清楚，也不会像"已选中"。蓝色只用在选中的骰子和已加上的加成标签上。
+
+1. 加成菜单的按钮现在看得清楚吗？满 4 组时，加不进去的按钮能分辨出来吗？
+2. 0.5.1 的改动也请再看一眼：投完后加成标签是否消失？
+
+### English
+
+The bonus picker's buttons now use the same grey with dark text as the panel's die buttons: easy to see in the Messages drawer, without looking "selected". Blue is used only for the selected die and added bonus tags.
+
+1. Are the bonus picker's buttons easy to see now? With 4 groups, can you tell which buttons are unavailable?
+2. Please also recheck 0.5.1: does the bonus tag disappear after a roll?
+
+### 上一版：测试内容（What to Test）— 0.5.1（构建号 10）
 
 两处改动：
 - 加成骰只用于一次投骰：投完自动清空，下一次默认没有加成；骰子、加值、优势和 DC 仍会记住。
