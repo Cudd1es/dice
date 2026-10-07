@@ -1,6 +1,6 @@
 # Roadmap
 
-Last reviewed: 2026-10-06, at 0.4.0 (build 8). `main` = `dev` = PR #10 merged, CI green.
+Last reviewed: 2026-10-06, at 0.5.0 (build 9).
 
 ## Shipped
 
@@ -13,7 +13,7 @@ Last reviewed: 2026-10-06, at 0.4.0 (build 8). `main` = `dev` = PR #10 merged, C
 | 0.3.1 | 6 | Bubble first line clears the Messages app icon | #9 |
 | 0.3.2 | 7 | Filled purpose field with clear button and counter | #9 |
 | 0.4.0 | 8 | Bonus dice (`1d20+1d4`, `1d8+2d6+3`) | #10 |
-| 0.5.0 (on `dev`) | — | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | — |
+| 0.5.0 | 9 | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | #12 |
 
 ## Waiting on a device check
 
