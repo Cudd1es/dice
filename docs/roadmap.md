@@ -14,7 +14,7 @@ Last reviewed: 2026-10-06, at 0.5.1 (build 10).
 | 0.3.2 | 6 | Filled purpose field with clear button and counter | #9 |
 | 0.4.0 | 7 | Bonus dice (`1d20+1d4`, `1d8+2d6+3`) | #10 |
 | 0.5.0 | 8 | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | #12 |
-| 0.5.1 | 10 | Bonus dice reset after every roll; clearer picker buttons | #14 |
+| 0.5.1 | 10 | Bonus dice reset after every roll (its blue picker buttons were reverted: they read as "selected") | #14 |
 
 ## Waiting on a device check
 
@@ -37,10 +37,11 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | 2 | With a purpose at the largest text sizes, the result card's breakdown is below the fold (the card scrolls) | `Shared/ResultCard.swift` | Smaller total font when a purpose is shown |
 | 3 | A pasted DC that overflows `Int` or uses full-width digits (`１２０`) keeps the old DC | `PanelModel.setDC(text:)` | Normalize digits; treat long digit runs as 999 |
 | 4 | VoiceOver: the Add/Subtract control is labelled "Bonus Dice", and "−1d6" may read poorly | `Shared/BonusPickerView.swift`, `BonusTags` | Add accessibility labels |
-| 5 | A DC typed while the panel is swapped for a result (tapping a sent bubble mid-edit) is dropped | `DCControls` | Commit `dcDraft` when the panel disappears |
-| 6 | `x=%2B1d4` (an explicit "+") also decodes: same roll, a non-canonical URL | `MessageCodec.parseExtras` | Require ASCII digits only |
-| 7 | `RevealState.ignoreNextExpand` can stay set within one activation (no visible effect found) | `DiceMessages/RevealState.swift` | Clear it on every expand |
-| 8 | The panel's height cap is `nil` for the first frame (a possible one-frame jump of Recent) | `RollPanelView` | Seed an estimate |
+| 5 | The bonus picker's buttons are a little faint against the Messages drawer background. A light blue fill was tried in 0.5.1 and reverted: it reads as "selected" | `Shared/BonusPickerView.swift` | A darker neutral fill, or a thin outline |
+| 6 | A DC typed while the panel is swapped for a result (tapping a sent bubble mid-edit) is dropped | `DCControls` | Commit `dcDraft` when the panel disappears |
+| 7 | `x=%2B1d4` (an explicit "+") also decodes: same roll, a non-canonical URL | `MessageCodec.parseExtras` | Require ASCII digits only |
+| 8 | `RevealState.ignoreNextExpand` can stay set within one activation (no visible effect found) | `DiceMessages/RevealState.swift` | Clear it on every expand |
+| 9 | The panel's height cap is `nil` for the first frame (a possible one-frame jump of Recent) | `RollPanelView` | Seed an estimate |
 
 ## Tech debt
 
