@@ -11,7 +11,29 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.4.0（构建号 8）
+## 测试内容（What to Test）— 0.5.0
+
+新功能：加成骰预设。在「＋ 加成」里新增按 2024 年规则整理的常用加成，点一下就加上：祝福术、神导术、灾祸术、诗人激励（d6–d12）、猎人印记、脆弱诅咒、神恩术、至圣斩。另外：
+- 「＋ 加成」移到 DC 那一行的最右边，「信息」小窗口里整个面板能放下了；
+- 目的超过 40 字不再在输入时截断（字数提示变红，投掷时保留前 40 字），拼音输入不会被打断；
+- 「信息」里离开时停在加成菜单，下次打开会回到面板。
+
+1. 试几个预设：祝福术 + 神导术是否合并成 +2d4？至圣斩是否加上 +2d8？
+2. 「信息」小窗口里不用上滑就能看到 DC、公式和「投掷」吗？
+3. 用拼音在目的里打一长句：输入是否顺畅？超过 40 字时提示是否变红？
+
+### English
+
+New: bonus presets. "+ Bonus" now has one-tap bonuses from the 2024 rules: Bless, Guidance, Bane, Bardic Inspiration (d6–d12), Hunter's Mark, Hex, Divine Favor, Divine Smite. Also:
+- "+ Bonus" moved to the end of the DC row, so the whole panel fits the small Messages drawer;
+- the purpose is no longer cut while typing (the counter turns red past 40 and rolling keeps the first 40), so pinyin input isn't interrupted;
+- leaving Messages with the bonus picker open returns to the panel next time.
+
+1. Try a few presets: do Bless and Guidance merge into +2d4? Does Divine Smite add +2d8?
+2. In the small Messages drawer, can you see the DC row, the formula and Roll without scrolling?
+3. Type a long purpose with pinyin: is input smooth, and does the counter turn red past 40?
+
+### 上一版：测试内容（What to Test）— 0.4.0（构建号 8）
 
 新功能：加成骰（骰子组合）。在面板上点「＋ 加成」选骰子，选完自动回到面板；也可以点「减」做灾祸术那样的 -1d4。请大家都更新：旧版收到带加成骰的消息只会提示"请更新 App"。
 

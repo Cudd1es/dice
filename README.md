@@ -13,6 +13,7 @@ Dice for D&D 5e / Baldur's Gate style tabletop games. You can roll them two ways
 - Advantage / disadvantage and critical success / failure on a single d20
 - Optional DC from 1 to 999; you can step it or type it in. A natural 20 always succeeds and a natural 1 always fails.
 - **Bonus dice:** up to 4 groups after the main dice, each 1–10 dice from d4 to d100, added or subtracted. Examples: Bless `1d20+1d4`, Bane `1d20-1d4`, damage `1d8+2d6+3`. Advantage and criticals look only at the main dice.
+- **Bonus presets** from the 2024 rules (SRD 5.2.1): Bless, Guidance, Bane, Bardic Inspiration (d6–d12), Hunter's Mark, Hex, Divine Favor, Divine Smite.
 - **Purpose:** an optional line of up to 40 characters, such as "Perception: anyone behind the door?". It travels with the roll and is cleared after each one.
 - **In the app:** a big result, plus the last 10 rolls (kept until the app closes)
 - **In Messages:**
@@ -156,4 +157,6 @@ The full list is in the [roadmap](docs/roadmap.md).
 
 ## License
 
-[MIT](LICENSE)
+Code: [MIT](LICENSE).
+
+This work includes material from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
