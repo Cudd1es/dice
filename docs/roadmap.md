@@ -1,6 +1,6 @@
 # Roadmap
 
-Last reviewed: 2026-10-07, at 0.6.0 (critical toggle; not yet released).
+Last reviewed: 2026-10-07, at 0.6.0 (build 12).
 
 ## Shipped
 
@@ -16,7 +16,7 @@ Last reviewed: 2026-10-07, at 0.6.0 (critical toggle; not yet released).
 | 0.5.0 | 8 | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | #12 |
 | 0.5.1 | 10 | Bonus dice reset after every roll | #14 |
 | 0.5.2 | 11 | Bonus picker buttons in the panel's neutral grey (0.5.1's blue read as "selected") | #14 |
-| 0.6.0 | — | Settings page with the critical success / failure toggle (App Group); message version 3 | — |
+| 0.6.0 | 12 | Settings page with the critical success / failure toggle (App Group); message version 3 | #15 |
 
 ## Waiting on a device check
 
