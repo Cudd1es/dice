@@ -117,4 +117,23 @@ final class DiceEngineTests: XCTestCase {
         XCTAssertTrue(first.bonusRolls[0].allSatisfy { (1...6).contains($0) })
         XCTAssertTrue(first.bonusRolls[1].allSatisfy { (1...4).contains($0) })
     }
+
+    // With criticals off, a natural 20 or 1 is just a number: only the total meets the DC.
+    func test_criticalsOff_noCriticalAndTotalDecides() {
+        let high = DiceEngine.evaluate(RollSpec(dc: 30, criticalsEnabled: false), dice: [20])
+        XCTAssertEqual(high.critical, .none)
+        XCTAssertEqual(high.dcOutcome, .failure)
+        let low = DiceEngine.evaluate(RollSpec(dc: 1, criticalsEnabled: false), dice: [1])
+        XCTAssertEqual(low.critical, .none)
+        XCTAssertEqual(low.dcOutcome, .success)
+    }
+
+    func test_criticalsOff_advantageUsesTotal() {
+        let spec = RollSpec(mode: .advantage, modifier: 2, dc: 25, criticalsEnabled: false)
+        let result = DiceEngine.evaluate(spec, dice: [20, 7])
+        XCTAssertEqual(result.keptIndices, [0])
+        XCTAssertEqual(result.total, 22)
+        XCTAssertEqual(result.critical, .none)
+        XCTAssertEqual(result.dcOutcome, .failure)
+    }
 }

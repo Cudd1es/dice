@@ -27,22 +27,26 @@ public struct RollSpec: Codable, Equatable, Sendable {
     public var dc: Int?
     /// Extra dice groups after the main dice, in the order they were added.
     public var extras: [BonusDice]
+    /// House rule: whether a natural 20 / 1 on a single main d20 is a critical success / failure that decides the DC.
+    /// Off, only the total is compared with the DC.
+    public var criticalsEnabled: Bool
 
     public init(count: Int = 1, sides: Int = 20, mode: RollMode = .normal, modifier: Int = 0, dc: Int? = nil,
-                extras: [BonusDice] = []) {
+                extras: [BonusDice] = [], criticalsEnabled: Bool = true) {
         self.count = count
         self.sides = sides
         self.mode = mode
         self.modifier = modifier
         self.dc = dc
         self.extras = extras
+        self.criticalsEnabled = criticalsEnabled
     }
 
     private enum CodingKeys: String, CodingKey {
-        case count, sides, mode, modifier, dc, extras
+        case count, sides, mode, modifier, dc, extras, criticalsEnabled
     }
 
-    /// Formulas saved by 0.3.x have no `extras` key.
+    /// Formulas saved by 0.3.x have no `extras` key; those before 0.6.0 have no `criticalsEnabled` key.
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         count = try container.decode(Int.self, forKey: .count)
@@ -51,6 +55,7 @@ public struct RollSpec: Codable, Equatable, Sendable {
         modifier = try container.decode(Int.self, forKey: .modifier)
         dc = try container.decodeIfPresent(Int.self, forKey: .dc)
         extras = try container.decodeIfPresent([BonusDice].self, forKey: .extras) ?? []
+        criticalsEnabled = try container.decodeIfPresent(Bool.self, forKey: .criticalsEnabled) ?? true
     }
 
     public var isSingleD20: Bool { count == 1 && sides == 20 }

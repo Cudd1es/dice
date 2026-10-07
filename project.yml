@@ -8,8 +8,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.5.2"
-    CURRENT_PROJECT_VERSION: "11"
+    MARKETING_VERSION: "0.6.0"
+    CURRENT_PROJECT_VERSION: "12"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: 72W9R47VF7
 packages:
@@ -27,6 +27,10 @@ targets:
         UILaunchScreen: {}
         # Only uses encryption built into iOS, so App Store Connect does not ask on every upload.
         ITSAppUsesNonExemptEncryption: false
+    entitlements:
+      path: DiceApp/DiceApp.entitlements
+      properties:
+        com.apple.security.application-groups: [group.dev.ansel.dice]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.ansel.dice
@@ -56,6 +60,10 @@ targets:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.message-payload-provider
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).MessagesViewController
+    entitlements:
+      path: DiceMessages/DiceMessages.entitlements
+      properties:
+        com.apple.security.application-groups: [group.dev.ansel.dice]
     settings:
       base:
         # Was dev.ansel.dice.messages: Messages on the developer's iPhone cached a blank icon for that ID
@@ -76,6 +84,7 @@ targets:
       - Shared/PanelModel.swift
       - Shared/SpecStore.swift
       - Shared/BonusPreset.swift
+      - Shared/SettingsStore.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

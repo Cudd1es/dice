@@ -16,6 +16,7 @@ struct GuideView: View {
                     Label("Advantage and disadvantage need exactly one d20 as the main die", systemImage: "arrow.up.arrow.down")
                     Label("Tap the DC number to type a value up to 999", systemImage: "number")
                     Label("Tap + Bonus to add dice such as +1d4 for Bless or −1d4 for Bane; tap a bonus tag to change or remove it", systemImage: "plus.square.on.square")
+                    Label("Turn critical success and failure on or off in Settings", systemImage: "gearshape")
                 }
                 Section("Use in Messages") {
                     Label("Open Messages and go to a conversation", systemImage: "message")

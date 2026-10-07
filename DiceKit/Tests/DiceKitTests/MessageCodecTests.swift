@@ -86,7 +86,7 @@ final class MessageCodecTests: XCTestCase {
     }
 
     func test_decode_futureVersion() {
-        assertDecodeThrows("v=3&n=1&s=20&m=n&k=0&d=7", .unsupportedVersion(3))
+        assertDecodeThrows("v=4&n=1&s=20&m=n&k=0&d=7", .unsupportedVersion(4))
     }
 
     func test_decode_missingField() {
@@ -155,5 +155,53 @@ final class MessageCodecTests: XCTestCase {
         let decoded = try MessageCodec.decode(url("v=1&n=1&s=20&m=n&k=0&x=1d4&d=7"))
         XCTAssertEqual(decoded.spec.extras, [])
         XCTAssertEqual(decoded.result.total, 7)
+    }
+
+    private let noCrits = RollSpec(modifier: 5, dc: 15, criticalsEnabled: false)
+
+    func test_criticalsOffUsesV3() {
+        let result = DiceEngine.evaluate(noCrits, dice: [20])
+        XCTAssertEqual(MessageCodec.url(for: noCrits, result: result).absoluteString,
+                       "https://dice.invalid/roll?v=3&n=1&s=20&m=n&k=5&dc=15&c=0&d=20")
+    }
+
+    func test_criticalsOffRoundTrips() throws {
+        let plain = DiceEngine.evaluate(noCrits, dice: [20])
+        let decoded = try MessageCodec.decode(MessageCodec.url(for: noCrits, result: plain))
+        XCTAssertEqual(decoded.spec, noCrits)
+        XCTAssertEqual(decoded.result, plain)
+        XCTAssertEqual(decoded.result.critical, .none)
+
+        let blessed = RollSpec(modifier: 5, dc: 15, extras: [BonusDice(sides: 4)], criticalsEnabled: false)
+        let rolled = DiceEngine.evaluate(blessed, dice: [20], bonusRolls: [[3]])
+        let withPurpose = try MessageCodec.decode(MessageCodec.url(for: blessed, result: rolled, purpose: "攻击"))
+        XCTAssertEqual(withPurpose.spec, blessed)
+        XCTAssertEqual(withPurpose.result, rolled)
+        XCTAssertEqual(withPurpose.purpose, "攻击")
+    }
+
+    // Without a single main d20 the setting changes nothing, so the URL stays at version 1.
+    func test_criticalsOffNonD20StaysV1() throws {
+        let spec = RollSpec(sides: 6, criticalsEnabled: false)
+        let url = MessageCodec.url(for: spec, result: DiceEngine.evaluate(spec, dice: [4]))
+        XCTAssertEqual(url.absoluteString, "https://dice.invalid/roll?v=1&n=1&s=6&m=n&k=0&d=4")
+        XCTAssertTrue(try MessageCodec.decode(url).spec.criticalsEnabled)
+    }
+
+    func test_decode_badCriticalsField() {
+        assertDecodeThrows("v=3&n=1&s=20&m=n&k=0&c=x&d=7", .malformed("c"))
+    }
+
+    func test_decode_v3WithoutCIsEnabled() throws {
+        let decoded = try MessageCodec.decode(url("v=3&n=1&s=20&m=n&k=0&d=20"))
+        XCTAssertTrue(decoded.spec.criticalsEnabled)
+        XCTAssertEqual(decoded.result.critical, .success)
+    }
+
+    // Versions 1 and 2 never had c; older apps ignore it, so this one does too.
+    func test_decode_v2IgnoresC() throws {
+        let decoded = try MessageCodec.decode(url("v=2&n=1&s=20&m=n&k=0&x=1d4&c=0&d=20,3"))
+        XCTAssertTrue(decoded.spec.criticalsEnabled)
+        XCTAssertEqual(decoded.result.critical, .success)
     }
 }

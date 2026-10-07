@@ -1,6 +1,6 @@
 # Roadmap
 
-Last reviewed: 2026-10-06, at 0.5.2 (build 11).
+Last reviewed: 2026-10-07, at 0.6.0 (build 12).
 
 ## Shipped
 
@@ -16,6 +16,7 @@ Last reviewed: 2026-10-06, at 0.5.2 (build 11).
 | 0.5.0 | 8 | Bonus presets; compact drawer fits; purpose not cut mid-typing; picker resets | #12 |
 | 0.5.1 | 10 | Bonus dice reset after every roll | #14 |
 | 0.5.2 | 11 | Bonus picker buttons in the panel's neutral grey (0.5.1's blue read as "selected") | #14 |
+| 0.6.0 | 12 | Settings page with the critical success / failure toggle (App Group); message version 3 | #15 |
 
 ## Waiting on a device check
 
@@ -27,6 +28,8 @@ These can't be checked in the simulator, because simulator bubbles are blank. Th
 4. Long purpose: is the bubble's first line truncated cleanly and clear of the icon?
 5. A tester other than the developer receives the rolls (the receiver's view in a group chat)
 6. Haptics on Roll and on a critical, in the app
+7. App Group in the TestFlight build: turning criticals off in the app takes effect in Messages
+8. A 0.5.x phone receiving a roll with criticals off asks to update
 
 ## Known issues (deferred minors)
 
@@ -42,6 +45,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | 6 | `x=%2B1d4` (an explicit "+") also decodes: same roll, a non-canonical URL | `MessageCodec.parseExtras` | Require ASCII digits only |
 | 7 | `RevealState.ignoreNextExpand` can stay set within one activation (no visible effect found) | `DiceMessages/RevealState.swift` | Clear it on every expand |
 | 8 | The panel's height cap is `nil` for the first frame (a possible one-frame jump of Recent) | `RollPanelView` | Seed an estimate |
+| 9 | The history row shows the formula on one line, so " · No crits" can be cut off on narrow phones with advantage and a DC | `DiceApp/RollerView.swift` `HistoryRow` | Let the formula wrap, or truncate in the middle |
 
 ## Tech debt
 

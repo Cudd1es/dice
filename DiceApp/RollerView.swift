@@ -6,6 +6,7 @@ struct RollerView: View {
     @StateObject private var model = PanelModel(store: SpecStore())
     @State private var history = RollHistory()
     @State private var showingGuide = false
+    @State private var showingSettings = false
 
     /// The result area takes up to 220pt but at most ~30% of the screen, so short screens keep room for history.
     private static let maxResultHeight: CGFloat = 220
@@ -35,10 +36,15 @@ struct RollerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button("Settings", systemImage: "gearshape") { showingSettings = true }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("How to Use", systemImage: "questionmark.circle") { showingGuide = true }
                 }
             }
             .sheet(isPresented: $showingGuide) { GuideView() }
+            // The formula line and the next roll follow the setting as soon as the page closes.
+            .sheet(isPresented: $showingSettings, onDismiss: model.refreshSettings) { SettingsView() }
             // Beyond this the result card and panel no longer fit an iPhone screen.
             .dynamicTypeSize(...DynamicTypeSize.accessibility2)
             .sensoryFeedback(trigger: latest?.id) { _, _ in feedback(for: latest?.result) }

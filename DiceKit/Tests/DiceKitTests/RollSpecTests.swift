@@ -81,4 +81,12 @@ final class RollSpecTests: XCTestCase {
         let decoded = try JSONDecoder().decode(RollSpec.self, from: JSONEncoder().encode(spec))
         XCTAssertEqual(decoded, spec)
     }
+
+    // Formulas saved before 0.6.0 have no criticalsEnabled key.
+    func test_decode_legacyJSONCriticalsEnabled() throws {
+        let json = #"{"count":1,"sides":20,"mode":"normal","modifier":0}"#
+        XCTAssertTrue(try JSONDecoder().decode(RollSpec.self, from: Data(json.utf8)).criticalsEnabled)
+        let off = RollSpec(dc: 12, criticalsEnabled: false)
+        XCTAssertEqual(try JSONDecoder().decode(RollSpec.self, from: JSONEncoder().encode(off)), off)
+    }
 }

@@ -33,6 +33,10 @@ public enum RollFormatter {
         case .disadvantage: text += language == .english ? " · Disadvantage" : " · 劣势"
         }
         if let dc = spec.dc { text += " · DC \(dc)" }
+        // Tells everyone reading the roll why a natural 20 or 1 didn't decide it.
+        if !spec.criticalsEnabled && spec.isSingleD20 {
+            text += language == .english ? " · No crits" : " · 不判定大成功"
+        }
         return text
     }
 

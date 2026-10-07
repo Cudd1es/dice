@@ -119,4 +119,16 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.detailMarkdown(bane, DiceEngine.evaluate(bane, dice: [10], bonusRolls: [[2, 5]])),
                        "[10] - [2, 5] = 3")
     }
+
+    func test_formula_noCrits() {
+        let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15, criticalsEnabled: false)
+        XCTAssertEqual(RollFormatter.formula(spec, zh), "1d20+5 · 优势 · DC 15 · 不判定大成功")
+        XCTAssertEqual(RollFormatter.formula(spec, en), "1d20+5 · Advantage · DC 15 · No crits")
+    }
+
+    // Without a single d20 there is nothing to switch off, so nothing is shown.
+    func test_formula_noCritsOnlyForSingleD20() {
+        XCTAssertEqual(RollFormatter.formula(RollSpec(count: 2, criticalsEnabled: false), en), "2d20")
+        XCTAssertEqual(RollFormatter.formula(RollSpec(sides: 6, criticalsEnabled: false), en), "1d6")
+    }
 }

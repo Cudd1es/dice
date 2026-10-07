@@ -66,7 +66,7 @@ Tap its tag (e.g. **+2d4**) to get **One More**, **One Fewer** or **Remove**.
 
 **Rules**
 - Advantage, disadvantage and criticals look only at the main d20. With advantage, the two d20s compete and every bonus die still counts.
-- Bonus dice count toward the DC. A natural 20 on the main d20 still always succeeds, and a natural 1 always fails.
+- Bonus dice count toward the DC. A natural 20 on the main d20 still always succeeds, and a natural 1 always fails (unless criticals are off in Settings).
 - A total can be zero or negative (e.g. `1d4-2d6`). It is shown as rolled.
 
 ## Reading a result
@@ -75,7 +75,13 @@ Tap its tag (e.g. **+2d4**) to get **One More**, **One Fewer** or **Remove**.
 |---|---|---|
 | Total | **25** | Orange for a critical success, red for a critical failure |
 | Breakdown | `[~~11~~, 16] + [4] + 5 = 25` | Main dice (a struck-through die was dropped by advantage or disadvantage), then each bonus group, then the modifier |
-| Outcome | **Success** | Critical Success / Critical Failure on a natural 20 / 1 on the main d20; otherwise Success / Failure against the DC |
+| Outcome | **Success** | Critical Success / Critical Failure on a natural 20 / 1 on the main d20 (unless criticals are off); otherwise Success / Failure against the DC |
+
+**Turning criticals off.** If your table doesn't use critical success and failure, open **Settings** (the gear in the app) and turn off **Critical Success & Failure**:
+- a natural 20 or 1 is then just a number, and only the total is compared with the DC;
+- the formula ends with "No crits" so everyone can see which rule applied;
+- the setting is shared with the Messages panel;
+- rolls you send use your setting, so everyone in the chat sees the same result whatever their own setting is.
 
 ## Rolling in the app
 
@@ -108,6 +114,7 @@ Tap **?** in the top right for the in-app guide.
 Version notes:
 - A purpose needs 0.3.0 or later to be seen.
 - Bonus dice need 0.4.0 or later to be read.
+- A roll with criticals off needs 0.6.0 or later to be read.
 
 ## Troubleshooting
 
