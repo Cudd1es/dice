@@ -45,6 +45,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | 6 | `x=%2B1d4` (an explicit "+") also decodes: same roll, a non-canonical URL | `MessageCodec.parseExtras` | Require ASCII digits only |
 | 7 | `RevealState.ignoreNextExpand` can stay set within one activation (no visible effect found) | `DiceMessages/RevealState.swift` | Clear it on every expand |
 | 8 | The panel's height cap is `nil` for the first frame (a possible one-frame jump of Recent) | `RollPanelView` | Seed an estimate |
+| 9 | The history row shows the formula on one line, so " · No crits" can be cut off on narrow phones with advantage and a DC | `DiceApp/RollerView.swift` `HistoryRow` | Let the formula wrap, or truncate in the middle |
 
 ## Tech debt
 
