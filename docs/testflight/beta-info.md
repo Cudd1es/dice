@@ -11,7 +11,25 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.6.0（构建号 12）
+## 测试内容（What to Test）— 0.6.1（构建号 13）
+
+这一版主要改进无障碍：开了旁白（VoiceOver）也能顺畅使用，字很大时结果也能完整显示。另外，"成功 / 大成功 / 大失败"的文字颜色在浅色模式下调深了一点，更容易看清。
+
+1. 投一次带 DC 的骰子：成功、大成功、大失败现在显示在总值右边。颜色是否清楚，样子是否和以前差不多？
+2. 最近记录里，公式太长时会换成两行，不再被截断。看起来正常吗？
+3. 如果平时用大字号（设置 → 辅助功能 → 显示与文字大小 → 更大字体）：投完骰子，结果、判定和骰子明细在 App 和「信息」里是否都能看到？
+4. 想试旁白的话（设置 → 辅助功能 → 旁白）：点结果卡片，是否读出完整一句（例如"掷出 17、8，取 17。总计 22。成功"）？在"数量"上用一根手指上下轻扫，能否调整数量？
+
+### English
+
+This version is mostly about accessibility: VoiceOver now reads rolls clearly, and results fit at very large text sizes. Success / Critical Success / Critical Failure text is also a little darker in light mode, so it is easier to read.
+
+1. Roll with a DC: the outcome now sits to the right of the total. Is the color clear, and does it look about the same as before?
+2. In Recent, a long formula now wraps to two lines instead of being cut off. Does it look right?
+3. If you use large text (Settings → Accessibility → Display & Text Size → Larger Text): after a roll, can you see the result, the outcome and the dice, in the app and in Messages?
+4. If you'd like to try VoiceOver (Settings → Accessibility → VoiceOver): does tapping the result card read one full sentence (for example "Rolled 17, 8; kept 17. Total 22. Success")? Does swiping up or down on Dice change the number of dice?
+
+### 上一版：测试内容（What to Test）— 0.6.0（构建号 12）
 
 新功能：设置页里可以关闭大成功 / 大失败判定（App 右上角齿轮）。关掉后天然 20 / 1 只是普通点数，只用总值和 DC 比较，公式末尾标出"不判定大成功"。「信息」里用的也是这个设置；你发出的投骰按你的设置判定，大家看到的结果一致。请大家都更新：旧版收到关闭判定的投骰会提示"请更新 App"。
 

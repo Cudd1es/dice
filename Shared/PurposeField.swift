@@ -16,15 +16,17 @@ struct PurposeField: View {
         HStack(spacing: 8) {
             Image(systemName: "pencil")
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
             // Not cut while typing: rewriting the text mid-composition broke pinyin input. The counter turns red past
             // the limit and rolling cuts the purpose to it (RollPurpose.normalize).
-            TextField("Purpose (optional), e.g. Perception check", text: $model.purpose)
+            TextField("Purpose (optional), e.g. Stealth", text: $model.purpose)
                 .submitLabel(.done)
                 .focused(focus, equals: .purpose)
             if model.purpose.count > Self.counterFrom {
                 Text(verbatim: "\(model.purpose.count)/\(RollPurpose.maxLength)")
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(isOverLimit ? .red : .secondary)
+                    .accessibilityLabel("\(model.purpose.count) of \(RollPurpose.maxLength) characters")
             }
             if !model.purpose.isEmpty {
                 Button {

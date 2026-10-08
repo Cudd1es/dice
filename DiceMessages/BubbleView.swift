@@ -24,11 +24,17 @@ struct BubbleView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel([purpose, RollFormatter.spokenFormula(spec), RollFormatter.pendingCaption()]
+                .compactMap { $0 }.joined(separator: RollLanguage.current == .english ? ". " : "。"))
         case .revealedBubble(let spec, let result, let purpose):
             VStack(alignment: .leading, spacing: 4) {
                 PurposeLine(purpose: purpose)
                 ResultView(spec: spec, result: result, clearsAppIcon: purpose == nil)
             }
+            // One element that also says which die was kept (the struck-through one is not read aloud).
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(RollFormatter.spokenResult(spec, result, purpose: purpose))
         case .detail(let spec, let result, let purpose):
             ResultCard(spec: spec, result: result, purpose: purpose)
         case .invalid(let reason):

@@ -9,37 +9,16 @@ struct ResultCard: View {
     var onRollAgain: (() -> Void)?
     /// Smaller in the app's result area on short screens such as iPhone SE.
     var totalFontSize: CGFloat = 72
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 6) {
-                    if let purpose {
-                        Text(purpose)
-                            .font(.headline)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.center)
-                    }
-                    Label(RollFormatter.formula(spec), systemImage: "dice")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.secondary)
-                    Text(verbatim: String(result.total))
-                        .font(.system(size: totalFontSize, weight: .bold, design: .rounded))
-                        .foregroundStyle(result.totalColor)
-                        .contentTransition(.numericText())
-                    Text(detail)
-                        .font(.body.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if let outcome = RollFormatter.outcome(result) {
-                        Text(outcome)
-                            .font(.headline)
-                            .foregroundStyle(result.outcomeColor)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 5)
-                            .background(result.outcomeColor.opacity(0.15), in: Capsule())
-                    }
+                    summary
+                        // One VoiceOver element that also says which die was kept; Roll Again stays separate.
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(RollFormatter.spokenResult(spec, result, purpose: purpose))
                     if let onRollAgain {
                         Button("Roll Again", systemImage: "arrow.counterclockwise", action: onRollAgain)
                             .buttonStyle(.bordered)
@@ -56,6 +35,54 @@ struct ResultCard: View {
         .ignoresSafeArea(.all, edges: .bottom)
     }
 
+    /// Accessibility text sizes: the purpose keeps one line and the total shrinks, so the outcome stays on screen.
+    private var isLargeText: Bool { dynamicTypeSize.isAccessibilitySize }
+
+    private var summary: some View {
+        VStack(spacing: 6) {
+            if let purpose {
+                Text(purpose)
+                    .font(.headline)
+                    .lineLimit(isLargeText ? 1 : 2)
+                    .multilineTextAlignment(.center)
+            }
+            Label(RollFormatter.formula(spec), systemImage: "dice")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.secondary)
+            // The outcome sits beside the total, not below the breakdown: at large text sizes the breakdown is
+            // below the fold, and the color alone would be the only sign of a critical.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: 12) { total; outcomeBadge }
+                VStack(spacing: 6) { total; outcomeBadge }
+            }
+            Text(detail)
+                .font(.body.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var total: some View {
+        Text(verbatim: String(result.total))
+            .font(.system(size: isLargeText ? totalFontSize * 0.7 : totalFontSize, weight: .bold, design: .rounded))
+            .foregroundStyle(result.totalColor)
+            .contentTransition(.numericText())
+    }
+
+    @ViewBuilder
+    private var outcomeBadge: some View {
+        if let outcome = RollFormatter.outcome(result) {
+            Text(outcome)
+                .font(.headline)
+                .foregroundStyle(result.outcomeColor)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 5)
+                .background(result.outcomeTint.opacity(0.15), in: Capsule())
+                .fixedSize()
+        }
+    }
+
     private var detail: AttributedString {
         let markdown = RollFormatter.detailMarkdown(spec, result)
         return (try? AttributedString(markdown: markdown)) ?? AttributedString(markdown)
@@ -63,21 +90,46 @@ struct ResultCard: View {
 }
 
 extension RollResult {
+    /// Text colors: in light mode darker than the system colors, which are about 2.2:1 on white (orange, green),
+    /// below WCAG AA's 4.5:1; these are 4.6:1 or more on white and on the outcome badge. Dark mode keeps the system
+    /// colors, which already pass.
     var totalColor: Color {
         switch critical {
-        case .success: return .orange
-        case .failure: return .red
+        case .success: return .readableOrange
+        case .failure: return .readableRed
         case .none: return .primary
         }
     }
 
     var outcomeColor: Color {
         switch (critical, dcOutcome) {
+        case (.success, _): return .readableOrange
+        case (.failure, _): return .readableRed
+        case (.none, .success): return .readableGreen
+        default: return .secondary
+        }
+    }
+
+    /// The badge's light fill keeps the system hue, so it looks the same as before.
+    var outcomeTint: Color {
+        switch (critical, dcOutcome) {
         case (.success, _): return .orange
         case (.failure, _): return .red
         case (.none, .success): return .green
         default: return .secondary
         }
+    }
+}
+
+private extension Color {
+    static let readableOrange = adaptive(light: 0xB25000, dark: .systemOrange)
+    static let readableRed = adaptive(light: 0xC4261D, dark: .systemRed)
+    static let readableGreen = adaptive(light: 0x1E7B34, dark: .systemGreen)
+
+    static func adaptive(light hex: Int, dark: UIColor) -> Color {
+        let light = UIColor(red: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255,
+                            blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+        return Color(UIColor { $0.userInterfaceStyle == .dark ? dark : light })
     }
 }
 

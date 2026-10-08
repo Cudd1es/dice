@@ -48,6 +48,8 @@ struct DCControls: View {
             } label: {
                 Text("\(dc)").font(.body.monospacedDigit())
             }
+            .accessibilityLabel("DC \(dc)")
+            .accessibilityHint("Double-tap to type a DC")
         }
     }
 }

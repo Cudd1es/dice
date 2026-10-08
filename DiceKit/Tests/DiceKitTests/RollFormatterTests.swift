@@ -131,4 +131,46 @@ final class RollFormatterTests: XCTestCase {
         XCTAssertEqual(RollFormatter.formula(RollSpec(count: 2, criticalsEnabled: false), en), "2d20")
         XCTAssertEqual(RollFormatter.formula(RollSpec(sides: 6, criticalsEnabled: false), en), "1d6")
     }
+
+    // MARK: - Spoken text for VoiceOver
+
+    func test_spokenFormula_replacesDotsWithCommas() {
+        let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15)
+        XCTAssertEqual(RollFormatter.spokenFormula(spec, en), "1d20+5, Advantage, DC 15")
+        XCTAssertEqual(RollFormatter.spokenFormula(spec, zh), "1d20+5，优势，DC 15")
+    }
+
+    func test_spokenResult_advantageNamesTheKeptDie() {
+        let spec = RollSpec(mode: .advantage, modifier: 5, dc: 15)
+        let result = DiceEngine.evaluate(spec, dice: [17, 8])
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, purpose: "Perception", en),
+                       "Perception. 1d20+5, Advantage, DC 15. Rolled 17, 8; kept 17. Total 22. Success")
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, purpose: "察觉检定", zh),
+                       "察觉检定。1d20+5，优势，DC 15。掷出 17、8，取 17。总计 22。成功")
+    }
+
+    func test_spokenResult_plainRollWithoutPurposeOrOutcome() {
+        let spec = RollSpec(count: 2, sides: 6, modifier: 3)
+        let result = DiceEngine.evaluate(spec, dice: [2, 5])
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, en), "2d6+3. Rolled 2, 5. Total 10")
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, zh), "2d6+3。掷出 2、5。总计 10")
+    }
+
+    func test_spokenResult_bonusGroupsWithSigns() {
+        let spec = RollSpec(extras: [BonusDice(sides: 4), BonusDice(sign: .minus, count: 2, sides: 6)])
+        let result = DiceEngine.evaluate(spec, dice: [12], bonusRolls: [[3], [2, 5]])
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, en),
+                       "1d20+1d4-2d6. Rolled 12. Plus 1d4: 3. Minus 2d6: 2, 5. Total 8")
+        XCTAssertEqual(RollFormatter.spokenResult(spec, result, zh),
+                       "1d20+1d4-2d6。掷出 12。加 1d4：3。减 2d6：2、5。总计 8")
+    }
+
+    func test_spokenResult_criticalAndNoCrits() {
+        let crit = RollSpec(dc: 30)
+        XCTAssertEqual(RollFormatter.spokenResult(crit, DiceEngine.evaluate(crit, dice: [20]), en),
+                       "1d20, DC 30. Rolled 20. Total 20. Critical Success")
+        let off = RollSpec(dc: 30, criticalsEnabled: false)
+        XCTAssertEqual(RollFormatter.spokenResult(off, DiceEngine.evaluate(off, dice: [20]), zh),
+                       "1d20，DC 30，不判定大成功。掷出 20。总计 20。失败")
+    }
 }
