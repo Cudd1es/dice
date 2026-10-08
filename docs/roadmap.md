@@ -49,7 +49,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | 8 | The panel's height cap is `nil` for the first frame (a possible one-frame jump of Recent) | `RollPanelView` | Seed an estimate |
 | ~~9~~ | ~~The history row's formula is cut off on one line~~ Fixed: it wraps to two lines (the audit found it cut off even without "No crits") | `DiceApp/RollerView.swift` `HistoryRow` | — |
 | 10 | At accessibility text sizes the app's Recent list has no height left (the panel and result take the screen) | `DiceApp/RollerView.swift` | A Recent sheet behind a toolbar button at accessibility sizes |
-| 11 | Contrast below WCAG AA (Xcode's audit): green "Success" text, the selected die (blue on light blue), the orange critical total, grey secondary text | `ResultCard`, `RollPanelView` | Darker text colors for the outcome; a decision on the chip style |
+| 11 | Contrast below WCAG AA (Xcode's audit) on the selected die and bonus tags (blue on light blue) and system grey secondary text. Kept on purpose: system styles. The outcome and critical total colors were fixed (darker in light mode, 4.6:1 or more) | `RollPanelView`, `BonusTags` | `.borderedProminent` for the selected die, if it ever matters |
 | 12 | With VoiceOver, the DC can only be changed with the stepper (the type-in field sits inside the stepper's label) | `Shared/DCControls.swift` | A separate "Type DC" accessibility action |
 
 ## Tech debt
@@ -64,8 +64,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 - [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
 - [ ] Protect `main` (require PRs and passing CI); it is unprotected today
 - [ ] Clear known issue 1 above
-- [x] An accessibility pass: VoiceOver labels, largest text sizes (on `dev`; device checks 9–10 above; contrast is known issue 11)
-- [ ] Decide on contrast (known issue 11)
+- [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9–10 above)
 - [ ] `MARKETING_VERSION` 1.0.0 through `scripts/release.sh 1.0.0`
 
 ## Next features
@@ -80,4 +79,4 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 
 Suggested order:
 1. Run the device checks above on 0.6.0.
-2. The rest of the before-1.0 list: the contrast decision and known issue 1, then the App Store listing.
+2. The rest of the before-1.0 list: known issue 1, then the App Store listing.

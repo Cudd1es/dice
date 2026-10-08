@@ -78,7 +78,7 @@ struct ResultCard: View {
                 .foregroundStyle(result.outcomeColor)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 5)
-                .background(result.outcomeColor.opacity(0.15), in: Capsule())
+                .background(result.outcomeTint.opacity(0.15), in: Capsule())
                 .fixedSize()
         }
     }
@@ -90,21 +90,46 @@ struct ResultCard: View {
 }
 
 extension RollResult {
+    /// Text colors: in light mode darker than the system colors, which are about 2.2:1 on white (orange, green),
+    /// below WCAG AA's 4.5:1; these are 4.6:1 or more on white and on the outcome badge. Dark mode keeps the system
+    /// colors, which already pass.
     var totalColor: Color {
         switch critical {
-        case .success: return .orange
-        case .failure: return .red
+        case .success: return .readableOrange
+        case .failure: return .readableRed
         case .none: return .primary
         }
     }
 
     var outcomeColor: Color {
         switch (critical, dcOutcome) {
+        case (.success, _): return .readableOrange
+        case (.failure, _): return .readableRed
+        case (.none, .success): return .readableGreen
+        default: return .secondary
+        }
+    }
+
+    /// The badge's light fill keeps the system hue, so it looks the same as before.
+    var outcomeTint: Color {
+        switch (critical, dcOutcome) {
         case (.success, _): return .orange
         case (.failure, _): return .red
         case (.none, .success): return .green
         default: return .secondary
         }
+    }
+}
+
+private extension Color {
+    static let readableOrange = adaptive(light: 0xB25000, dark: .systemOrange)
+    static let readableRed = adaptive(light: 0xC4261D, dark: .systemRed)
+    static let readableGreen = adaptive(light: 0x1E7B34, dark: .systemGreen)
+
+    static func adaptive(light hex: Int, dark: UIColor) -> Color {
+        let light = UIColor(red: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255,
+                            blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+        return Color(UIColor { $0.userInterfaceStyle == .dark ? dark : light })
     }
 }
 
