@@ -65,7 +65,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 
 - [x] **Privacy manifest** (`PrivacyInfo.xcprivacy`) in the app and the extension (on `dev`, ships with the next build): no tracking, no data collected; `UserDefaults` declared with `CA92.1` (`SpecStore`, the app's own defaults) and `1C8F.1` (`SettingsStore`, the App Group). Add a reason here whenever new code uses another required-reason API (file timestamps, system boot time, disk space, keyboards).
 - [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
-- [ ] Protect `main` (require PRs and passing CI); it is unprotected today
+- [x] Protect `main`: ruleset "Protect main" (2026-10-10) requires a pull request (no approvals needed), the `DiceKit tests` and `App and extension` checks, merge commits only (squash or rebase would leave `dev` behind `main`); no force pushes, no deletion, no bypass
 - [x] Clear known issue 1 above (on `dev`)
 - [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9 and 10 above)
 - [ ] `MARKETING_VERSION` 1.0.0 through `scripts/release.sh 1.0.0`
@@ -82,4 +82,4 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 
 Suggested order:
 1. Run the device checks above on 0.6.3.
-2. The rest of the before-1.0 list: the App Store listing and protecting `main`.
+2. The rest of the before-1.0 list: the App Store listing.
