@@ -86,6 +86,7 @@ targets:
       - Shared/SpecStore.swift
       - Shared/BonusPreset.swift
       - Shared/SettingsStore.swift
+      - Shared/RowSplit.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

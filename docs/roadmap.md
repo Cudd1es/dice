@@ -37,11 +37,11 @@ These can't be checked in the simulator, because simulator bubbles are blank. Th
 
 ## Known issues (deferred minors)
 
-None of these breaks a roll or leaks a result. They are ordered by how likely a player is to notice. Fixed on `dev` (after 0.4.0): the compact drawer now fits (without bonus dice), the purpose is no longer cut mid-typing (red counter instead), the bonus picker closes when the drawer reopens, and bonus tags are keyed by group. Fixed in the accessibility pass (after 0.6.0): 2, 4 and 9.
+None of these breaks a roll or leaks a result. They are ordered by how likely a player is to notice. Fixed on `dev` (after 0.4.0): the compact drawer now fits (without bonus dice), the purpose is no longer cut mid-typing (red counter instead), the bonus picker closes when the drawer reopens, and bonus tags are keyed by group. Fixed in the accessibility pass (after 0.6.0): 2, 4 and 9. Fixed after 0.6.2: 1.
 
 | # | Issue | Where | Suggested fix |
 |---|---|---|---|
-| 1 | With bonus dice in the compact Messages drawer, the formula row sits just below the fold (the tags row shows the bonuses) | `Shared/RollPanelView.swift` | Show the formula in the tags row, or shorten the purpose field |
+| ~~1~~ | ~~With bonus dice in the compact Messages drawer, the formula row sits just below the fold~~ Fixed: the formula shares the tags' row (`TagsAndFormulaLayout`, split by `RowSplit`); with many groups the tags scroll and the formula shrinks, then truncates | `Shared/RollPanelView.swift`, `Shared/BonusControls.swift` | — |
 | ~~2~~ | ~~With a purpose at the largest text sizes, the result card's breakdown is below the fold~~ Fixed: the outcome sits beside the total, the purpose keeps one line and the total shrinks at accessibility sizes | `Shared/ResultCard.swift` | — |
 | 3 | A pasted DC that overflows `Int` or uses full-width digits (`１２０`) keeps the old DC | `PanelModel.setDC(text:)` | Normalize digits; treat long digit runs as 999 |
 | ~~4~~ | ~~VoiceOver: the Add/Subtract control is labelled "Bonus Dice", and "−1d6" may read poorly~~ Fixed with accessibility labels | `Shared/BonusPickerView.swift`, `BonusTags` | — |
@@ -57,7 +57,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 ## Tech debt
 
 - ~~`RollPanelView` was the largest file (about 270 lines).~~ Split into `PurposeField`, `DCControls` and `BonusControls` (now about 180 lines).
-- **View wiring has few automated tests.** Focus order, keyboard expansion and the picker swap are checked by hand. Model logic is covered (DiceKit 97 tests, DiceMessagesTests 70 tests). The `Accessibility` scheme (`DiceAppUITests`) runs Xcode's accessibility audit over the roller, a result, the bonus picker and Settings; it fails on missing labels and the like, and prints contrast, Dynamic Type and clipped-text findings (the clipped-text check also flags text that shows in full, so read those by eye). Run it before a release; it is not in CI.
+- **View wiring has few automated tests.** Focus order, keyboard expansion and the picker swap are checked by hand. Model logic is covered (DiceKit 97 tests, DiceMessagesTests 80 tests). The `Accessibility` scheme (`DiceAppUITests`) runs Xcode's accessibility audit over the roller, a result, the bonus picker and Settings; it fails on missing labels and the like, and prints contrast, Dynamic Type and clipped-text findings (the clipped-text check also flags text that shows in full, so read those by eye). Run it before a release; it is not in CI.
 - **Device-only acceptance is manual for every release.** Keep the "Waiting on a device check" list current.
 
 ## Before 1.0 (App Store)
@@ -65,7 +65,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 - [x] **Privacy manifest** (`PrivacyInfo.xcprivacy`) in the app and the extension (on `dev`, ships with the next build): no tracking, no data collected; `UserDefaults` declared with `CA92.1` (`SpecStore`, the app's own defaults) and `1C8F.1` (`SettingsStore`, the App Group). Add a reason here whenever new code uses another required-reason API (file timestamps, system boot time, disk space, keyboards).
 - [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
 - [ ] Protect `main` (require PRs and passing CI); it is unprotected today
-- [ ] Clear known issue 1 above
+- [x] Clear known issue 1 above (on `dev`)
 - [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9 and 10 above)
 - [ ] `MARKETING_VERSION` 1.0.0 through `scripts/release.sh 1.0.0`
 
@@ -81,4 +81,4 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 
 Suggested order:
 1. Run the device checks above on 0.6.2.
-2. The rest of the before-1.0 list: known issue 1, then the App Store listing.
+2. The rest of the before-1.0 list: the App Store listing and protecting `main`.
