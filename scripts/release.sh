@@ -41,7 +41,7 @@ if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     exit 2
 fi
 
-echo "DND Dice $current_version ($current_build) -> $version ($build)"
+echo "Dicide $current_version ($current_build) -> $version ($build)"
 
 restore() {
     git checkout -- project.yml 2>/dev/null || true
@@ -80,7 +80,7 @@ if ! $upload; then
 fi
 
 if ! $assume_yes; then
-    read -r -p "Upload DND Dice $version ($build) to App Store Connect? [y/N] " answer
+    read -r -p "Upload Dicide $version ($build) to App Store Connect? [y/N] " answer
     if [[ ! "$answer" =~ ^[Yy]$ ]]; then
         trap - ERR
         restore
@@ -95,5 +95,5 @@ xcodebuild -exportArchive -archivePath "$archive" -exportOptionsPlist scripts/Ex
 trap - ERR
 git add project.yml
 git commit -q -m "build: version $version (build $build) for TestFlight"
-echo "Uploaded DND Dice $version ($build) and committed the version bump."
+echo "Uploaded Dicide $version ($build) and committed the version bump."
 echo "Next: add the build to a TestFlight group and update What to Test (docs/testflight/beta-info.md)."

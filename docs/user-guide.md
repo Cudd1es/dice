@@ -1,13 +1,24 @@
-# DND Dice user guide
+# Dicide user guide
 
 [简体中文](user-guide.zh-CN.md) · [Quick start](quick-start.md)
 
-DND Dice rolls D&D 5e-style dice in two places that share the same panel:
+Dicide helps you decide with a d20 check (the DC is how much the choice deserves to happen; your modifier and advantage are how much you want it), and it is a dice roller for tabletop RPGs. You can roll in two places that share the same panel:
 
 - **The app**, for games at the table. The result shows on your screen, and recent rolls are listed below it.
 - **Messages**, for games over chat. The roll is sent as a message, and nobody sees the result until it is sent.
 
 The interface follows your phone's language: English or Simplified Chinese.
+
+## Deciding with a check
+
+Stuck on a choice? Treat it like a skill check:
+
+1. **Write the question** in the purpose field, like "Buy the $90 shoes?"
+2. **Set a DC for how much it deserves to happen.** A sensible idea gets a low DC (5–10); a doubtful one a high DC (15–20).
+3. **Add how much you want it.** A modifier from +1 to +5, or advantage if you really want it (disadvantage if you'd rather not).
+4. **Roll a d20.** Success means do it; failure means don't. A natural 20 or 1 decides on its own, unless you turn criticals off in Settings.
+
+Roll in Messages to let a friend see the verdict too.
 
 ## The roll panel
 
@@ -96,7 +107,7 @@ Tap **?** in the top right for the in-app guide.
 
 ## Rolling in Messages
 
-1. In a conversation, tap **+** next to the text field and choose **DND Dice**.
+1. In a conversation, tap **+** next to the text field and choose **Dicide**.
 2. Set your roll. Tapping the purpose or DC field expands the panel so the keyboard can show.
 3. Tap **Roll**. A draft goes into the text field. It shows the purpose, the formula and "Revealed when sent", never the result.
 4. Send it. The bubble shows the result to everyone, without anyone tapping it.
@@ -107,8 +118,8 @@ Tap **?** in the top right for the in-app guide.
 | Person | Sees |
 |---|---|
 | You, before sending | Formula only, so a reroll can't help you |
-| Everyone with DND Dice, after sending | The same result, each in their own phone's language |
-| People without DND Dice | The formula and "Install DND Dice to see the result" |
+| Everyone with Dicide, after sending | The same result, each in their own phone's language |
+| People without Dicide | The formula and "Install Dicide to see the result" |
 | People on an older version | Rolls they can read show normally. Newer features show "Can't read this roll. Please update the app." Before 0.3.0, DCs above 40 also showed "Invalid roll data". |
 
 Version notes:
@@ -120,11 +131,11 @@ Version notes:
 
 | Problem | Fix |
 |---|---|
-| The DND Dice panel in Messages is blank grey | Wait a moment, or swipe Messages away and reopen it. This can happen right after an update. |
-| DND Dice is missing from the + list or has no icon | Restart the phone. iOS caches Messages app icons. |
-| A bubble says "Can't read this roll. Please update the app." | Update DND Dice in TestFlight. |
+| The Dicide panel in Messages is blank grey | Wait a moment, or swipe Messages away and reopen it. This can happen right after an update. |
+| Dicide is missing from the + list or has no icon | Restart the phone. iOS caches Messages app icons. |
+| A bubble says "Can't read this roll. Please update the app." | Update Dicide in TestFlight. |
 | A bubble says "Invalid roll data" | The message was damaged or edited, or it was a DC above 40 read by a version before 0.3.0. |
-| A friend only sees the formula and an install prompt | They need to install DND Dice. |
+| A friend only sees the formula and an install prompt | They need to install Dicide. |
 | The bubble is in a different language from the draft | Expected: each phone draws bubbles in its own language. |
 
 ## Fair play

@@ -34,14 +34,14 @@ final class RollFormatterTests: XCTestCase {
 
     func test_captions() {
         XCTAssertEqual(RollFormatter.pendingCaption(zh), "发送后揭晓")
-        XCTAssertEqual(RollFormatter.installToRevealCaption(zh), "安装 DND Dice 查看结果")
+        XCTAssertEqual(RollFormatter.installToRevealCaption(zh), "安装「掷定」查看结果")
         XCTAssertEqual(RollFormatter.needsUpdateText(zh), "无法读取这次投骰，请更新 App")
         XCTAssertEqual(RollFormatter.corruptText(zh), "数据无效")
     }
 
     func test_captions_english() {
         XCTAssertEqual(RollFormatter.pendingCaption(en), "Revealed when sent")
-        XCTAssertEqual(RollFormatter.installToRevealCaption(en), "Install DND Dice to see the result")
+        XCTAssertEqual(RollFormatter.installToRevealCaption(en), "Install Dicide to see the result")
         XCTAssertEqual(RollFormatter.needsUpdateText(en), "Can't read this roll. Please update the app.")
         XCTAssertEqual(RollFormatter.corruptText(en), "Invalid roll data")
     }
