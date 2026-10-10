@@ -75,15 +75,26 @@ struct RollPanelView: View {
                         modifierStepper
                     }
                 }
+                // With bonus dice the formula shares the tags' row, so the panel keeps its height and still fits
+                // the compact Messages drawer. At accessibility sizes the row is too narrow, so they stay apart.
                 if !model.spec.extras.isEmpty {
-                    BonusTags(model: model)
+                    if dynamicTypeSize.isAccessibilitySize {
+                        BonusTags(model: model)
+                    } else {
+                        TagsAndFormulaLayout {
+                            BonusTags(model: model)
+                            formula
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                        }
+                    }
                 }
                 modeRow
                 dcAndBonusRow
-                Text(RollFormatter.formula(model.spec))
-                    .font(.headline.monospacedDigit())
-                    .frame(maxWidth: .infinity)
-                    .accessibilityLabel(RollFormatter.spokenFormula(model.spec))
+                if model.spec.extras.isEmpty || dynamicTypeSize.isAccessibilitySize {
+                    formula
+                        .frame(maxWidth: .infinity)
+                }
                 if let error = model.errorMessage {
                     Text(error)
                         .font(.footnote)
@@ -91,6 +102,12 @@ struct RollPanelView: View {
                 }
         }
         .padding()
+    }
+
+    private var formula: some View {
+        Text(RollFormatter.formula(model.spec))
+            .font(.headline.monospacedDigit())
+            .accessibilityLabel(RollFormatter.spokenFormula(model.spec))
     }
 
     private var rollButton: some View {

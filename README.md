@@ -150,7 +150,7 @@ What's next, and the known gaps: [roadmap](docs/roadmap.md).
 
 ## Status
 
-The latest TestFlight build is **0.6.1 (build 13)**.
+The latest TestFlight build is **0.6.3 (build 15)**.
 
 **Verified on a device (iPhone 14 Pro, iOS 26.6):**
 - the draft shows only the formula;

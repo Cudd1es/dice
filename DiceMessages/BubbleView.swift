@@ -4,11 +4,15 @@ import DiceKit
 /// Renders every non-panel screen: draft bubble, revealed bubble, result detail and errors.
 struct BubbleView: View {
     let screen: Screen
+    /// Opens the full result. Messages does not open the extension when a Live Layout bubble is tapped.
+    var onOpen: (() -> Void)? = nil
 
     var body: some View {
         content
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture { if case .revealedBubble = screen { onOpen?() } }
     }
 
     @ViewBuilder
@@ -35,6 +39,8 @@ struct BubbleView: View {
             // One element that also says which die was kept (the struck-through one is not read aloud).
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(RollFormatter.spokenResult(spec, result, purpose: purpose))
+            .accessibilityAddTraits(.isButton)
+            .accessibilityHint("Double-tap to open the full result")
         case .detail(let spec, let result, let purpose):
             ResultCard(spec: spec, result: result, purpose: purpose)
         case .invalid(let reason):

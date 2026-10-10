@@ -8,8 +8,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.6.1"
-    CURRENT_PROJECT_VERSION: "13"
+    MARKETING_VERSION: "0.6.3"
+    CURRENT_PROJECT_VERSION: "15"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: 72W9R47VF7
 packages:
@@ -81,10 +81,12 @@ targets:
       - DiceMessages/Screen.swift
       - DiceMessages/MessageFactory.swift
       - DiceMessages/RevealState.swift
+      - DiceMessages/RevealHandoff.swift
       - Shared/PanelModel.swift
       - Shared/SpecStore.swift
       - Shared/BonusPreset.swift
       - Shared/SettingsStore.swift
+      - Shared/RowSplit.swift
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

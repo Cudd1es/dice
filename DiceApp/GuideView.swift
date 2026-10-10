@@ -24,6 +24,7 @@ struct GuideView: View {
                     Label("Set your dice and tap Roll; the roll goes into the text field", systemImage: "dice")
                     Label("To say what the roll is for (like “attack the goblin”), type it at the top of the panel; it shows in the bubble", systemImage: "text.bubble")
                     Label("Once sent, the bubble shows the result, the same for everyone", systemImage: "paperplane")
+                    Label("Tap a sent roll to see the full result and purpose", systemImage: "hand.tap")
                 }
                 Section {
                     Text("The result is fixed when you tap Roll and nobody sees it before it's sent, so deleting and rolling again doesn't help.")

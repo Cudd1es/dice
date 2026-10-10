@@ -9,6 +9,8 @@ struct ResultCard: View {
     var onRollAgain: (() -> Void)?
     /// Smaller in the app's result area on short screens such as iPhone SE.
     var totalFontSize: CGFloat = 72
+    /// The Messages result page has the whole screen (and scrolls), so the purpose is not cut there.
+    var showsFullPurpose = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
@@ -43,7 +45,7 @@ struct ResultCard: View {
             if let purpose {
                 Text(purpose)
                     .font(.headline)
-                    .lineLimit(isLargeText ? 1 : 2)
+                    .lineLimit(showsFullPurpose ? nil : (isLargeText ? 1 : 2))
                     .multilineTextAlignment(.center)
             }
             Label(RollFormatter.formula(spec), systemImage: "dice")

@@ -1,7 +1,10 @@
 import Messages
 import SwiftUI
 import UIKit
+import os
 import DiceKit
+
+private let log = Logger(subsystem: "dev.ansel.dice.imessage", category: "reveal")
 
 struct RootView: View {
     /// nil until the transcript bubble knows which message it shows.
@@ -10,6 +13,7 @@ struct RootView: View {
     let onRoll: () -> Void
     let onRollAgain: () -> Void
     let onKeyboardFocus: () -> Void
+    let onOpenResult: () -> Void
 
     var body: some View {
         content
@@ -26,10 +30,10 @@ struct RootView: View {
         case .panel?:
             RollPanelView(model: model, onRoll: onRoll, onKeyboardFocus: onKeyboardFocus)
         case .detail(let spec, let result, let purpose)?:
-            ResultCard(spec: spec, result: result, purpose: purpose, onRollAgain: onRollAgain)
+            ResultCard(spec: spec, result: result, purpose: purpose, onRollAgain: onRollAgain, showsFullPurpose: true)
         case let screen?:
             // No ScrollView: the transcript bubble is sized from this view's fitting height.
-            BubbleView(screen: screen)
+            BubbleView(screen: screen, onOpen: onOpenResult)
         }
     }
 }
@@ -56,6 +60,7 @@ final class MessagesViewController: MSMessagesAppViewController {
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
         reveal.activate()
+        if presentationStyle != .transcript { takeHandoff() }
         model.didActivate()
         // activeConversation is still nil inside this callback when Messages recreates a bubble that was
         // scrolled off screen (seen on device), so use the conversation it hands us.
@@ -72,6 +77,7 @@ final class MessagesViewController: MSMessagesAppViewController {
         // Messages hides the keyboard in compact but the field could stay focused; end editing so the next tap
         // on a field is a new focus and expands again.
         if presentationStyle == .compact { view.endEditing(true) }
+        if presentationStyle == .expanded { takeHandoff() }
         if presentationStyle == .expanded, let message = activeConversation?.selectedMessage {
             reveal.didExpand(selected: message.url, isPending: message.isPending)
         }
@@ -106,8 +112,11 @@ final class MessagesViewController: MSMessagesAppViewController {
         // and resolving now would flash the corrupt-data text.
         if presentationStyle == .transcript && conversation == nil { return }
         let message = conversation?.selectedMessage
-        let screen = Screen.resolve(style: presentationStyle, messageURL: message?.url,
-                                    isPending: message?.isPending ?? false, revealing: reveal.revealing)
+        // Opened from a tapped bubble: show that message even if Messages selected none (or another).
+        let opened = presentationStyle == .transcript ? nil : reveal.openedURL
+        let screen = Screen.resolve(style: presentationStyle, messageURL: opened ?? message?.url,
+                                    isPending: opened == nil && (message?.isPending ?? false),
+                                    revealing: reveal.revealing)
         host.rootView = makeRoot(screen)
     }
 
@@ -115,7 +124,28 @@ final class MessagesViewController: MSMessagesAppViewController {
         RootView(screen: screen, model: model,
                  onRoll: { [weak self] in self?.roll() },
                  onRollAgain: { [weak self] in self?.showPanel() },
-                 onKeyboardFocus: { [weak self] in self?.expandForKeyboard() })
+                 onKeyboardFocus: { [weak self] in self?.expandForKeyboard() },
+                 onOpenResult: { [weak self] in self?.openResultFromBubble() })
+    }
+
+    /// Messages does not open the extension when a sent Live Layout bubble is tapped, so the bubble asks for an
+    /// expanded instance itself and hands it the message (RevealHandoff), where the full result and purpose show.
+    private func openResultFromBubble() {
+        guard presentationStyle == .transcript,
+              let message = activeConversation?.selectedMessage, !message.isPending, let url = message.url
+        else {
+            log.info("bubble tap ignored: style \(self.presentationStyle.rawValue), no sent message")
+            return
+        }
+        RevealHandoff().store(url)
+        log.info("bubble tap: requesting expanded")
+        requestPresentationStyle(.expanded)
+    }
+
+    private func takeHandoff() {
+        guard let url = RevealHandoff().take() else { return }
+        log.info("opened from a bubble tap (style \(self.presentationStyle.rawValue))")
+        reveal.didOpen(from: url)
     }
 
     private func expandForKeyboard() {

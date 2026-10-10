@@ -21,6 +21,8 @@ struct BonusTags: View {
                     }
                     .buttonStyle(.bordered)
                     .tint(.accentColor)
+                    // Small, so the row is barely taller than the formula row it shares (TagsAndFormulaLayout).
+                    .controlSize(.small)
                     // "−1d6" uses a minus sign that VoiceOver may read oddly; say the action instead.
                     .accessibilityLabel(group.sign == .plus ? Text("Add \(group.count)d\(group.sides)")
                                                             : Text("Subtract \(group.count)d\(group.sides)"))
@@ -28,6 +30,35 @@ struct BonusTags: View {
                 }
             }
         }
+    }
+}
+
+/// Bonus tags on the left and the formula on the right in one row, split by `RowSplit`. A separate tags row pushed
+/// the formula below the fold of the compact Messages drawer. Expects exactly two subviews: tags, then formula.
+struct TagsAndFormulaLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.replacingUnspecifiedDimensions().width
+        let split = widths(width, subviews)
+        let height = max(subviews[0].sizeThatFits(ProposedViewSize(width: split.leading, height: nil)).height,
+                         subviews[1].sizeThatFits(ProposedViewSize(width: split.trailing, height: nil)).height)
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let split = widths(bounds.width, subviews)
+        subviews[0].place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading,
+                          proposal: ProposedViewSize(width: split.leading, height: bounds.height))
+        subviews[1].place(at: CGPoint(x: bounds.maxX, y: bounds.midY), anchor: .trailing,
+                          proposal: ProposedViewSize(width: split.trailing, height: nil))
+    }
+
+    private func widths(_ available: CGFloat, _ subviews: Subviews) -> (leading: CGFloat, trailing: CGFloat) {
+        RowSplit.widths(available: available,
+                        leading: subviews[0].sizeThatFits(.unspecified).width,
+                        trailing: subviews[1].sizeThatFits(.unspecified).width,
+                        spacing: spacing)
     }
 }
 
