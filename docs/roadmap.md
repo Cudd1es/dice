@@ -1,6 +1,6 @@
 # Roadmap
 
-Last reviewed: 2026-10-07, at 0.6.1 (build 13).
+Last reviewed: 2026-10-09, at 0.6.2 (build 14).
 
 ## Shipped
 
@@ -17,7 +17,8 @@ Last reviewed: 2026-10-07, at 0.6.1 (build 13).
 | 0.5.1 | 10 | Bonus dice reset after every roll | #14 |
 | 0.5.2 | 11 | Bonus picker buttons in the panel's neutral grey (0.5.1's blue read as "selected") | #14 |
 | 0.6.0 | 12 | Settings page with the critical success / failure toggle (App Group); message version 3 | #15 |
-| 0.6.1 | 13 | Accessibility pass (VoiceOver, largest text sizes), outcome colors with AA contrast, privacy manifests | #15 |
+| 0.6.1 | 13 | Accessibility pass (VoiceOver, largest text sizes), outcome colors with AA contrast, privacy manifests | #16 |
+| 0.6.2 | 14 | Tapping a sent bubble opens the full result (experiment, needs a device check) | #16 |
 
 ## Waiting on a device check
 
@@ -80,5 +81,5 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 | Dice sounds / animation | Out of scope so far; the app uses haptics only. |
 
 Suggested order:
-1. Run the device checks above on 0.6.1.
+1. Run the device checks above on 0.6.2.
 2. The rest of the before-1.0 list: known issue 1, then the App Store listing.

@@ -149,7 +149,7 @@ project.yml         XcodeGen 工程定义
 
 ## 现状
 
-最新的 TestFlight 版本是 **0.6.1（构建号 13）**。
+最新的 TestFlight 版本是 **0.6.2（构建号 14）**。
 
 **已在真机（iPhone 14 Pro，iOS 26.6）上验证：**
 - 草稿只显示公式；
