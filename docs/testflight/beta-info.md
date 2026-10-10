@@ -11,7 +11,23 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.6.2（构建号 14）
+## 测试内容（What to Test）— 0.6.3（构建号 15）
+
+加了加成骰后，公式不会再被挤到「信息」小窗口外面：加成标签和公式现在放在同一行，标签在左，公式在右。App 内的使用说明也加了一条"点已发送的投骰，查看完整结果和目的"。
+
+1. 在「信息」里打开 DND Dice（不要拉到全屏），加一个祝福术 +1d4：公式（例如 1d20+1d4）是否在标签右边显示，投掷按钮是否完整？
+2. 再多加两三组加成，并打开优势和 DC：标签可以左右滑动查看，公式太长时会缩小、末尾显示"…"。看起来能接受吗？
+3. 点加成标签，"多一个 / 少一个 / 删除"菜单是否还正常？
+
+### English
+
+With bonus dice, the formula no longer falls off the bottom of the Messages drawer: the bonus tags and the formula now share one row, tags on the left and formula on the right. The in-app guide also mentions tapping a sent roll to see the full result and purpose.
+
+1. Open DND Dice in Messages (without dragging it to full screen) and add Bless +1d4: does the formula (for example 1d20+1d4) show to the right of the tag, and is the Roll button fully visible?
+2. Add two or three more bonuses and turn on advantage and a DC: the tags scroll sideways, and a long formula shrinks and ends with "…". Does it look acceptable?
+3. Tap a bonus tag: do One More / One Fewer / Remove still work?
+
+### 上一版：测试内容（What to Test）— 0.6.2（构建号 14）
 
 试验版：点一下已发送的投骰气泡，会打开完整结果页，长目的也能看全。以前点气泡没有反应，这次是第一次在真机上试，不一定成功，请告诉我结果。
 
