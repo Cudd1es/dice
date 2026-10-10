@@ -100,7 +100,7 @@ Tap **?** in the top right for the in-app guide.
 2. Set your roll. Tapping the purpose or DC field expands the panel so the keyboard can show.
 3. Tap **Roll**. A draft goes into the text field. It shows the purpose, the formula and "Revealed when sent", never the result.
 4. Send it. The bubble shows the result to everyone, without anyone tapping it.
-5. Tap a sent bubble to open the full result. **Roll Again** takes you back to the panel.
+5. Tap a sent bubble to open the full result, including a purpose cut off with "…" in the bubble (0.6.2 or later). **Roll Again** takes you back to the panel.
 
 ### Who sees what
 

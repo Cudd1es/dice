@@ -606,6 +606,16 @@
           }
         }
       }
+    },
+    "Tap a sent roll to see the full result and purpose": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点已发送的投骰，查看完整结果和目的"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -51,6 +51,7 @@ Decision: B
    （`viewWillAppear › viewDidAppear › willBecomeActive › didBecomeActive`），`willBecomeActive` 时 `isPending == false`。→ **成立**
 3. **接收方**：待验证。朋友未安装 App，需要 TestFlight 分发后再测。
 4. **点已发送的 Live Layout 气泡**：没有任何反应，不会展开扩展。方案 A 不依赖点开，所以不影响。
+   - 补充（2026-10-09，0.6.2 真机验证）：气泡自己加点击手势，在 transcript 实例里调用 `requestPresentationStyle(.expanded)`，「信息」会新建一个展开的实例；消息地址经 App Group 传过去（`RevealHandoff`），就能打开完整结果。
 
 结论：模拟器上方案 A 不成立，真机上发送方成立。模拟器的行为不能代表真机。
 

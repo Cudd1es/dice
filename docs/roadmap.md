@@ -18,7 +18,7 @@ Last reviewed: 2026-10-09, at 0.6.2 (build 14).
 | 0.5.2 | 11 | Bonus picker buttons in the panel's neutral grey (0.5.1's blue read as "selected") | #14 |
 | 0.6.0 | 12 | Settings page with the critical success / failure toggle (App Group); message version 3 | #15 |
 | 0.6.1 | 13 | Accessibility pass (VoiceOver, largest text sizes), outcome colors with AA contrast, privacy manifests | #16 |
-| 0.6.2 | 14 | Tapping a sent bubble opens the full result (experiment, needs a device check) | #17 |
+| 0.6.2 | 14 | Tapping a sent bubble opens the full result, with the whole purpose (checked on a device) | #17 |
 
 ## Waiting on a device check
 
@@ -33,8 +33,7 @@ These can't be checked in the simulator, because simulator bubbles are blank. Th
 7. App Group in the TestFlight build: turning criticals off in the app takes effect in Messages
 8. A 0.5.x phone receiving a roll with criticals off asks to update
 9. VoiceOver (accessibility pass, after 0.6.0): the result card, a history row and a sent bubble each read as one sentence that names the kept die; Dice and Modifier adjust by swiping up or down; bonus tags say "Add 1d4" / "Subtract 1d4"
-10. Tapping a sent bubble opens the full result (0.6.2; Messages does not do this for Live Layout bubbles, so the bubble requests an expanded instance and hands it the message through the App Group)
-11. The Messages panel at the largest text sizes (now capped at accessibility2 like the app; the simulator's Messages was too hard to drive at that size)
+10. The Messages panel at the largest text sizes (now capped at accessibility2 like the app; the simulator's Messages was too hard to drive at that size)
 
 ## Known issues (deferred minors)
 
@@ -67,7 +66,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 - [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
 - [ ] Protect `main` (require PRs and passing CI); it is unprotected today
 - [ ] Clear known issue 1 above
-- [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9 and 11 above)
+- [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9 and 10 above)
 - [ ] `MARKETING_VERSION` 1.0.0 through `scripts/release.sh 1.0.0`
 
 ## Next features
