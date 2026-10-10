@@ -2,7 +2,7 @@
 
 在 App Store Connect → App 里填写（App 信息、App 隐私、版本页）。每一项都标了字数上限，下面的文字都在上限以内（2026-10-10 数过）；改动后请重数。
 
-> **先决定名字。** "DND" 是 Dungeons & Dragons 的常见缩写，D&D 是 Wizards of the Coast 的商标；SRD 的 CC-BY 授权只覆盖规则文字，不授予商标使用权。App 名称里带商标容易被审核以 5.2.1（知识产权）拒绝，上架后也可能被投诉下架。下面的文案暂用 "DND Dice"，描述和关键词里已避免使用 D&D / DnD。
+> **名字：掷定 / Dicide**（2026-10-10 定）。"掷定"读 zhì dìng，谐音"制定 / 指定"；Dicide = dice + decide。查过 App Store 和商标检索，没有同名。主屏幕名字按语言显示（`InfoPlist.xcstrings`）。描述和关键词里不用 D&D / DnD 等商标。App Store Connect 里的 App 名称要手动从"DND Dice"改过来。
 
 ## 网址
 
@@ -27,31 +27,33 @@
 
 ## 简体中文
 
-**名称**（30）：DND Dice
+**名称**（30）：掷定 Dicide
 
-**副标题**（30）：跑团骰子，发出后才揭晓结果
+**副标题**（30）：选择困难就过个检定，也能跑团投骰
 
 **宣传文本**（170，可随时修改，不需要审核）：
-在「信息」里投骰，发送前连你自己也看不到结果；发出后，全队看到同一个总值、骰子和成败，没法偷看后重投。也能在 App 里当桌边骰子用。
+拿不定主意？给它过个检定：DC 代表该不该做，加值和优势代表你有多想做，剩下的交给 d20。跑团时也是一套完整的骰子，在「信息」里投，发出前谁都看不到结果。
 
 **关键词**（100，用逗号分隔，不加空格）：
-骰子,跑团,掷骰,投骰,桌游,角色扮演,TRPG,d20,5e,优势,劣势,检定,大成功,祝福术,信息,iMessage,DM,团本
+骰子,选择困难,做决定,检定,跑团,掷骰,投骰,d20,DC,优势,劣势,大成功,桌游,TRPG,5e,随机,信息,iMessage
 
-66 个字符。如果 App Store Connect 提示超长（它按字符计，个别情况按字节计时会是 126），从后往前删到能保存为止。
 
 **描述**（4000）：
 
-在「信息」对话里为跑团投骰，结果在发出之前谁都看不到，包括你自己。
+选择困难的时候，给它过个检定。
 
-点「投掷」的那一刻结果就已确定，但草稿里只显示公式，例如「1d20+5 · 优势 · DC 15 · 发送后揭晓」。发出后，对话里每个人看到的都是同一个总值、同一组骰子和同一个成败。不能先偷看再决定要不要重投。
+把问题写下来，例如"买不买那双鞋？"。用 DC 表示这件事该不该做：理智上该做就设低，不太该做就设高。再用加值或优势、劣势表示你自己有多想做。然后投一个 d20：成功就去做，失败就算了。天然 20 和天然 1 直接拍板。
+
+它也是一套完整的跑团骰子。
 
 【在「信息」里投】
-• 点输入框旁的 +，选 DND Dice，设好骰子点「投掷」
-• 可以写一句目的，例如「察觉检定：门后有没有人」，和结果一起显示
+• 点输入框旁的 +，选「掷定」，设好骰子点「投掷」
+• 点「投掷」的那一刻结果就已确定，但发送前谁都看不到，包括你自己；发出后，对话里每个人看到的都是同一个结果，没法偷看后重投
+• 可以写一句目的，例如"察觉检定：门后有没有人"，和结果一起显示
 • 点已发送的投骰，打开完整结果
 
-【在桌边投】
-• 打开 App 就是投骰界面，结果大字显示
+【在 App 里投】
+• 打开就是投骰界面，结果大字显示
 • 保留最近 10 次投骰，带时间和目的
 
 【功能】
@@ -66,38 +68,41 @@
 【隐私】
 没有账号、没有广告、不追踪、不收集任何数据。设置只保存在你的 iPhone 上。
 
-想看结果的人都需要安装 DND Dice；没装的人只会看到公式和安装提示。
+在「信息」里，想看结果的人都需要安装「掷定」；没装的人只会看到公式和安装提示。
 
 加成预设包含 Wizards of the Coast LLC 的 System Reference Document 5.2.1 中的内容，以 CC BY 4.0 授权。本 App 与 Wizards of the Coast 无关，也未获其认可。
 
 **此版本的新内容**（1.0.0）：
-第一个正式版本。在「信息」里投骰，发出前谁都看不到结果；支持优势 / 劣势、DC、加成骰、投骰目的，以及关闭大成功判定。
+第一个正式版本。选择困难时用 d20 检定做决定，DC、加值、优劣势随你设；也能在「信息」里跑团投骰，发出前谁都看不到结果。
 
 ## English
 
-**Name** (30): DND Dice
+**Name** (30): Dicide
 
-**Subtitle** (30): Dice rolls revealed when sent
+**Subtitle** (30): Roll a check for any decision
 
 **Promotional Text** (170, can change any time without review):
-Roll in Messages with the result hidden until it's sent, even from you. Then the whole party sees the same total, dice and outcome, so nobody can peek and reroll.
+Can't decide? Roll a check: the DC is how much it deserves to happen, your modifier is how much you want it. Also a full dice roller for tabletop RPGs in Messages.
 
 **Keywords** (100, comma-separated, no spaces):
-dice,roller,d20,rpg,ttrpg,5e,tabletop,imessage,advantage,disadvantage,dc,critical,bless,dm,party
+dice,decision,decide,choice,check,d20,dc,rpg,ttrpg,5e,tabletop,roller,advantage,imessage,random
 
 **Description** (4000):
 
-Roll dice for your tabletop RPG right in Messages, and nobody sees the result until it's sent, not even you.
+Can't decide? Roll a check.
 
-The result is fixed the moment you tap Roll, but the draft shows only the formula, like "1d20+5 · Advantage · DC 15 · Revealed when sent". Send it, and everyone in the chat sees the same total, the same dice and the same outcome. No peeking first and deciding whether to roll again.
+Write the question, like "Buy the shoes?". Set a DC for how much it deserves to happen: low if it's sensible, high if it's doubtful. Add a modifier, or advantage or disadvantage, for how much you want it. Then roll a d20: success means do it, failure means let it go. A natural 20 or 1 settles it.
+
+It's also a full dice roller for tabletop RPGs.
 
 IN MESSAGES
-• Tap + next to the text field, choose DND Dice, set your dice and tap Roll
+• Tap + next to the text field, choose Dicide, set your dice and tap Roll
+• The result is fixed the moment you tap Roll but hidden until the message is sent, even from you. Then everyone in the chat sees the same result, so nobody can peek and roll again
 • Add a purpose, like "Perception: is someone behind the door?", shown with the result
 • Tap a sent roll to open the full result
 
-AT THE TABLE
-• Open the app and roll; the result shows in large type
+IN THE APP
+• Open it and roll; the result shows in large type
 • The last 10 rolls are kept, with time and purpose
 
 FEATURES
@@ -112,12 +117,12 @@ FEATURES
 PRIVATE
 No account, no ads, no tracking, no data collected. Your settings stay on your iPhone.
 
-Everyone who wants to see the result needs DND Dice; others see the formula and an install prompt.
+In Messages, everyone who wants to see the result needs Dicide; others see the formula and an install prompt.
 
 Bonus presets include material from the System Reference Document 5.2.1 by Wizards of the Coast LLC, licensed under CC BY 4.0. This app is not affiliated with or endorsed by Wizards of the Coast.
 
 **What's New** (1.0.0):
-First release. Roll in Messages with the result hidden until it's sent, with advantage and disadvantage, a DC, bonus dice, a purpose for each roll, and an option to turn off critical success and failure.
+First release. Decide with a d20 check, with your own DC, modifier and advantage, and roll for tabletop RPGs in Messages with the result hidden until it's sent.
 
 ## App 隐私（App Privacy）
 
@@ -146,11 +151,11 @@ First release. Roll in Messages with the result hidden until it's sent, with adv
 - **备注**（英文）：
 
 ```
-DND Dice has no account and needs no sign-in.
+Dicide (Chinese name 掷定) has no account and needs no sign-in.
 
-To test the iMessage extension: open Messages, start any conversation, tap the + button next to the text field, scroll the list and choose "DND Dice", set the dice and tap "Roll". The roll is inserted into the text field; its result is hidden until the message is sent, then the bubble shows it. Tapping a sent roll opens the full result.
+To test the iMessage extension: open Messages, start any conversation, tap the + button next to the text field, scroll the list and choose "Dicide" (掷定 on a Chinese iPhone), set the dice and tap "Roll". The roll is inserted into the text field; its result is hidden until the message is sent, then the bubble shows it. Tapping a sent roll opens the full result.
 
-The app itself is a dice roller: tap "Roll" on the main screen. Settings (gear button) can turn critical success and failure off.
+The app itself is a dice roller, also meant for making decisions with a DC check: tap "Roll" on the main screen. Settings (gear button) can turn critical success and failure off.
 
 The person receiving a roll needs the app to see the result; without it, Messages shows the formula and an install prompt.
 ```

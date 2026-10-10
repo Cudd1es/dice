@@ -23,7 +23,8 @@ targets:
     info:
       path: DiceApp/Info.plist
       properties:
-        CFBundleDisplayName: DND Dice
+        # Localized in InfoPlist.xcstrings: "掷定" in Simplified Chinese.
+        CFBundleDisplayName: Dicide
         UILaunchScreen: {}
         # Only uses encryption built into iOS, so App Store Connect does not ask on every upload.
         ITSAppUsesNonExemptEncryption: false
@@ -57,7 +58,7 @@ targets:
     info:
       path: DiceMessages/Info.plist
       properties:
-        CFBundleDisplayName: DND Dice
+        CFBundleDisplayName: Dicide
         NSExtension:
           NSExtensionPointIdentifier: com.apple.message-payload-provider
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).MessagesViewController

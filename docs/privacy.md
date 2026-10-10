@@ -6,7 +6,7 @@ Effective 2026-10-10 · 生效日期：2026 年 10 月 10 日
 
 ## English
 
-DND Dice is a dice roller for tabletop role-playing games, with an iMessage extension. It does not collect, store or share any personal data with the developer or anyone else.
+Dicide (掷定) is a dice roller for decisions and tabletop role-playing games, with an iMessage extension. It does not collect, store or share any personal data with the developer or anyone else.
 
 **What the app does not do**
 - It has no accounts and no sign-in.
@@ -17,7 +17,7 @@ DND Dice is a dice roller for tabletop role-playing games, with an iMessage exte
 - The last formula you rolled (dice, modifier, advantage, DC), so the panel opens where you left it.
 - Your Settings (for example, whether critical success and failure are used). The app and its iMessage extension share them through an App Group on your iPhone.
 - The app's Recent list (the last 10 rolls). It is kept in memory only and is cleared when the app closes.
-- When you tap a sent roll in Messages, that roll is briefly passed to the DND Dice screen that opens to show it, through the same App Group. It is removed as soon as that screen opens, or the next time DND Dice opens.
+- When you tap a sent roll in Messages, that roll is briefly passed to the Dicide screen that opens to show it, through the same App Group. It is removed as soon as that screen opens, or the next time Dicide opens.
 
 None of this leaves your iPhone, except as described below. Deleting the app deletes it.
 
@@ -38,7 +38,7 @@ Questions: open an issue at <https://github.com/Cudd1es/dice/issues>.
 
 ## 简体中文
 
-DND Dice 是给桌面角色扮演游戏（跑团）用的骰子，带有 iMessage 扩展。它不会收集、保存或向开发者及任何人分享你的个人数据。
+「掷定」（Dicide）是用来做决定和跑团的骰子，带有 iMessage 扩展。它不会收集、保存或向开发者及任何人分享你的个人数据。
 
 **App 不会做的事**
 - 没有账号，不需要登录。
@@ -49,7 +49,7 @@ DND Dice 是给桌面角色扮演游戏（跑团）用的骰子，带有 iMessag
 - 你上一次投骰的公式（骰子、加值、优势、DC），下次打开时面板保持原样。
 - 你的设置（例如是否判定大成功 / 大失败）。App 和它的 iMessage 扩展通过你 iPhone 上的 App Group 共用这些设置。
 - App 里的"最近"记录（最近 10 次投骰）。只保存在内存里，关掉 App 后清空。
-- 在「信息」里点一条已发送的投骰时，这次投骰会通过同一个 App Group 短暂交给随后打开的 DND Dice 结果页；结果页一打开就删除，最迟在下次打开 DND Dice 时删除。
+- 在「信息」里点一条已发送的投骰时，这次投骰会通过同一个 App Group 短暂交给随后打开的「掷定」结果页；结果页一打开就删除，最迟在下次打开「掷定」时删除。
 
 除下面说明的情况外，这些内容都不会离开你的 iPhone。删除 App 时会一并删除。
 

@@ -32,7 +32,7 @@ struct RollerView: View {
                         .layoutPriority(1)
                 }
             }
-            .navigationTitle("DND Dice")
+            .navigationTitle("Dicide")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

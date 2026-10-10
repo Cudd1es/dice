@@ -164,9 +164,6 @@
         }
       }
     },
-    "DND Dice": {
-      "shouldTranslate": false
-    },
     "Dice": {
       "localizations": {
         "zh-Hans": {
@@ -193,16 +190,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "完成"
-          }
-        }
-      }
-    },
-    "Everyone in the chat needs DND Dice to see the result; others only see the formula and an install prompt.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "群里每个人都要安装 DND Dice 才能看到结果；没装的人只会看到公式和安装提示。"
           }
         }
       }
@@ -467,16 +454,6 @@
         }
       }
     },
-    "Tap + next to the text field and choose DND Dice": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点输入框左侧的 +，在 App 列表里选「DND Dice」"
-          }
-        }
-      }
-    },
     "Tap the DC number to type a value up to 999": {
       "localizations": {
         "zh-Hans": {
@@ -663,6 +640,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "加成预设中的法术和职业特性来自 System Reference Document 5.2.1。"
+          }
+        }
+      }
+    },
+    "Dicide": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "掷定"
+          }
+        }
+      }
+    },
+    "Tap + next to the text field and choose Dicide": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点输入框左侧的 +，在 App 列表里选「掷定」"
+          }
+        }
+      }
+    },
+    "Everyone in the chat needs Dicide to see the result; others only see the formula and an install prompt.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "群里每个人都要安装「掷定」才能看到结果；没装的人只会看到公式和安装提示。"
+          }
+        }
+      }
+    },
+    "Decide with a Check": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用检定做决定"
+          }
+        }
+      }
+    },
+    "Write the question as the purpose, like “Buy the shoes?”": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "把问题写在目的栏，例如「买不买这双鞋？」"
+          }
+        }
+      }
+    },
+    "Set a DC for how much it deserves to happen: low if it's sensible, high if it's doubtful": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用 DC 表示该不该做：理智上该做就设低，不太该做就设高"
+          }
+        }
+      }
+    },
+    "Add a modifier or advantage for how much you want it": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用加值或优势表示你有多想做"
+          }
+        }
+      }
+    },
+    "Roll a d20: success means do it": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "投 d20：成功就去做"
           }
         }
       }

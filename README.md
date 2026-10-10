@@ -1,8 +1,8 @@
-# DND Dice
+# Dicide
 
 [简体中文](README.zh-CN.md)
 
-Dice for D&D 5e / Baldur's Gate style tabletop games. You can roll them two ways: right inside a Messages conversation, or in the app itself when everyone is at the same table. The interface is in English or Simplified Chinese, following the system language.
+Can't decide? Roll a check. Set a DC for how much the choice deserves to happen, add a modifier or advantage for how much you want it, and let a d20 decide. Dicide (Chinese name 掷定) is also a full dice roller for tabletop RPGs, at the table or right inside a Messages conversation, where nobody sees the result until it's sent. The interface is in English or Simplified Chinese, following the system language.
 
 - **For players:** [Quick start](docs/quick-start.md) · [User guide](docs/user-guide.md)
 - **For developers:** read on.
@@ -29,7 +29,7 @@ Dice for D&D 5e / Baldur's Gate style tabletop games. You can roll them two ways
 
 The sender never sees the result before sending, so deleting the draft and rolling again gains nothing.
 
-**People without the app** see the formula and "Install DND Dice to see the result". They can't see the result either.
+**People without the app** see the formula and "Install Dicide to see the result". They can't see the result either.
 
 **Language:**
 - Each recipient's own app draws the bubble, so everyone reads it in their own language.
@@ -61,7 +61,7 @@ open Dice.xcodeproj
 Run the `DiceApp` scheme.
 
 - **Roll in the app:** the app opens on the roller.
-- **Roll in Messages:** open Messages, pick a conversation, tap **+** next to the text field and choose DND Dice.
+- **Roll in Messages:** open Messages, pick a conversation, tap **+** next to the text field and choose Dicide.
 
 > **Bubbles only render on a device.** The simulator's Messages doesn't let a bubble read its own message, so bubbles show up blank there (see the [Live Layout spike](docs/superpowers/spikes/2026-10-05-live-layout.md)). The panels and every unit test work on the simulator.
 

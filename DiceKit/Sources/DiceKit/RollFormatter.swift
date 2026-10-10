@@ -8,7 +8,7 @@ public enum RollFormatter {
 
     /// Subcaption of the fallback bubble that people without the app see.
     public static func installToRevealCaption(_ language: RollLanguage = .current) -> String {
-        language == .english ? "Install DND Dice to see the result" : "安装 DND Dice 查看结果"
+        language == .english ? "Install Dicide to see the result" : "安装「掷定」查看结果"
     }
 
     public static func needsUpdateText(_ language: RollLanguage = .current) -> String {

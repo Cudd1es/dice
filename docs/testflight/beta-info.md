@@ -4,12 +4,14 @@
 
 ## Beta 版 App 描述（Beta App Description）
 
-DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种用法：
+掷定（Dicide，原名 DND Dice）有两种用法：
 
-1. 在「信息」里投：对话里点 + →「DND Dice」，设好骰子后点「投掷」。结果在投掷时就已确定，但发送前谁都看不到，发出去后气泡上直接显示结果，大家看到的一样。所以没法"先看结果、不满意再重投"。
-2. 在 App 里投：打开 App 就是投骰界面，适合线下跑团把手机当骰子用，下面保留最近 10 次记录。
+1. 做决定：选择困难时给它过个检定。DC 代表这件事该不该做，加值和优势、劣势代表你自己有多想做，投 d20，成功就去做。
+2. 跑团投骰：
+   - 在「信息」里投：对话里点 + →「掷定」，设好骰子后点「投掷」。结果在投掷时就已确定，但发送前谁都看不到，发出去后气泡上直接显示结果，大家看到的一样，所以没法"先看结果、不满意再重投"；
+   - 在 App 里投：打开就是投骰界面，适合线下跑团，下面保留最近 10 次记录。
 
-支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
+支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如"买不买这双鞋？"或"察觉检定"），和结果一起显示。
 
 ## 测试内容（What to Test）— 0.6.3（构建号 15）
 
@@ -264,7 +266,7 @@ Please send screenshots through TestFlight feedback or in the group chat.
 - 需要登录：否（App 没有账号系统）
 - 审核备注（Notes），可直接粘贴：
 
-> This app is a dice roller for tabletop role-playing games. It has two parts: an iMessage extension and the app itself.
-> To test the iMessage extension: open Messages, start any conversation, tap the + button next to the text field, choose "DND Dice", set the dice and tap "Roll". The roll is inserted into the text field; its result is hidden until the message is sent, then the bubble shows it.
+> Dicide (Chinese name 掷定) is a dice roller for making decisions with a d20 check and for tabletop role-playing games. It has two parts: an iMessage extension and the app itself.
+> To test the iMessage extension: open Messages, start any conversation, tap the + button next to the text field, choose "Dicide" (掷定 on a Chinese iPhone), set the dice and tap "Roll". The roll is inserted into the text field; its result is hidden until the message is sent, then the bubble shows it.
 > To test the app: open it and tap "Roll". The result appears at the top and recent rolls are listed below.
 > No account, network access or in-app purchase is involved.
