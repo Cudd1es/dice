@@ -64,7 +64,7 @@ None of these breaks a roll or leaks a result. They are ordered by how likely a 
 ## Before 1.0 (App Store)
 
 - [x] **Privacy manifest** (`PrivacyInfo.xcprivacy`) in the app and the extension (on `dev`, ships with the next build): no tracking, no data collected; `UserDefaults` declared with `CA92.1` (`SpecStore`, the app's own defaults) and `1C8F.1` (`SettingsStore`, the App Group). Add a reason here whenever new code uses another required-reason API (file timestamps, system boot time, disk space, keyboards).
-- [ ] App Store listing: description, keywords, screenshots (app and Messages), age rating, privacy "Data Not Collected"
+- [ ] App Store listing: copy, URLs, privacy and age rating answers drafted in [`docs/app-store/listing.md`](app-store/listing.md) (privacy policy and support pages in `docs/`); the app is iPhone-only (no iPad screenshots). Left: decide the name (trademark), screenshots, fill in App Store Connect
 - [x] Protect `main`: ruleset "Protect main" (2026-10-10) requires a pull request (no approvals needed), the `DiceKit tests` and `App and extension` checks, merge commits only (squash or rebase would leave `dev` behind `main`); no force pushes, no deletion, no bypass
 - [x] Clear known issue 1 above (on `dev`)
 - [x] An accessibility pass: VoiceOver labels, largest text sizes, outcome colors with AA contrast (on `dev`; device checks 9 and 10 above)

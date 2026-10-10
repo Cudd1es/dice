@@ -32,6 +32,18 @@ struct GuideView: View {
                     Text("Everyone in the chat needs DND Dice to see the result; others only see the formula and an install prompt.")
                         .foregroundStyle(.secondary)
                 }
+                Section("About") {
+                    Link("Privacy Policy", destination: Self.privacyURL)
+                    Link("Support", destination: Self.supportURL)
+                    LabeledContent("Version", value: Self.version)
+                    // CC-BY-4.0 requires this attribution wherever the preset names are used.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Bonus presets for spells and class features come from the System Reference Document 5.2.1.")
+                        Text(verbatim: Self.srdAttribution)
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
             }
             .navigationTitle("How to Use")
             .navigationBarTitleDisplayMode(.inline)
@@ -42,6 +54,24 @@ struct GuideView: View {
             }
         }
     }
+}
+
+extension GuideView {
+    static let privacyURL = URL(string: "https://github.com/Cudd1es/dice/blob/main/docs/privacy.md")!
+    static let supportURL = URL(string: "https://github.com/Cudd1es/dice/blob/main/docs/support.md")!
+
+    static var version: String {
+        let info = Bundle.main.infoDictionary
+        let marketing = info?["CFBundleShortVersionString"] as? String ?? "?"
+        let build = info?["CFBundleVersion"] as? String ?? "?"
+        return "\(marketing) (\(build))"
+    }
+
+    static let srdAttribution = """
+        This work includes material from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast \
+        LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons \
+        Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
+        """
 }
 
 #Preview { GuideView() }
