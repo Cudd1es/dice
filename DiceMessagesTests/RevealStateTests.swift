@@ -80,3 +80,31 @@ final class RevealStateTests: XCTestCase {
         XCTAssertTrue(state.revealing)
     }
 }
+
+extension RevealStateTests {
+    // Tapping a sent Live Layout bubble does not open the extension; the bubble asks for an expanded instance
+    // and hands it the message's URL (RevealHandoff), which may not be the selected message there.
+    func test_openFromBubble_revealsThatURL() {
+        var state = RevealState()
+        state.activate()
+        state.didOpen(from: url)
+        XCTAssertTrue(state.revealing)
+        XCTAssertEqual(state.openedURL, url)
+    }
+
+    func test_rollAgainAfterOpeningFromBubble_showsPanel() {
+        var state = RevealState()
+        state.activate()
+        state.didOpen(from: url)
+        state.closeResult(selected: url)
+        XCTAssertFalse(state.revealing)
+        XCTAssertNil(state.openedURL)
+    }
+
+    func test_activateClearsOpenedURL() {
+        var state = RevealState()
+        state.didOpen(from: url)
+        state.activate()
+        XCTAssertNil(state.openedURL)
+    }
+}

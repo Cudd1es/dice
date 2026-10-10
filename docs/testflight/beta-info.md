@@ -11,7 +11,25 @@ DND Dice 是给跑团（DnD 5e / 博德之门规则）用的骰子，有两种�
 
 支持 d4–d100、1–20 枚、加值、优势/劣势、DC（1–999），以及天然 20 / 天然 1 的大成功和大失败；可以加上祝福术 +1d4 这样的加成骰，也可以写一句投骰目的（例如「察觉检定」），和结果一起显示。
 
-## 测试内容（What to Test）— 0.6.1（构建号 13）
+## 测试内容（What to Test）— 0.6.2（构建号 14）
+
+试验版：点一下已发送的投骰气泡，会打开完整结果页，长目的也能看全。以前点气泡没有反应，这次是第一次在真机上试，不一定成功，请告诉我结果。
+
+1. 点一条已发送的投骰气泡（自己发的或朋友发的都行）：是否打开全屏结果，显示的是不是你点的那一条？
+2. 目的很长时（气泡里被"…"截断）：结果页里是否显示完整的目的？
+3. 结果页里点「再投一次」，是否回到投骰面板？
+4. 关掉再从 + 打开 DND Dice，是否还是正常的投骰面板，而不是刚才的结果？
+
+### English
+
+Experiment: tapping a sent roll bubble now opens the full result, so a long purpose can be read in full. Tapping a bubble used to do nothing; this is the first try on a real phone, so please tell me whether it works.
+
+1. Tap a sent roll bubble (yours or a friend's): does the full result open, and is it the roll you tapped?
+2. With a long purpose (cut off with "…" in the bubble): does the result page show all of it?
+3. Tap Roll Again on the result page: are you back on the panel?
+4. Close it and open DND Dice again from +: is it the normal panel, not the earlier result?
+
+### 上一版：测试内容（What to Test）— 0.6.1（构建号 13）
 
 这一版主要改进无障碍：开了旁白（VoiceOver）也能顺畅使用，字很大时结果也能完整显示。另外，"成功 / 大成功 / 大失败"的文字颜色在浅色模式下调深了一点，更容易看清。
 
